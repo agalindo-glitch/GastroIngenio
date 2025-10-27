@@ -25,3 +25,33 @@
     text-align: center;
     margin-bottom: 15px;
 }
+.contenedor-secundario {
+    display: flex;
+    align-items: flex-start;
+    border: 2px solid #ffffff;
+    border-radius: 10px;  
+    gap: 40px;
+    margin: 20px auto;
+    max-width: 950px; 
+    width: 100%;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.contenedor-cards-segundo {
+    display: flex;
+    gap: 50px;
+}
+
+.card-content {
+    padding-top: 15px;
+}
+
+.card-content h2 {
+    padding-top: 5px;
+    font-size: 1.1rem;
+}
+
+.title {
+    font-size: 1.5rem;
+}
