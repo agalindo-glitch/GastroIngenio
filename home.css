@@ -4,8 +4,9 @@
     padding:10px;
     border: 2px solid #ffffff;
     border-radius: 10px;  
-    width: 60%;
-    margin: 30px auto 0 auto;
+    margin: 20px auto;
+    max-width: 950px; 
+    width: 100%;
 
 }
 .contenedor-cards{
