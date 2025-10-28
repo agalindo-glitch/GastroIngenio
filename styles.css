@@ -1,11 +1,53 @@
 .navbar{
-    height: 100px;
-    background-color: aliceblue;
+    height: 70px;
+    padding: 0px 200px;
+    display: flex;
+    align-items: center;   
+    position: relative;    
+    background-color: #ffffff;
 }
 
-.Padre-buscador{
-    margin-top: 20px;
+.navbar-item img{
+  max-height: 210px;
 }
-.navbar-menu{
-    width: 100px;
+
+.navbar-link,
+a.navbar-item {
+  padding-top: 15px;
+  background-color: transparent !important;
+}
+
+.navbar-end{
+  width: 15% !important;
+}
+
+.input{
+  background-color: white;
+  border-color: blac;
+}
+
+.input::placeholder{
+  color: black;
+}
+
+.panel-block{
+    width: 30%;
+    max-height: 310px;
+    margin: 0 auto; 
+
+}
+
+
+.navbar-end{
+    width: 10%;
+    margin-inline-start: 0;
+}
+
+.icon{
+  background-color: rgba(213, 162, 68, 0.844);
+  border-radius: 0px 6px 6px 0px;
+}
+
+.is-primary{
+  background-color: rgba(213, 162, 68, 0.844);
 }

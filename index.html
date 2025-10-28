@@ -1,72 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link rel="stylesheet" href="./main.css">
-    <link rel="stylesheet" href="./styles.css">
-    <title>GastroIngenio</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <link rel="stylesheet" href="./main.css">
+        <link rel="stylesheet" href="./styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+        <title>GastroIngenio</title>
+    </head>
 
-<body>
-    <header>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="./index.html">
-        <p> GastroIngenio</p>
-        </a>
+    <body>
+        <header>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="./index.html">
+                    <img src="Resources/icono.png" alt="GastroIngenio" width="260px">
+                </a>
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        </a>
-    </div>
-    
-    <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item">
-                Recetas
-            </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
             
-        </div>
-        <div class="Padre-buscador">
+            <!-- MENU 
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            More
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">
+                                About
+                            </a>
+                            <a class="navbar-item is-selected">
+                                Jobs
+                            </a>
+                            <a class="navbar-item">
+                                Contact
+                            </a>
+                            <hr class="navbar-divider">
+                            <a class="navbar-item">
+                                Report an issue
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
             <div class="panel-block">
-                <p class="control has-icons-left">
-                <input class="input is-link" type="text" placeholder="Search" />
-                <span class="icon is-left">
-                    <i class="fas fa-search" aria-hidden="true"></i>
+                <p class="control has-icons-right">
+                <input class="input is-danger" type="text" placeholder="Search" />
+                <span class="icon is-right">
+                    <i class="fas fa-search"
+                        id="icono-busqueda"
+                        title="Buscar"
+                        data-role="buscador"
+                        aria-hidden="true">
+                    </i>
                 </span>
                 </p>
             </div>
-        </div>
-        
-        <div class="navbar-end">
-        <div class="navbar-item">
-            <div class="buttons">
-            <a class="button is-primary">
-                <strong>Crear recetas</strong>
-            </a>
-            <a class="button is-light">
-                Usuario
-            </a>
+                
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary">
+                            <strong>Crear recetas</strong>
+                        </a>
+                        <a class="button is-light">
+                            Usuario
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-    </div>
-    </nav>
-    <article class="panel is-link">
+        </nav>
 
-</article>
-    </header>
-        <main>
+        <article class="panel is-link">
+        </article>
+        </header>
+            <main>
 
-        </main>
-        <footer>
+            </main>
+            <footer>
 
-        </footer>
+            </footer>
     </body>
 </html>
