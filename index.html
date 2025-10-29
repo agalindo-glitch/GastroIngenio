@@ -7,78 +7,96 @@
         <link rel="stylesheet" href="./main.css">
         <link rel="stylesheet" href="./styles.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-        <title>GastroIngenio</title>
+        <title>GastroIngenio | Recetas de cocina ingeniosas</title>
     </head>
 
     <body>
         <header>
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="./index.html">
-                    <img src="Resources/icono.png" alt="GastroIngenio" width="260px">
-                </a>
-
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-            
-            <!-- MENU 
-            <div id="navbarBasicExample" class="navbar-menu">
-                <div class="navbar-start">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            More
+            <nav>    
+                <div class="navbar" role="navigation" aria-label="main navigation">
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href="./index.html">
+                            <img src="Resources/icono.png" alt="GastroIngenio" width="340px">
                         </a>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                                About
-                            </a>
-                            <a class="navbar-item is-selected">
-                                Jobs
-                            </a>
-                            <a class="navbar-item">
-                                Contact
-                            </a>
-                            <hr class="navbar-divider">
-                            <a class="navbar-item">
-                                Report an issue
-                            </a>
+
+                        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    
+                    <div class="panel-block">
+                        <p class="control has-icons-right">
+                        <input class="input is-danger" type="text" placeholder="Buscar" />
+                        <span class="icon is-right">
+                            <i class="fas fa-search"
+                                id="icono-busqueda"
+                                title="Buscar"
+                                data-role="buscador"
+                                aria-hidden="true">
+                            </i>
+                        </span>
+                        </p>
+                    </div>
+                        
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a class="button is-primary">
+                                    <strong>+ Crear</strong>
+                                </a>
+                                <a class="button is-light">
+                                    Usuario
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div> -->
-
-            <div class="panel-block">
-                <p class="control has-icons-right">
-                <input class="input is-danger" type="text" placeholder="Search" />
-                <span class="icon is-right">
-                    <i class="fas fa-search"
-                        id="icono-busqueda"
-                        title="Buscar"
-                        data-role="buscador"
-                        aria-hidden="true">
-                    </i>
-                </span>
-                </p>
-            </div>
-                
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary">
-                            <strong>Crear recetas</strong>
-                        </a>
-                        <a class="button is-light">
-                            Usuario
-                        </a>
+                <div class="navbar-menu">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <ul class="menu">
+                            <li class="navbar-link">
+                                <a href="./index.html">Cenas</a>
+                                <!-- Dentro del menú 
+                                <ul>
+                                    <li>
+                                        <a href="./index.html"> 5-Ingredient Dinners</a>
+                                    </li>
+                                </ul> -->
+                            </li>
+                            <li class="navbar-link">
+                                <a href="./index.html">Comidas</a>
+                                <!-- Dentro del menú 
+                                <ul>
+                                    <li>
+                                        <a href="./index.html"> 5-Ingredient Dinners</a>
+                                    </li>
+                                </ul> -->
+                            </li>
+                            <li class="navbar-link">
+                                <a href="./index.html">Ocasiones</a>
+                                <!-- Dentro del menú 
+                                <ul>
+                                    <li>
+                                        <a href="./index.html"> 5-Ingredient Dinners</a>
+                                    </li>
+                                </ul> -->
+                            </li>
+                            <li class="navbar-link">
+                                <a href="./index.html">Sobre Nosotros</a>
+                                <!-- Dentro del menú 
+                                <ul>
+                                    <li>
+                                        <a href="./index.html"> 5-Ingredient Dinners</a>
+                                    </li>
+                                </ul> -->
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
 
         <article class="panel is-link">
         </article>
