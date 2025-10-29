@@ -86,4 +86,14 @@ li::after {
 
 .is-primary {
     background-color: rgba(213, 162, 68, 0.844);
+.navbar{
+    height: 100px;
+    background-color: aliceblue;
+}
+
+.Padre-buscador{
+    margin-top: 20px;
+}
+.navbar-menu{
+    width: 100px;
 }
