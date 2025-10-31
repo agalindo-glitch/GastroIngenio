@@ -13,6 +13,9 @@ body {
 
 
 .title {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
     color: black;
     font-size: 30px !important;
     font-weight: 750 !important;
@@ -70,6 +73,9 @@ body {
     font-optical-sizing: auto !important;
     font-weight: 700 !important;
     font-size: 25px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
 }
 
 .contenedor-secundario {
@@ -131,4 +137,38 @@ body {
     padding-left: 20px;
     padding-right: 20px;
     margin-right: 20px;
+}
+
+.elegidos-por-la-comunidad {
+    padding-top: 90px;
+    height: 700px;
+    width: 700px;
+}
+
+.elegidos-por-la-comunidad img{
+    height: 500px;
+    width: 750px;
+    max-width: 800px;
+}
+
+.subtitulo {
+    color: rgb(77, 74, 74);
+    font-size: 17px !important;
+    font-weight: 600 !important;
+}
+
+span.link {
+    display: inline;
+    border-bottom: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1;    
+}
+
+span.link:hover {
+    border-bottom: 1px solid black;
+}
+
+span.link::after {
+    content: none !important;
 }
