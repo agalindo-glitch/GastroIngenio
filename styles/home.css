@@ -1,37 +1,83 @@
+main {
+    padding: 0 110px;
+    box-shadow: 0px 1px 0 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+.title {
+    color: black;
+    font-size: 30px !important;
+    font-weight: 750 !important;
+}
+
 .contenedor-principal {
     display: flex;
     flex-direction: column;
-    padding:10px;
+    padding-top: 90px;
     border: 2px solid #ffffff;
     border-radius: 10px;  
-    margin: 20px auto;
-    max-width: 950px; 
     width: 100%;
-
 }
+
+.card img {
+    height: 180px;
+}
+
+.texto-subrayado {
+  position: relative;
+  display: inline-block;
+  z-index: 1; 
+}
+
+.texto-subrayado::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 290px;
+  height: 12px;
+  background-color: rgba(213, 162, 68, 0.83);
+  z-index: -1; 
+}
+
 .contenedor-cards{
     display: flex;
     justify-content: center;
-    gap: 100px;
+    gap: 20px;
 }
+
 .card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 200px;        
+    width: 800px;        
     height: 230px;       
+    background-color: #ffffff;
 }
 .contenido{
     text-align: center;
     margin-bottom: 15px;
+    color: black;
+    font-family: "Inter", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 700 !important;
+    font-size: 25px;
 }
+
 .contenedor-secundario {
     display: flex;
     align-items: flex-start;
     border: 2px solid #ffffff;
     border-radius: 10px;  
     gap: 40px;
-    margin: 20px auto;
     max-width: 950px; 
     width: 100%;
     padding-top: 20px;
@@ -56,11 +102,9 @@
     font-size: 1.5rem;
 }
 
-
 .tercer-contenedor{
     display: flex;
     flex-direction: column;
-    margin: 20px auto;
     max-width: 950px; 
     width: 100%;
     border: 2px solid #ffffff;
@@ -81,6 +125,7 @@
 .texto{
     padding: 10px;
 }
+
 .button{
     align-self: flex-end;
     padding-left: 20px;
