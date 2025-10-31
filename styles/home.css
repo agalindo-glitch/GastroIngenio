@@ -172,3 +172,51 @@ span.link:hover {
 span.link::after {
     content: none !important;
 }
+
+.contenedor-divs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 150px;
+  margin-bottom: -60px;
+
+}
+.segundo-div {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+}
+.columnas{
+    display: flex;
+    flex-direction: column;
+}
+.card-ultimo {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1px solid #807a7a;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.card-ultimo img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.texto-ultimo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.categoria-titulo {
+  font-size: 11px;
+  color: #777;
+  margin: 0;
+}
+
+.texto-ultimo h3 {
+  font-size: 13px;
+  color: #000;
+}
