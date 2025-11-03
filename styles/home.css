@@ -51,6 +51,23 @@ body {
   z-index: -1; 
 }
 
+.division {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+}
+
+.division::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 2px;
+    background-color: rgba(213, 162, 68, 0.83);
+    z-index: -1; 
+}
+
 .contenedor-cards{
     display: flex;
     justify-content: center;
@@ -166,7 +183,7 @@ span.link {
 }
 
 span.link:hover {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgba(213, 162, 68, 0.83);
 }
 
 span.link::after {
@@ -177,7 +194,7 @@ span.link::after {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 150px;
+  gap: 130px;
   margin-bottom: -60px;
 
 }
@@ -186,6 +203,7 @@ span.link::after {
   flex-direction: column;
   margin-top: 80px;
 }
+
 .columnas{
     display: flex;
     flex-direction: column;
@@ -194,14 +212,14 @@ span.link::after {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  border-bottom: 1px solid #807a7a;
+  border-bottom: 1px solid #cac0c0;
   padding-bottom: 12px;
   margin-bottom: 12px;
 }
 
 .card-ultimo img {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 60px;
   object-fit: cover;
 }
 
@@ -210,6 +228,14 @@ span.link::after {
   flex-direction: column;
   gap: 4px;
 }
+/* 
+.recientes {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+} */
+
 .categoria-titulo {
   font-size: 11px;
   color: #777;
@@ -218,5 +244,6 @@ span.link::after {
 
 .texto-ultimo h3 {
   font-size: 13px;
+  font-weight: 600;
   color: #000;
 }
