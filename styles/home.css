@@ -51,23 +51,6 @@ body {
   z-index: -1; 
 }
 
-.division {
-    position: relative;
-    display: inline-block;
-    z-index: 1;
-}
-
-.division::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    height: 2px;
-    background-color: rgba(213, 162, 68, 0.83);
-    z-index: -1; 
-}
-
 .contenedor-cards{
     display: flex;
     justify-content: center;
@@ -198,52 +181,76 @@ span.link::after {
   margin-bottom: -60px;
 
 }
+
+.card-ultimo img {
+  width: 100px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Segundo DIV */
 .segundo-div {
   display: flex;
   flex-direction: column;
   margin-top: 80px;
 }
 
-.columnas{
-    display: flex;
-    flex-direction: column;
-}
-.card-ultimo {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  border-bottom: 1px solid #cac0c0;
-  padding-bottom: 12px;
-  margin-bottom: 12px;
-}
+    /* Recientes */
+    .division {
+        position: relative;
+        display: inline-block;
+        z-index: 1;
+    }
 
-.card-ultimo img {
-  width: 100px;
-  height: 60px;
-  object-fit: cover;
-}
+    .division::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        height: 2px;
+        background-color: rgba(213, 162, 68, 0.83);
+        z-index: -1; 
+    }
 
-.texto-ultimo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-/* 
-.recientes {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 30px;
-} */
+    .columnas {
+        display: flex;
+        flex-direction: column;
+    }
 
-.categoria-titulo {
-  font-size: 11px;
-  color: #777;
-  margin: 0;
-}
+    .card-ultimo {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border-bottom: 1px solid #cac0c0;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .texto-ultimo {
+        display: flex;
+        flex-direction: column;
+    }
 
-.texto-ultimo h3 {
-  font-size: 13px;
-  font-weight: 600;
-  color: #000;
-}
+    .categoria-titulo {
+        display: flex;
+        /* align-items: center; */
+        font-size: 11px;
+        gap: 0; 
+        color: #777;
+        margin: 0;
+    }
+
+    .grupos {
+        padding-right: 9px;        
+        border-right: 1px solid #cac0c0;
+        margin-right: 9px;          
+        color: #777;
+    }
+
+    .titulo {
+        font-size: 13px;
+        font-weight: 600;
+        color: #000;
+    }
