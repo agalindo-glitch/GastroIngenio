@@ -223,11 +223,14 @@ span.link::after {
         display: flex;
         align-items: flex-start;
         gap: 10px;
+    }
+
+    .card-ultimo:not(:nth-last-child(-n+2)) {
         border-bottom: 1px solid #cac0c0;
         padding-bottom: 12px;
         margin-bottom: 12px;
     }
-    
+
     .texto-ultimo {
         display: flex;
         flex-direction: column;
@@ -235,7 +238,6 @@ span.link::after {
 
     .categoria-titulo {
         display: flex;
-        /* align-items: center; */
         font-size: 11px;
         gap: 0; 
         color: #777;
@@ -253,4 +255,20 @@ span.link::after {
         font-size: 13px;
         font-weight: 600;
         color: #000;
+    }
+
+    .ver-mas {
+        border: 1px solid rgba(204, 139, 17, 0.83);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        width: 70px;
+        height: 30px;
+        margin: 0 auto;
+    }
+
+    .ver-mas:hover {
+        background-color:  rgba(204, 139, 17, 0.83);
+        color: white;
     }
