@@ -1,97 +1,125 @@
-.navbar {
-    height: 100px;
-    padding: 0 100px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    background-color: #ffffff;
+/* === NAVBAR PRINCIPAL === */
+header {
+    box-shadow: 0 .125rem .375rem rgba(0,0,0,.15);
+}
 
+nav {
+    padding: 0 90px ;  
+    width: 1383.89px;
+    justify-self: center;
+}
+
+.navbar {
+    height: 100px ;
+    display: flex ;
+    align-items: center ;     
+    justify-content: center ; 
+    gap: 125px ;               
+    background-color: #ffffff ;      
+    position: relative ;
 }
 
 .navbar-menu {
+    display: flex;
+    justify-content: flex-start;
     background-color: #ffffff;
-    z-index: 10;
-    position: relative;
-    padding: 0 100px;
-    box-shadow: 0px 1px 0 0 rgba(0, 0, 0, 0.2) !important;
-}
-
-.navbarBasicExample {
-    padding: 0 !important;
 }
 
 .navbar-item img {
-    max-height: 280px;
+    max-height: 280px ;
 }
 
 .navbar-link,
 a.navbar-item {
-    padding: 15px 0 0 0;
-    background-color: transparent !important;
-}
-
-.navbar-link {
-    padding: 0 !important;
+    padding: 15px 0 0 0 ;
+    background-color: transparent ;
 }
 
 .navbar-end {
-    width: 24%;
-    margin-inline-start: 0;
+    width: auto ;
+    margin: 0 ;
 }
 
+/* MENU */
 .menu {
-    display: flex;
-    gap: 60px;
-    padding: 0 0 15px 20px;
-    background-color: #ffffff;
+    display: flex ;
+    gap: 60px ;
+    padding: 0 0 15px 20px ;
+    background-color: #ffffff ;
 }
 
 a {
-    text-decoration: none;
-    color: black;
-    font-weight: 700;
-    transition: text-decoration 0.2s ease;
-    padding-bottom: 0;
+    text-decoration: none ;
+    color: black ;
+    font-weight: 700 ;
+    transition: text-decoration 0.2s ease ;
+    padding-bottom: 0 ;
 }
 
 li a {
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid transparent ;
 }
 
 li a:hover {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgba(213, 162, 68, 0.83) ;
 }
 
 li::after {
-    content: none !important;
-    display: none !important;
+    border: none !important;
 }
 
+/* === Buscador === */
 .input {
-    background-color: white;
-    border-color: black;
-    color: black;
+    background-color: white ;
+    border-color: black ;
+    color: black ;
 }
 
 .input::placeholder {
-    color: black;
+    color: black ;
 }
+
+.input:focus {
+    border-color: rgba(213, 162, 68, 0.844);
+    box-shadow: 0 0 4px rgba(213, 162, 68, 0.83); 
+}
+
+.panel-block .icon.is-right i {
+    color: white;
+}
+
 
 .panel-block {
-    width: 30%;
-    max-height: 310px;
-    margin: 0 auto;
+    width: auto ;
+    max-height: 310px ;
+    margin: 0 ;
 }
 
+.panel-block .input {
+    width: 750px ;   
+    max-width: 340px ;
+    min-width: 250px ;
+    
+}
+
+.panel-block .control {
+    width: auto ;
+}
+
+.panel-block .icon.is-right {
+    right: 10px ; 
+}
+
+/* === Botones === */
 .icon {
-    background-color: rgba(213, 162, 68, 0.844);
-    border-radius: 0 6px 6px 0;
+    background-color: rgba(213, 162, 68, 0.844) ;
+    border-radius: 0 6px 6px 0 ;
 }
 
 .is-light {
-    background-color: rgba(213, 162, 68, 0.844);
+    background-color: rgba(213, 162, 68, 0.844) ;
 }
 
 .is-primary {
-    background-color: rgba(213, 162, 68, 0.844);
+    background-color: rgba(213, 162, 68, 0.844) ;
 }

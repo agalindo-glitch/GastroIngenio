@@ -163,7 +163,7 @@ span.link::after {
 
 /* Primer DIV */
 .elegidos-por-la-comunidad {
-    padding-top: 90px;
+    margin-top: 90px;
     height: 700px;
     width: 700px;
 }
