@@ -139,28 +139,6 @@ body {
     margin-right: 20px;
 }
 
-.elegidos-por-la-comunidad {
-    padding-top: 90px;
-    height: 700px;
-    width: 700px;
-}
-
-.elegidos-por-la-comunidad img{
-    height: 500px;
-    width: 750px;
-    max-width: 800px;
-}
-
-.subtitulo {
-    color: rgb(77, 74, 74);
-    font-size: 17px !important;
-    font-weight: 600 !important;
-}
-
-.hover-link .link {
-    border-bottom: 2px solid transparent;
-}
-
 span.link:hover {
     border-bottom: 1px solid rgba(213, 162, 68, 0.83);
 }
@@ -174,8 +152,6 @@ span.link::after {
   justify-content: center;
   align-items: flex-start;
   gap: 130px;
-  margin-bottom: -60px;
-
 }
 
 .card-ultimo img {
@@ -183,6 +159,34 @@ span.link::after {
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
+}
+
+/* Primer DIV */
+.elegidos-por-la-comunidad {
+    padding-top: 90px;
+    height: 700px;
+    width: 700px;
+}
+
+.elegidos-por-la-comunidad img{
+    height: 500px;
+    width: 750px;
+    max-width: 800px;
+}
+
+.hover-link .link {
+    border-bottom: 2px solid transparent;
+}
+
+
+.hover-link:hover .link {
+    border-bottom-color: rgb(255, 166, 0); 
+}
+
+.subtitulo {
+    color: rgb(77, 74, 74);
+    font-size: 17px !important;
+    font-weight: 600 !important;
 }
 
 /* Segundo DIV */
@@ -268,3 +272,6 @@ span.link::after {
         background-color:  rgba(204, 139, 17, 0.83);
         color: white;
     }
+
+
+
