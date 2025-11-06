@@ -1,4 +1,33 @@
-.navbar{
-    height: 100px;
+body{
     background-color: aliceblue;
+}
+.contenedor-general-recetas{
+    display: flex;
+    flex-direction: column;
+}
+.titulo{
+    margin-top: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.contenido-recetas{
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.imagen{
+  width: 100%;      
+  max-width: 500px; 
+  height: auto;    
+  display: block;   
+}
+.ingredientes{
+    position: sticky;
+    top: 10px;
+    border: 2px solid rgb(0, 0, 0); 
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 15px;
 }
