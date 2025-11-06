@@ -1,7 +1,8 @@
 .footer{
-    padding: 40px;
+    padding: 0 90px ;
     background-color: white;
     color: black;
+    margin-top: 90px;
 }
 
 .redes-sociales a{
