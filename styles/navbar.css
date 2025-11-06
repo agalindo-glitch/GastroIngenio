@@ -160,12 +160,10 @@ li::after {
     color: rgba(213, 162, 68, 0.9);
 }
 
-/* Mostrar submenu al pasar el mouse */
 .navbar-link:hover .submenu {
     display: flex;
 }
 
-/* Alinear correctamente los ítems principales */
 .menu {
     display: flex;
     gap: 60px;
