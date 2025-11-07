@@ -1,7 +1,7 @@
 #usuario {
   display: flex;
   justify-content: space-around;
-  background-color: #ffff;
+  background-color: #f1f1f1;
   margin: 0 30%;
   padding: 3% 0;
   border-color: #111827;
@@ -9,8 +9,9 @@
 }
 
 .perfil-card-img{
+  background-color: #ffff;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+  box-shadow: 8px 8px 2px 1px rgba(213, 162, 68, 0.83);
   box-sizing: border-box;
 }
 
@@ -48,7 +49,6 @@
   overflow: hidden;
 }
 
-
 .perfil-img img {
   width: 100%;
   height: 100%;
@@ -66,13 +66,20 @@
   flex-wrap: wrap;
 }
 
+
 .perfil-stats > div {
   flex: 1 1 30%;
-  background: #acacac;
-  border-radius: 8px;
+  background: #ffff;
+  border: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: rgba(213, 162, 68, 0.83);
   padding: 0.6rem 0.8rem;
   text-align: center;
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.10);
+}
+
+.perfil-stats strong{
+  color: black;
 }
 
 .perfil-stats p:first-child {
@@ -84,7 +91,7 @@
 .perfil-stats p:last-child {
   font-weight: 600;
   font-size: 1.05rem;
-  color: #111827; 
+  color: rgba(213, 162, 68, 0.83); 
 }
 
 
@@ -114,6 +121,11 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 0.5rem;
+}
+
+.perfil-form .button.is-link{
+  background-color: rgba(213, 162, 68, 0.83);
+  color: black;
 }
 
 @media (max-width: 768px) {
