@@ -123,3 +123,50 @@ li::after {
 .is-primary {
     background-color: rgba(213, 162, 68, 0.844) ;
 }
+
+/* === SUBMENÚ DESPLEGABLE === */
+.navbar-link {
+    position: relative;
+    list-style: none;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    padding: 10px 0;
+    min-width: 180px;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.submenu li {
+    padding: 8px 20px;
+    white-space: nowrap;
+}
+
+.submenu li a {
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    border: none;
+}
+
+.submenu li a:hover {
+    color: rgba(213, 162, 68, 0.9);
+}
+
+.navbar-link:hover .submenu {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    background-color: #fff;
+}
