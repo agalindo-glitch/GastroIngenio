@@ -31,3 +31,21 @@ body{
     padding-right: 50px;
     padding-top: 15px;
 }
+.usuario-creador{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    margin-right: 625px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+.imagen-usuario{
+    width: 100%;      
+    max-width: 80px; 
+    height: auto; 
+}
+.nombre-usuario{
+    padding-top: 20px;
+    text-align: center;
+
+}
