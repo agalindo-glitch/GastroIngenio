@@ -17,11 +17,15 @@ body{
     justify-content: center;
     margin-bottom: 20px;
 }
-.imagen{
-  width: 100%;      
-  max-width: 500px; 
-  height: auto;    
-  display: block;   
+.imagen img{
+    width: 100%;      
+    max-width: 500px; 
+    height: auto;    
+    display: block;   
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 }
 .ingredientes{
     position: sticky;
@@ -30,6 +34,7 @@ body{
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 15px;
+    border-radius: 20px;
 }
 .usuario-creador{
     display: flex;
@@ -47,5 +52,4 @@ body{
 .nombre-usuario{
     padding-top: 20px;
     text-align: center;
-
 }
