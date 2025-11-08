@@ -53,3 +53,13 @@ body{
     padding-top: 20px;
     text-align: center;
 }
+.media{
+    justify-content: center;
+}
+.media-content{
+    width: 100%;      
+    max-width: 400px; 
+    margin-right: 425px;
+    margin-bottom: 10px;
+    
+}
