@@ -4,6 +4,9 @@ body{
 .contenedor-general-recetas{
     display: flex;
     flex-direction: column;
+    margin: auto;
+    width: 1000px;
+    justify-content: center;
 }
 .titulo{
     margin-top: 20px;
@@ -14,7 +17,9 @@ body{
     display: flex;
     flex-direction: row;
     gap: 100px;
-    justify-content: center;
+    justify-content: start;
+    padding-left: 50px;
+    padding-right: 50px;
     margin-bottom: 20px;
 }
 .imagen img{
@@ -39,9 +44,10 @@ body{
 .usuario-creador{
     display: flex;
     align-items: start;
-    justify-content: center;
-    margin-right: 625px;
+    justify-content: start;
     margin-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
     gap: 10px;
 }
 .imagen-usuario{
@@ -54,12 +60,17 @@ body{
     text-align: center;
 }
 .media{
-    justify-content: center;
+    display: flex;
+    width: 800px;
+    flex-direction: column;
+    padding: 1.5rem;
+    padding-left: 50px;
 }
-.media-content{
-    width: 100%;      
-    max-width: 400px; 
-    margin-right: 425px;
+.media-content{ 
     margin-bottom: 10px;
-    
+    gap: 50px;
+    display: flex;
+}
+.textarea{
+    width: 300px;
 }
