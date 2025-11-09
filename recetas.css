@@ -45,7 +45,6 @@ body{
     display: flex;
     align-items: start;
     justify-content: start;
-    margin-bottom: 10px;
     padding-left: 50px;
     padding-right: 50px;
     gap: 10px;
@@ -65,12 +64,31 @@ body{
     flex-direction: column;
     padding: 1.5rem;
     padding-left: 50px;
+    padding-top: 10px;
 }
 .media-content{ 
     margin-bottom: 10px;
     gap: 50px;
     display: flex;
 }
-.textarea{
-    width: 300px;
+.imagen-receta img{
+    width: 100%;      
+    max-width: 500px; 
+    height: auto;    
+    margin-bottom: 10px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}
+.textarea {
+    width: 300px !important;
+    min-height: 60px !important;
+    resize: none;
+}
+.bottom-buttons{
+    display: flex;
+    gap: 280px;
+}
+.button-imagen{
+    margin-top: 5px;
 }
