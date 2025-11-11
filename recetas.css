@@ -3,9 +3,15 @@ body{
 }
 .contenedor-general-recetas{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin: auto;
     width: 1000px;
+}
+.segundo-contenedor{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 700px;
     justify-content: center;
 }
 .titulo{
@@ -14,8 +20,6 @@ body{
     margin-bottom: 10px;
 }
 .contenido-recetas{
-    display: flex;
-    flex-direction: row;
     gap: 100px;
     justify-content: start;
     padding-left: 50px;
@@ -31,15 +35,6 @@ body{
     overflow: hidden;
     background: white;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
-}
-.ingredientes{
-    position: sticky;
-    top: 10px;
-    border: 2px solid rgb(0, 0, 0); 
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 15px;
-    border-radius: 20px;
 }
 .usuario-creador{
     display: flex;
@@ -60,7 +55,6 @@ body{
 }
 .media{
     display: flex;
-    width: 800px;
     flex-direction: column;
     padding: 1.5rem;
     padding-left: 50px;
@@ -91,4 +85,27 @@ body{
 }
 .button-imagen{
     margin-top: 5px;
+}
+.tercer-contenedor-ingredientes{
+    margin-top: 50px;
+}
+.ingredientes{
+    position: sticky;
+    top: 10px;
+    background-color: #f9f7e8;
+    padding: 20px 40px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    width: 280px;
+    align-self: flex-start;
+}
+.ingredientes h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+.ingredientes li {
+    border-bottom: 2px solid #f8eeee; 
+    padding: 8px 0;
 }
