@@ -1,0 +1,106 @@
+#usuario {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  margin: 3% 30%;
+  padding: 3% 0;
+  border-color: #111827;
+  background-color: #ffff;
+  border-radius: 12px;
+  box-shadow: 8px 8px 2px 1px rgba(213, 162, 68, 0.83);
+  box-sizing: border-box;
+}
+
+.perfil{
+  display: flex;
+  flex-direction: column;
+  margin: 0px 90px;
+  
+}
+
+
+.perfil-img img {
+  width: 110px;
+  height: 110px;
+  border-radius: 100%;
+  border: 2px solid rgba(213, 162, 68, 0.83);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.perfil-img-nombre-usuario{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.perfil-img-nombre-usuario h2{
+ margin-top: 5px;
+
+}
+.perfil-stats{
+  display: flex; 
+  flex-direction: column;
+  margin-bottom: 1.50rem;
+  margin-top: 1.50rem;
+  flex-wrap: wrap;
+}
+
+.perfil-stats strong{
+  color: black;
+}
+.perfil-stats p:last-child {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: rgba(213, 162, 68, 0.83); 
+}
+
+.perfil-stats-post-likes{
+  display: flex;
+  justify-content: space-between;
+  
+}
+
+.posts{
+  margin-right: 20px;
+}
+
+.perfil-stats-post-likes div{
+  flex: 1 1 30%;
+  background: #ffff;
+  margin-bottom: 1.50rem;
+  border: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: rgba(213, 162, 68, 0.83);
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+
+.perfil-stats-sobreMi{
+  display: flex;
+  padding-top: 200px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfil-stats-sobreMi {
+  flex: 1 1 30%;
+  background: #ffff;
+  border: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: rgba(213, 162, 68, 0.83);
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+
+.perfil .button{
+  background-color: rgba(213, 162, 68, 0.83);
+  color: black;
+}
+
+
+
+
+
+
