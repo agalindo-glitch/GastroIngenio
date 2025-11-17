@@ -203,3 +203,21 @@ body{
 .navbar-item.has-dropdown .navbar-link a:hover {
     color: #b8860b;
 }
+.footer{
+    background-color: #fff5d6;
+}
+footer.footer p {
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+footer.footer .redes-sociales {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+footer.footer .redes-sociales a img {
+    width: 32px;
+    height: 32px;
+}
