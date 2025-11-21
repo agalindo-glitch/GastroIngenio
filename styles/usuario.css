@@ -2,13 +2,17 @@
   display: flex;
   justify-content: space-around;
   flex-direction: column;
-  margin: 3% 30%;
-  padding: 3% 0;
+  margin: 3rem 500px;
+  padding: 30px 0;
   border-color: #111827;
   background-color: #ffff;
   border-radius: 12px;
   box-shadow: 0px 0px 8px 8px rgba(213, 162, 68, 0.83);
   box-sizing: border-box;
+}
+
+main{
+  padding-bottom: 1px;
 }
 
 .perfil{
