@@ -21,7 +21,7 @@
     background: #ffffff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.432);
     border: 2px solid transparent;
     transition: 0.2s;
 }
@@ -62,4 +62,43 @@
     margin-top: 5px;
     color: #7c7c7c;
     line-height: 1.4;
+}
+
+.contenedor-secundario{
+    display: flex;
+    flex-direction: row;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contenedor-filtros{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filtros {
+    width: 260px;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+    top: 20px;
+}
+
+.filtros-grupo {
+    margin-bottom: 25px;
+}
+
+.filtros-content label {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+.filtros-content input {
+    margin-right: 8px;
+}
+.filtros-content span {
+    color: grey;
+    font-size: 12px;
 }
