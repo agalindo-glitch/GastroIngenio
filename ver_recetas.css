@@ -1,0 +1,65 @@
+.contenedor-principal{
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.title {      
+    border-bottom: 2px solid grey;  
+    padding-bottom: 10px;       
+    margin-bottom: 20px;        
+    display: inline-block;       
+    font-style: italic;
+}
+.resultados-recetas{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+.receta {
+    display: flex;
+    gap: 20px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+    transition: 0.2s;
+}
+.receta:hover {
+    border-color: rgba(213, 162, 68, 0.844); /* celeste */
+}
+.info-receta{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.receta img {
+    width: 220px;
+    height: 170px;
+    object-fit: cover;
+}
+.categoria h2 {
+  color: rgb(36, 35, 35);        
+  transition: color 0.3s;    
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.categoria h2:hover {
+  color: rgba(213, 162, 68, 0.844);
+}
+
+
+.dificultad {
+    margin: 0;
+    color: #000000;
+    font-size: 14px;
+}
+
+
+.descripcion {
+    margin-top: 5px;
+    color: #7c7c7c;
+    line-height: 1.4;
+}
