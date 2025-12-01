@@ -136,3 +136,141 @@ main{
 
 
 
+#usuario {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #ffff;
+  margin: 3rem 550px;
+  padding: 30px 0;
+  border-color: #111827;
+  border-radius: 12px;
+}
+
+main{
+  padding-bottom: 1px;
+}
+
+.perfil-card-img{
+  background-color: #ffff;
+  border-radius: 12px;
+  box-shadow: 0px 0px 8px 8px rgba(213, 162, 68, 0.83);
+  box-sizing: border-box;
+}
+
+.perfil-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.nombre-perfil{
+  display: flex;
+  justify-content: center;
+}
+
+
+.perfil-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+
+.perfil-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  margin: 0 auto 0.75rem;
+  color: #6c757d;
+  overflow: hidden;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.perfil-img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  border: 2px solid rgba(213, 162, 68, 0.83);
+}
+
+
+.perfil-stats {
+  display: flex; 
+  padding: 0 10px;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+
+.perfil-stats > div {
+  flex: 1 1 100px;
+  background: #ffff;
+  border: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: rgba(213, 162, 68, 0.83);
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+
+.perfil-stats strong{
+  color: black;
+}
+
+.perfil-stats p:first-child {
+  font-size: 0.85rem;
+  color: #6b7280; 
+  margin-bottom: 0.25rem;
+}
+
+.perfil-stats p:last-child {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: rgba(213, 162, 68, 0.83); 
+}
+
+
+.perfil-form .field {
+  margin-bottom: 0.9rem;
+}
+
+.perfil-form .label {
+  font-size: 0.85rem;
+  color: black;
+  margin-bottom: 0.35rem;
+}
+
+.perfil-form .input {
+  color: black;
+  box-shadow: none;
+  border: 0px solid;
+  border-radius: 6px;
+  background-color: #e9ecef;
+}
+.perfil-form .input::placeholder {
+  color: black;
+}
+
+
+.perfil-form .field.has-text-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.perfil-form .button.is-link{
+  background-color: rgba(213, 162, 68, 0.83);
+  color: black;
+}
+
+
+
+
