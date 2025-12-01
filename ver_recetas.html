@@ -6,16 +6,16 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <link rel="stylesheet" href="./styles/navbar.css">
         <link rel="stylesheet" href="./styles/home.css">
-        <link rel="stylesheet" href="./styles/modificar_usuario.css">
+        <link rel="stylesheet" href="./styles/usuario.css">
         <link rel="stylesheet" href="./styles/footer.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="./ver_recetas.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         <title>Perfil Usuario - GastroIngenio</title>
     </head>
     <body>
-         <header>
+        <header>
             <nav>    
                 <div class="navbar" role="navigation" aria-label="main navigation">
                     <div class="navbar-brand">
@@ -101,67 +101,109 @@
             <article class="panel is-link">
             </article>
         </header>
-        <main>
-            <section id="usuario">
-                <div class="perfil-card-img">
-                    <div class= "perfil-card">
-                        <div class="perfil-img">
-                            <img src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg" alt="Foto perfil">
+        <main>  
+            <div class="contenedor-principal">
+                <div class="title">Resultados para pollo</div>
+                
+                <div class="contenedor-secundario">
+                    <div class="resultados-recetas">
+                        <div class="receta">
+                            <img src="https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg" alt="imagen de la receta">
+                            <div class="info-receta">
+                                <div class="categoria">
+                                    <h2> Receta de pollo</h2>
+                                </div>
+                                <p class="dificultad"> Dificultad media | 45 minutos</p>
+                                <p class="descripcion"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quidem similique corporis quod dolorum laudantium repellendus veniam natus distinctio necessitatibus. Magni sit minus nemo itaque labore. Atque ipsum distinctio quis!</p>
+                            </div>
                         </div>
-                        <h2 class="nombre-perfil">Nombre</h2>
+                        
+                        <div class="receta">
+                            <img src="https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg" alt="imagen de la receta">
+                            <div class="info-receta">
+                                <div class="categoria">
+                                    <h2> Receta de pollo</h2>
+                                </div>
+                                <p class="dificultad"> Dificultad alta | 1 hora </p>
+                                <p class="descripcion"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quidem similique corporis quod dolorum laudantium repellendus veniam natus distinctio necessitatibus. Magni sit minus nemo itaque labore. Atque ipsum distinctio quis!</p>
+                            </div>
+                        </div>
+        
+                       <div class="receta">
+                            <img src="https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg" alt="imagen de la receta">
+                            <div class="info-receta">
+                                <div class="categoria">
+                                    <h2> Receta de pollo</h2>
+                                </div>
+                                <p class="dificultad"> Dificultad baja | 35 minutos </p>
+                                <p class="descripcion"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quidem similique corporis quod dolorum laudantium repellendus veniam natus distinctio necessitatibus. Magni sit minus nemo itaque labore. Atque ipsum distinctio quis!</p>
+                            </div>
+                        </div>
+    
+                        <div class="receta">
+                            <img src="https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg" alt="imagen de la receta">
+                            <div class="info-receta">
+                                <div class="categoria">
+                                    <h2> Receta de pollo</h2>
+                                </div>
+                                <p class="dificultad"> Dificultad baja | 20 minutos</p>
+                                <p class="descripcion"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quidem similique corporis quod dolorum laudantium repellendus veniam natus distinctio necessitatibus. Magni sit minus nemo itaque labore. Atque ipsum distinctio quis!</p>
+                            </div>
+                        </div>
                     </div>
+                    <div class="contenedor-filtros">
+                        <div class="filtros">
+                            <div class="filtros-grupo">
+                                <button class="filtros-title">Dificultad</button>
+                                <div class="filtros-content">
+                                    <label><input type="checkbox"> Muy baja <span>63</span></label>
+                                    <label><input type="checkbox"> Baja <span>1475</span></label>
+                                    <label><input type="checkbox"> Media <span>487</span></label>
+                                    <label><input type="checkbox"> Alta <span>20</span></label>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="filtros">
+                            <div class="filtros-grupo">
+                                <button class="filtros-title">Propiedades</button>
+                                <div class="filtros-content">
+                                    <label><input type="checkbox"> Sin sal <span>63</span></label>
+                                    <label><input type="checkbox"> Sin azucar <span>1475</span></label>
+                                    <label><input type="checkbox"> Sin glutten <span>487</span></label>
+                                    <label><input type="checkbox"> sin lactosa <span>20</span></label>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="filtros">
+                            <div class="filtros-grupo">
+                                <button class="filtros-title">Duracion</button>
+                                <div class="filtros-content">
+                                    <label><input type="checkbox"> 60 minutos<span>63</span></label>
+                                    <label><input type="checkbox"> 80 minutos <span>1475</span></label>
+                                    <label><input type="checkbox"> 40 minutos <span>487</span></label>
+                                    <label><input type="checkbox"> 20 minutos <span>20</span></label>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="perfil-stats">
-                        <div>
-                            <p><strong>Posts</strong></p>
-                            <p> Input </p>
-                        </div>
-                        <div>
-                            <p><strong>Likes</strong></p>
-                            <p>Input</p>
-                        </div>
-                        <div>
-                            <p><strong>Sobre mi</strong></p>
-                            <p>Input</p>
+                        <div class="filtros">
+                            <div class="filtros-grupo">
+                                <button class="filtros-title">Categoria</button>
+                                <div class="filtros-content">
+                                    <label><input type="checkbox"> Salsas <span>63</span></label>
+                                    <label><input type="checkbox"> Verduras <span>1475</span></label>
+                                    <label><input type="checkbox"> Milanesas <span>487</span></label>
+                                    <label><input type="checkbox"> Postres <span>20</span></label>
+                                    <label><input type="checkbox"> jugos <span>20</span></label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                    <form class="perfil-form">
-                        <div class="field">
-                            <label class="label">Nombre</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Tu nombre">                    
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Apellido</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Tu apellido">
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Usuario</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Tu usuario">
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Contraseña</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Tu contraseña">
-                            </div>
-                        </div>
-
-                        <div class="field has-text-right">
-                            <a href="./usuario.html">
-                                <button class="button is-link">Guardar</button>
-                            </a>
-                        </div>
-                    </form>
-            </section>
+            </div>
+            
         </main>
         <footer class="footer">
             <div class="content has-text-centered">
