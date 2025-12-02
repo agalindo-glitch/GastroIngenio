@@ -1,80 +1,70 @@
-<nav>    
-    <div class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="./index.html">
-                <img src="../assets/img/icono.png" alt="GastroIngenio" width="340px">
-            </a>
-        </div>
-        
-        <div class="panel-block">
-            <p class="control has-icons-right">
-                <input class="input is-danger" type="text" placeholder="Buscar" />
-                <span class="icon is-right">
-                    <i class="fas fa-search"
-                    id="icono-busqueda"
-                    title="Buscar"
-                    data-role="buscador"
-                    aria-hidden="true">
-                </i>
-            </span>
-        </p>
-    </div>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <h1 class="navbar__logo">
+        <a href="index.html" class="navbar__logo-link">
+            <img src="../assets/img/icono.png" alt="Icono GastroIngenio" class="navbar__logo-image">
+            <span class="navbar__logo-text">GASTROINGENIO</span>
+        </a>
+    </h1>
 
-    <div class="navbar-end">
-        <div class="navbar-item">
-            <div class="buttons">
-                <a class="button is-primary">
-                    <strong>+ Crear receta</strong>
-                </a>
-                <a href="./usuario.html" class="button is-light">
-                    Usuario
-                </a>
-            </div>
+    <div class="navbar__search">
+        <div class="navbar__search-control">
+            <input 
+                type="text"
+                class="navbar__search-input"
+                placeholder="Buscar"
+            >
+            
+            <button type="submit" class="navbar__search-button" title="Buscar">
+                <i class="navbar__search-icon fa fa-search" data-role="buscador"></i>
+            </button>
+
         </div>
     </div>
+
+    <div class="navbar__actions">
+        <a class="navbar__button" href="./pages/recetas.html">+ Crear receta</a>
+        <a class="navbar__button" href="./pages/usuario.html">Ingresar</a>
     </div>
 
-    <div class="navbar-menu">
-        <ul class="menu">
-            <li class="navbar-link">
-                <a href="./index.html">Cenas</a>
-                <ul class="submenu">
-                    <li><a href="#">Rápidas</a></li>
-                    <li><a href="#">Económicas</a></li>
-                    <li><a href="#">Gourmet</a></li>
-                </ul>
-            </li>
-            
-            <li class="navbar-link">
-                <a href="./index.html">Comidas</a>
-                <ul class="submenu">
-                    <li><a href="#">Desayuno</a></li>
-                    <li><a href="#">Almuerzo</a></li>
-                    <li><a href="#">Saludable</a></li>
-                    <li><a href="#">Vegano</a></li>
-                    <li><a href="#">Sin Gluten</a></li>
-                </ul>
-            </li>
-            
-            <li class="navbar-link">
-                <a href="./index.html">Ocasiones</a>
-                <ul class="submenu">
-                    <li><a href="#">Cumpleaños</a></li>
-                    <li><a href="#">Navidad</a></li>
-                    <li><a href="#">Aniversarios</a></li>
-                    <li><a href="#">Halloween</a></li>
-                    <li><a href="#">Día de la Madre</a></li>
-                </ul>
-            </li>
-            
-            <li class="navbar-link">
-                <a href="./index.html">Sobre Nosotros</a>
-                <ul class="submenu">
-                    <li><a href="#">Historia</a></li>
-                    <li><a href="#sobreNosotros">Equipo</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+    <ul class="navbar__menu menu">
+        <li class="navbar__link">
+            <a href="./index.html" class="navbar__link-title">Cenas</a>
+            <ul class="navbar__submenu submenu">
+                <li><a href="#" class="navbar__submenu-link">Rápidas</a></li>
+                <li><a href="#" class="navbar__submenu-link">Económicas</a></li>
+                <li><a href="#" class="navbar__submenu-link">Gourmet</a></li>
+            </ul>
+        </li>
+
+        <li class="navbar__link">
+            <a href="./index.html" class="navbar__link-title">Comidas</a>
+            <ul class="navbar__submenu submenu">
+                <li><a href="#" class="navbar__submenu-link">Desayuno</a></li>
+                <li><a href="#" class="navbar__submenu-link">Almuerzo</a></li>
+                <li><a href="#" class="navbar__submenu-link">Saludable</a></li>
+                <li><a href="#" class="navbar__submenu-link">Vegano</a></li>
+                <li><a href="#" class="navbar__submenu-link">Sin Gluten</a></li>
+            </ul>
+        </li>
+
+        <li class="navbar__link">
+            <a href="./index.html" class="navbar__link-title">Ocasiones</a>
+            <ul class="navbar__submenu submenu">
+                <li><a href="#" class="navbar__submenu-link">Cumpleaños</a></li>
+                <li><a href="#" class="navbar__submenu-link">Navidad</a></li>
+                <li><a href="#" class="navbar__submenu-link">Aniversarios</a></li>
+                <li><a href="#" class="navbar__submenu-link">Halloween</a></li>
+                <li><a href="#" class="navbar__submenu-link">Día de la Madre</a></li>
+            </ul>
+        </li>
+
+        <li class="navbar__link">
+            <a href="./index.html" class="navbar__link-title">Sobre Nosotros</a>
+            <ul class="navbar__submenu submenu">
+                <li><a href="#" class="navbar__submenu-link">Historia</a></li>
+                <li><a href="#sobreNosotros" class="navbar__submenu-link">Equipo</a></li>
+                <li><a href="#" class="navbar__submenu-link">Contacto</a></li>
+            </ul>
+        </li>
+    </ul>
 </nav>
