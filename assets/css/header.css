@@ -108,8 +108,7 @@ header {
     background: linear-gradient(135deg, #F6A75A, #E0A24A);
 }
 
-
-/* --- MENU --- */
+/* <--- MENU --- */
 .navbar__menu {
     display: flex;
     gap: 60px;
@@ -169,3 +168,93 @@ header {
 .navbar__link:hover .navbar__submenu {
     display: flex;
 }
+
+/* <--- Responsive para Tablets / Pequeñas pantallas */
+@media screen and (max-width: 900px) {
+
+    .navbar__button span{
+        display: none;
+    }
+
+    .navbar__link:hover .navbar__submenu {
+        display: none;
+    }
+
+    .navbar__logo-text {
+        font-size: 1.3rem;
+    }
+    
+    .navbar__logo-image {
+        max-width: 28px;
+    }
+
+    .navbar__search {
+        width: 100%;
+    }
+
+    .navbar__button {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+    }
+
+    .navbar__menu {
+        gap: 30px;
+    }
+
+    .navbar__link-title {
+        font-size: 0.95rem;
+    }
+}
+
+
+/* --- Responsive para Mobile / Tablets --- */
+/* @media screen and (max-width: 768px) {
+
+    header {
+        padding: 0;
+    }
+
+    .navbar {
+        grid-template-columns: repeat(4, 1fr); 
+        padding: 0px 10px;
+    }
+
+    .navbar__logo-image {
+        height: 25px;
+        padding-bottom: 4px;
+    }
+
+    .navbar__logo-text {
+        font-size: 0.5rem;
+        letter-spacing: normal;
+    }
+
+    .navbar__logo-link {
+        gap: 5px;
+    }
+
+    .navbar__search-input {
+        display: none;
+    }
+
+    .navbar__search-control {
+        width: 25px;
+        height: 25px;
+    }
+
+    .navbar__search-icon {
+        padding: 0 4.5px;
+    }
+
+    .navbar__search-icon::before {
+        font-size: 15px;
+    }
+
+    .navbar__button:first-child {
+        display: none;
+    }
+
+    .navbar__link {
+        display: none;
+    }
+} */
