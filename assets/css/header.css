@@ -2,6 +2,12 @@
   --font-main: "Funnel Sans", sans-serif;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 header {
     box-shadow: 0 .125rem .375rem rgba(0,0,0,.15);
     background: #fff;
@@ -9,18 +15,79 @@ header {
 }
 
 .navbar {
+    position: relative;
     background: #fff;
     margin: 0 auto;
     max-width: 1200px;  
-}
-
-.navbar__wrapper {
-    width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(2, 1fr) .9fr; 
     grid-template-rows: repeat(2, auto);   
     align-items: center;
+}
 
+/* <--- HAMBURGUESA  */
+#menu-toggle {
+  display: none; 
+}
+
+.hamburger {
+  display: block;
+  width: 15px;  
+  cursor: pointer;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;     
+  background: black;
+  margin-bottom: 2.5px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* <--- Hamburguesa X */
+#menu-toggle:checked + .hamburger span:nth-child(1) {
+  transform: rotate(45deg) translate(3px, 3.2px);
+}
+
+#menu-toggle:checked + .hamburger span:nth-child(2) {
+  opacity: 0;
+}
+
+#menu-toggle:checked + .hamburger span:nth-child(3) {
+  transform: rotate(-45deg) translate(3px, -3.2px);
+}
+
+/* ------------------- MENU ------------------- */
+.navbar__menu-mobile {
+  list-style: none;
+  display: none; 
+  flex-direction: column;
+  position: absolute; 
+  top: 100%; 
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 50;
+}
+
+#menu-toggle:checked ~ .navbar__menu-mobile {
+  display: flex;
+}
+
+.navbar__menu-mobile li a {
+  padding: 10px 20px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar__menu-mobile li a:hover {
+  color: #f2a900;
 }
 
 /* <--- NAVBAR TOP --- */
@@ -213,15 +280,25 @@ header {
 
 
 /* --- Responsive para Mobile / Tablets --- */
-/* @media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
+
+    .hamburger {
+        display: block;
+    }
 
     header {
         padding: 0;
     }
 
     .navbar {
-        grid-template-columns: repeat(4, 1fr); 
-        padding: 0px 10px;
+        grid-template-columns: .1fr repeat(3, 1fr); 
+        grid-template-rows: auto;
+        padding: 0px 7px;
+    }
+
+    .navbar__logo-link {
+        gap: 5px;
+        justify-self: center;
     }
 
     .navbar__logo-image {
@@ -234,8 +311,9 @@ header {
         letter-spacing: normal;
     }
 
-    .navbar__logo-link {
-        gap: 5px;
+    .navbar__search {
+        width: auto;
+        justify-self: end;
     }
 
     .navbar__search-input {
@@ -245,14 +323,15 @@ header {
     .navbar__search-control {
         width: 25px;
         height: 25px;
+        border: none;
     }
 
     .navbar__search-icon {
-        padding: 0 4.5px;
+        padding: 0 7.5px;
     }
 
     .navbar__search-icon::before {
-        font-size: 15px;
+        font-size: 12px;
     }
 
     .navbar__button:first-child {
@@ -262,4 +341,8 @@ header {
     .navbar__link {
         display: none;
     }
-} */
+
+    .navbar__menu {
+        display: none;
+    }
+} 
