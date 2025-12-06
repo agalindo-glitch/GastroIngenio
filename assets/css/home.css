@@ -1,6 +1,146 @@
+.layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;   
+    gap: 60px;         
+    max-width: 1200px;
+    margin: 80px auto;            
+}
+
+
+/* Elegidos por la Comunidad */
+.community-card__media {
+    position: relative;
+} 
+
+.community-card__image {
+    display: block;
+    object-fit: cover;
+}
+
+/* Guardar, Compartir */
+.community-card__actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.community-card__action-btn {
+    background: rgba(0,0,0,0.35);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform .14s ease, background-color .12s ease;
+}
+
+.community-card__action-btn:focus { 
+    outline: 2px solid rgba(255,166,0,0.8);
+    outline-offset: 2px; 
+}
+
+.community-card__action-btn:hover { 
+    transform: scale(1.08); 
+    background: rgba(255,166,0,0.95); 
+}
+
+.community-card__tag {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background-color: rgba(255,166,0,0.95);
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: transform .12s ease, background-color .12s ease;
+}
+
+.community-card__tag:hover { 
+    transform: translateY(-2px); 
+    background-color: rgba(255,140,0,1); 
+}
+
+/* Autor, Rating, Duracion y Titulo */
+.community-card__body {
+    padding: 14px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* meta: fila flexible */
+.community-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+/* Autor */
+.community-card__author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.community-card__author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.community-card__author-name { 
+    font-weight: 700;
+    font-size: 14px; 
+}
+
+/* Rating */
+.community-card__rating {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 6px;
+}
+.community-card__star { color: #f5b700; font-size: 16px; line-height: 1; }
+.community-card__star--empty { color: #ddd; }
+.community-card__score { font-size: 13px; color: #666; margin-left: 4px; }
+
+/* duracion */
+.community-card__duration { font-size: 13px; color: #555; margin-left: 12px; }
+
+/* titulo */
+.community-card__title { margin: 0; font-size: 20px; line-height: 1.1; }
+.community-card__title-link {
+  text-decoration: none;
+  color: #111;
+  font-weight: 800;
+}
+.community-card__title-link:hover { text-decoration: underline; color: rgba(213,162,68,1); }
+
+.community-card__image { 
+    height: 480px; 
+}
+
+/* Responsive: adapta el tamaño en pantallas pequeñas */
+@media (max-_: 900px) {
+  .community-card__image { height: 320px; }
+  .community-card__body { padding: 12px; }
+  .community-card__meta { gap: 8px; flex-wrap: wrap; align-items: center; }
+}
+
+
+
+
 main {
-    padding: 0 110px;
     box-shadow: 0px 1px 0 0 rgba(0, 0, 0, 0.2) !important;
+    max-_: 1200px;
 }
 
 body {
@@ -28,8 +168,8 @@ body {
     padding-top: 90px;
     border: 2px solid #ffffff;
     border-radius: 10px;  
-    width: 1383.89px;
     justify-self: center;
+    grid-column: 1 / -1;
 }
 
 .card img {
@@ -63,7 +203,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 800px;        
+    _: 800px;        
     height: 230px;       
     background-color: #ffffff;
 }
@@ -86,10 +226,11 @@ body {
     border: 2px solid #ffffff;
     border-radius: 10px;  
     gap: 40px;
-    max-width: 950px; 
-    width: 100%;
+    max-_: 950px; 
+    _: 100%;
     padding-top: 20px;
     padding-left: 20px;
+    grid-column: 1 / -1;
 }
 
 .contenedor-cards-segundo {
@@ -114,7 +255,7 @@ body {
 .tercer-contenedor{
     display: flex;
     flex-direction: column;
-    width: 1383.89px;
+    grid-column: 1 / -1;
     justify-self: center;
     border: 2px solid #ffffff;
     border-radius: 10px;  
@@ -161,147 +302,16 @@ span.link::after {
 }
 
 .card-ultimo img {
-  width: 100px;
+  _: 100px;
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
 }
 
-/* === DIV Elegidos por la comunidad === */
-    .elegidos-por-la-comunidad {
-        margin-top: 90px;
-        width: 750px;
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        position: relative;
-        font-family: "Poppins", sans-serif;
-    }
-
-    .imagen-container {
-        position: relative;
-    }
-
-    .elegidos-por-la-comunidad img {
-        height: 500px;
-        width: 750px;
-        max-width: 800px;
-        object-fit: cover;
-        border-radius: 10px;
-    }
-
-    .acciones-superiores {
-        position: absolute;
-        top: 18px;
-        right: 18px;
-        display: flex;
-        gap: 20px;
-    }
-
-    .icono-accion {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 30px;
-        color: rgba(255, 255, 255, 0.8);
-        transition: color 0.2s ease, transform 0.2s ease;
-    }
-
-
-    .icono-accion:hover {
-        color: rgba(255, 166, 0, 1);
-        transform: scale(1.15);
-    }
-
-    .etiqueta-seccion {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-        background-color: rgba(255, 166, 0, 0.9);
-        color: white;
-        font-weight: 600;
-        font-size: 20px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: background-color 0.2s ease, transform 0.15s ease;
-    }
-
-    .etiqueta-seccion:hover {
-        background-color: rgba(255, 140, 0, 1);
-        transform: scale(1.05);
-    }
-
-    .info-extra {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .usuario {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-decoration: none;
-        color: black;
-        transition: opacity 0.2s ease;
-        cursor: pointer;
-    }
-
-    .usuario:hover {
-        opacity: 0.8;
-    }
-
-    .usuario img {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-    }
-
-    .rating {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .estrella {
-        color: gold;
-        font-size: 18px;
-    }
-
-    .estrella.vacia {
-        color: #ccc;
-    }
-
-    .puntuacion {
-        font-size: 14px;
-        color: #666;
-        margin-left: 4px;
-    }
-
-    .duracion {
-        font-size: 15px;
-        color: #555;
-    }
-
-    .hover-link .link {
-        border-bottom: 2px solid transparent;
-        text-decoration: none;
-        color: black;
-        font-weight: 700;
-    }
-
-    .hover-link:hover .link {
-        border-bottom-color: rgb(255, 166, 0);
-    }
-
-
-
 /* Segundo DIV */
 .segundo-div {
   display: flex;
   flex-direction: column;
-  margin-top: 80px;
 }
 
     /* Recientes */
@@ -316,7 +326,7 @@ span.link::after {
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 280px;
+        _: 280px;
         height: 2px;
         background-color: rgba(213, 162, 68, 0.83);
         z-index: -1; 
@@ -371,7 +381,7 @@ span.link::after {
         justify-content: center;
         align-items: center;
         font-size: 10px;
-        width: 70px;
+        _: 70px;
         height: 30px;
         margin: 0 auto;
     }
@@ -385,7 +395,7 @@ span.link::after {
 .contenedor-cenas {
     padding: 0 90px ;
     margin-top: 90px;
-    width: 1383.89px;
+    grid-column: 1 / -1;
     justify-self: center;
 }
 
@@ -394,17 +404,16 @@ span.link::after {
     flex-wrap: wrap;
     justify-content: center;
     gap: 40px;
-    max-width: 1100px; 
+    max-_: 1100px; 
     padding: 40px 60px; 
     box-sizing: border-box; 
-    width: 100%; 
 }
 
 .contenedor-cards-cenas .card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 30%;         
+       
     height: 240px;
     background-color: #ffffff;
     border-radius: 15px;
@@ -414,7 +423,7 @@ span.link::after {
 }
 
 .contenedor-cards-cenas .card img {
-    width: 100%;
+
     height: 150px;
     border-radius: 10px;
     object-fit: cover;
