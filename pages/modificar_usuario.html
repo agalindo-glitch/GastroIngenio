@@ -7,10 +7,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
     />
+
     <link rel="stylesheet" href="../assets/css/header.css" />
     <link rel="stylesheet" href="../assets/css/home.css" />
     <link rel="stylesheet" href="../assets/css/modificar_usuario.css" />
     <link rel="stylesheet" href="../assets/css/footer.css" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -21,97 +23,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/jpg" href="assets/img/icono.jpg" />
+
     <title>Perfil Usuario - GastroIngenio</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <div class="navbar" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a class="navbar-item" href="./index.html">
-              <img
-                src="Resources/icono.png"
-                alt="GastroIngenio"
-                width="340px"
-              />
-            </a>
-          </div>
-
-          <div class="panel-block">
-            <p class="control has-icons-right">
-              <input class="input is-danger" type="text" placeholder="Buscar" />
-              <span class="icon is-right">
-                <i
-                  class="fas fa-search"
-                  id="icono-busqueda"
-                  title="Buscar"
-                  data-role="buscador"
-                  aria-hidden="true"
-                >
-                </i>
-              </span>
-            </p>
-          </div>
-
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-primary">
-                  <strong>+ Crear</strong>
-                </a>
-                <a href="./usuario.html" class="button is-light"> Usuario </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="navbar-menu">
-          <ul class="menu">
-            <li class="navbar-link">
-              <a href="./index.html">Cenas</a>
-              <ul class="submenu">
-                <li><a href="#">Rápidas</a></li>
-                <li><a href="#">Económicas</a></li>
-                <li><a href="#">Gourmet</a></li>
-              </ul>
-            </li>
-
-            <li class="navbar-link">
-              <a href="./index.html">Comidas</a>
-              <ul class="submenu">
-                <li><a href="#">Desayuno</a></li>
-                <li><a href="#">Almuerzo</a></li>
-                <li><a href="#">Saludable</a></li>
-                <li><a href="#">Vegano</a></li>
-                <li><a href="#">Sin Gluten</a></li>
-              </ul>
-            </li>
-
-            <li class="navbar-link">
-              <a href="./index.html">Ocasiones</a>
-              <ul class="submenu">
-                <li><a href="#">Cumpleaños</a></li>
-                <li><a href="#">Navidad</a></li>
-                <li><a href="#">Aniversarios</a></li>
-                <li><a href="#">Halloween</a></li>
-                <li><a href="#">Día de la Madre</a></li>
-              </ul>
-            </li>
-
-            <li class="navbar-link">
-              <a href="./index.html">Sobre Nosotros</a>
-              <ul class="submenu">
-                <li><a href="#">Historia</a></li>
-                <li><a href="#">Equipo</a></li>
-                <li><a href="#">Contacto</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <article class="panel is-link"></article>
-    </header>
+    <header id="header"></header>
     <main>
       <section id="usuario">
         <div class="perfil-card-img">
@@ -207,5 +124,6 @@
         </div>
       </div>
     </footer>
+    <script src="/assets/js/components.js"></script>
   </body>
 </html>
