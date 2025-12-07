@@ -1,5 +1,5 @@
 :root {
-  --font-main: "Funnel Sans", sans-serif;
+    --font-main: "Funnel Sans", sans-serif;
 }
 
 * {
@@ -18,10 +18,10 @@ body {
 
 .layout-grid {
     display: grid;
-    grid-template-columns: 1fr 0.5fr;   
-    gap: 60px;         
+    grid-template-columns: 1fr 0.5fr;
+    gap: 60px;
     max-width: 1200px;
-    margin: 80px 50px;            
+    margin: 80px 50px;
     justify-self: center;
 }
 
@@ -29,7 +29,7 @@ body {
 
 .community-card__media {
     position: relative;
-} 
+}
 
 .community-card__image {
     display: block;
@@ -48,7 +48,7 @@ body {
 }
 
 .community-card__action-btn {
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     color: #fff;
     width: 40px;
     height: 40px;
@@ -59,21 +59,21 @@ body {
     transition: transform .14s ease, background-color .12s ease;
 }
 
-.community-card__action-btn:focus { 
-    outline: 2px solid rgba(255,166,0,0.8);
-    outline-offset: 2px; 
+.community-card__action-btn:focus {
+    outline: 2px solid rgba(255, 166, 0, 0.8);
+    outline-offset: 2px;
 }
 
-.community-card__action-btn:hover { 
-    transform: scale(1.08); 
-    background: rgba(255,166,0,0.95); 
+.community-card__action-btn:hover {
+    transform: scale(1.08);
+    background: rgba(255, 166, 0, 0.95);
 }
 
 .community-card__tag {
     position: absolute;
     right: 12px;
     bottom: 12px;
-    background-color: rgba(255,166,0,0.95);
+    background-color: rgba(255, 166, 0, 0.95);
     color: #fff;
     font-weight: 600;
     font-size: 18px;
@@ -82,9 +82,9 @@ body {
     transition: transform .12s ease, background-color .12s ease;
 }
 
-.community-card__tag:hover { 
-    transform: translateY(-2px); 
-    background-color: rgba(255,140,0,1); 
+.community-card__tag:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 140, 0, 1);
 }
 
 /* Autor, Rating, Duracion y Titulo */
@@ -113,7 +113,7 @@ body {
 
 .community-card__author:hover {
     transform: translateX(4px);
-    color: rgba(213,162,68,1);
+    color: rgba(213, 162, 68, 1);
 }
 
 
@@ -129,59 +129,59 @@ body {
     transform: scale(1.12);
 }
 
-.community-card__author-name { 
+.community-card__author-name {
     font-weight: 700;
-    font-size: 14px; 
+    font-size: 14px;
 }
 
 /* Rating */
 .community-card__rating {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-  gap: 6px;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 6px;
 }
 
-.community-card__star { 
-    color: #f5b700; 
-    font-size: 28px; 
-    line-height: 1; 
+.community-card__star {
+    color: #f5b700;
+    font-size: 28px;
+    line-height: 1;
 }
 
-.community-card__star--empty { 
-    color: #bbb; 
+.community-card__star--empty {
+    color: #bbb;
 }
 
-.community-card__score { 
-    font-size: 13px; 
-    color: #666; 
-    margin-left: 4px; 
+.community-card__score {
+    font-size: 13px;
+    color: #666;
+    margin-left: 4px;
 }
 
 /* Duracion */
-.community-card__duration { 
+.community-card__duration {
     font-size: 13px;
-    color: #555; 
-    margin-left: 12px; 
+    color: #555;
+    margin-left: 12px;
 }
 
 /* Titulo */
-.community-card__title { 
-    margin: 0; 
-    font-size: 1.7rem; 
-    line-height: 1.1; 
+.community-card__title {
+    margin: 0;
+    font-size: 1.7rem;
+    line-height: 1.1;
 }
 
 .community-card__title-link {
-  text-decoration: none;
-  color: #111;
-  font-weight: 800;
+    text-decoration: none;
+    color: #111;
+    font-weight: 800;
 }
 
 .community-card__title-link:hover,
-.community-card__media:hover ~ .community-card__body .community-card__title-link { 
-    text-decoration: underline; 
-    color: rgba(213,162,68,1); 
+.community-card__media:hover~.community-card__body .community-card__title-link {
+    text-decoration: underline;
+    color: rgba(213, 162, 68, 1);
 }
 
 /* Recientes */
@@ -283,9 +283,9 @@ body {
 }
 
 .recent__headline:hover,
-.recent__image-link:hover ~ .recent__content .recent__headline { 
-    text-decoration: underline; 
-    color: rgba(213,162,68,1); 
+.recent__image-link:hover~.recent__content .recent__headline {
+    text-decoration: underline;
+    color: rgba(213, 162, 68, 1);
 }
 
 .recent__more {
@@ -305,6 +305,179 @@ body {
     color: #fff;
 }
 
+/* Tendencias */
+
+.trends {
+    margin-top: 50px;
+    grid-column: 1 / -1;
+}
+
+.trends__title {
+    font-size: 2.3rem;
+    font-weight: 750;
+    color: #111;
+    margin-bottom: 25px;
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+}
+
+.trends__title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 105%;
+    height: 10px;
+    background-color: rgba(213, 162, 68, 0.9);
+    z-index: -1;
+}
+
+.trends__list {
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 560px);
+    gap: 5%;
+}
+
+.trends-card {
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .6);
+    display: flex;
+    transition: transform .2s ease, box-shadow .2s ease;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.trends-card:hover {
+    transform: translateY(-6px);
+}
+
+.trends-card:nth-child(even) {
+    justify-self: end;
+}
+
+.trends-card__media {
+    width: 250px;
+    height: 100%;
+}
+
+.trends-card__image {
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px 0 0 10px;
+}
+
+.trends-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 15px;
+}
+
+.trends-card__heading {
+    font-size: 1.7rem;
+    color: #111;
+    font-weight: 700;
+}
+
+.trends-card__main-link:hover .trends-card__heading {
+    text-decoration: underline;
+    color: rgba(213, 162, 68, 1);
+}
+
+.trends-card__meta {
+    font-size: 14px;
+    color: #333;
+}
+
+.trends-card__link {
+    color: black;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-bottom .2s;
+}
+
+.trends-card__link:hover {
+    color: rgba(213, 162, 68, 0.83);
+    border-bottom: 2px solid rgba(213, 162, 68, 0.83);
+}
+
+.trends-card__description {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #7c7c7c;
+    line-height: 1.4;
+}
+
+.trends-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.trends-card__author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: inherit;
+    text-decoration: none;
+    transition: transform .18s ease, color .18s ease;
+
+}
+
+.trends-card__author:hover {
+    transform: translateX(4px);
+    color: rgba(213, 162, 68, 1);
+}
+
+.trends-card__author-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.trends-card__duration {
+    font-size: 0.9rem;
+}
+
+.trends-card__rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.trends-card__rating .star {
+    color: gold;
+    font-size: 30px;
+}
+
+.trends-card__rating .star.empty {
+    color: #bbb;
+}
+
+.reviews {
+    margin-left: 4px;
+    color: #555;
+}
+
+.trends-card__heading {
+    font-size: 1.15rem;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.trends-card__main-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.trends-card__author {
+    position: relative;
+    z-index: 2;
+}
 
 
 
@@ -317,39 +490,28 @@ body {
     font-weight: 750 !important;
 }
 
-.contenedor-principal {
-    padding: 0 90px ;
-    display: flex;
-    flex-direction: column;
-    padding-top: 90px;
-    border: 2px solid #ffffff;
-    border-radius: 10px;  
-    justify-self: center;
-    grid-column: 1 / -1;
-}
-
 .card img {
     height: 180px;
 }
 
 .texto-subrayado {
-  position: relative;
-  display: inline-block;
-  z-index: 1; 
+    position: relative;
+    display: inline-block;
+    z-index: 1;
 }
 
 .texto-subrayado::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 290px;
-  height: 12px;
-  background-color: rgba(213, 162, 68, 0.83);
-  z-index: -1; 
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 290px;
+    height: 12px;
+    background-color: rgba(213, 162, 68, 0.83);
+    z-index: -1;
 }
 
-.contenedor-cards{
+.contenedor-cards {
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -359,11 +521,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    _: 800px;        
-    height: 230px;       
+    _: 800px;
+    height: 230px;
     background-color: #ffffff;
 }
-.contenido{
+
+.contenido {
     text-align: center;
     margin-bottom: 15px;
     color: black;
@@ -380,9 +543,9 @@ body {
     display: flex;
     align-items: flex-start;
     border: 2px solid #ffffff;
-    border-radius: 10px;  
+    border-radius: 10px;
     gap: 40px;
-    max-_: 950px; 
+    max-_: 950px;
     _: 100%;
     padding-top: 20px;
     padding-left: 20px;
@@ -408,34 +571,36 @@ body {
     margin-top: 23px;
 }
 
-.tercer-contenedor{
+.tercer-contenedor {
     display: flex;
     flex-direction: column;
     grid-column: 1 / -1;
     justify-self: center;
     border: 2px solid #ffffff;
-    border-radius: 10px;  
+    border-radius: 10px;
     margin-top: 90px;
-    padding: 0 90px ;
+    padding: 0 90px;
 }
 
-.tercer-contenedor .title{
-  text-align: center;
-  margin-top: 14px;
-  margin-bottom: 0;
+.tercer-contenedor .title {
+    text-align: center;
+    margin-top: 14px;
+    margin-bottom: 0;
 }
-.contenido{
+
+.contenido {
     display: flex;
     flex-direction: column;
     position: relative;
     text-align: center;
     align-items: center;
 }
-.texto{
+
+.texto {
     padding: 10px;
 }
 
-.button{
+.button {
     align-self: flex-end;
     padding-left: 20px;
     padding-right: 20px;
@@ -451,21 +616,21 @@ span.link::after {
 }
 
 .contenedor-divs {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
 }
 
 .card-ultimo img {
-  _: 100px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
+    _: 100px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .contenedor-cenas {
-    padding: 0 90px ;
+    padding: 0 90px;
     margin-top: 90px;
     grid-column: 1 / -1;
     justify-self: center;
@@ -476,20 +641,20 @@ span.link::after {
     flex-wrap: wrap;
     justify-content: center;
     gap: 40px;
-    max-_: 1100px; 
-    padding: 40px 60px; 
-    box-sizing: border-box; 
+    max-_: 1100px;
+    padding: 40px 60px;
+    box-sizing: border-box;
 }
 
 .contenedor-cards-cenas .card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-       
+
     height: 240px;
     background-color: #ffffff;
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
     box-sizing: border-box;
 }
@@ -540,4 +705,3 @@ span.link::after {
         transform: translateX(-25%);
     }
 }
-
