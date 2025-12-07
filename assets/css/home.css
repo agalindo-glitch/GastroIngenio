@@ -527,13 +527,17 @@ span.link::after {
 @media screen and (max-width: 930px) {
     .layout-grid {
         grid-template-columns: 90dvw;
-             
     }
 }
 
 /* Responsive Mobile */
 @media screen and (max-width: 768px) {
+    .recent__title {
+        align-self: center;
+    }
 
-
+    .recent__title::after {
+        transform: translateX(-25%);
+    }
 }
 
