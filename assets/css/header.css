@@ -270,7 +270,7 @@ header {
 }
 
 /* Responsive Tablets */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 930px) {
 
     .navbar__button span{
         display: none;
