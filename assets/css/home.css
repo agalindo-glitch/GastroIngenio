@@ -193,9 +193,11 @@ body {
 
 .recent__title {
     position: relative;
+    display: inline-block;
     font-size: 2.3rem;
     font-weight: 750;
     color: black;
+    transition: color 0.3s ease;
 }
 
 .recent__title::after {
@@ -206,6 +208,10 @@ body {
     width: 350px;
     height: 3px;
     background-color: rgba(213, 162, 68, 0.83);
+}
+
+.recent__title:hover {
+    color: rgba(213, 162, 68, 0.83);
 }
 
 .recent__list {
@@ -229,6 +235,17 @@ body {
     width: 100px;
     object-fit: cover;
     border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.recent__image-link {
+    overflow: hidden;
+    border-radius: 4px;
+    display: block;
+}
+
+.recent__image-link:hover .recent__image {
+    transform: scale(1.08);
 }
 
 .recent__content {
@@ -265,8 +282,10 @@ body {
     text-decoration: none;
 }
 
-.recent__headline:hover {
-    text-decoration: underline;
+.recent__headline:hover,
+.recent__image-link:hover ~ .recent__content .recent__headline { 
+    text-decoration: underline; 
+    color: rgba(213,162,68,1); 
 }
 
 .recent__more {
@@ -285,6 +304,9 @@ body {
     background-color: rgba(204, 139, 17, 0.83);
     color: #fff;
 }
+
+
+
 
 .title {
     margin: 0;
@@ -441,90 +463,6 @@ span.link::after {
   object-fit: cover;
   border-radius: 4px;
 }
-
-/* Segundo DIV */
-.segundo-div {
-  display: flex;
-  flex-direction: column;
-}
-
-    /* Recientes */
-    .division {
-        position: relative;
-        display: inline-block;
-        z-index: 1;
-    }
-
-    .division::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        _: 280px;
-        height: 2px;
-        background-color: rgba(213, 162, 68, 0.83);
-        z-index: -1; 
-    }
-
-    .columnas {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card-ultimo {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .card-ultimo:not(:nth-last-child(-n+2)) {
-        border-bottom: 1px solid #cac0c0;
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-    }
-
-    .texto-ultimo {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .categoria-titulo {
-        display: flex;
-        font-size: 11px;
-        gap: 0; 
-        color: #777;
-        margin: 0;
-    }
-
-    .grupos {
-        padding-right: 9px;        
-        border-right: 1px solid #cac0c0;
-        margin-right: 9px;          
-        color: #777;
-    }
-
-    .titulo {
-        font-size: 13px;
-        font-weight: 600;
-        color: #000;
-    }
-
-    .ver-mas {
-        border: 1px solid rgba(204, 139, 17, 0.83);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 10px;
-        _: 70px;
-        height: 30px;
-        margin: 0 auto;
-    }
-
-    .ver-mas:hover {
-        background-color:  rgba(204, 139, 17, 0.83);
-        color: white;
-    }
-
 
 .contenedor-cenas {
     padding: 0 90px ;
