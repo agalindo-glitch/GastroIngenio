@@ -360,6 +360,7 @@ body {
 .trends-card__media {
     width: 250px;
     height: 100%;
+    position: relative;
 }
 
 .trends-card__image {
@@ -367,6 +368,32 @@ body {
     object-fit: cover;
     display: block;
     border-radius: 10px 0 0 10px;
+}
+
+.trends-card__actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+}
+
+.trends-card__action-btn {
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform .14s ease, background-color .12s ease;
+}
+
+.trends-card__action-btn:hover {
+    transform: scale(1.08);
+    background: rgba(255, 166, 0, 0.95);
 }
 
 .trends-card__content {
