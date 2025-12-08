@@ -1,10 +1,41 @@
-.footer{
-    padding: 0 90px ;
-    background-color: white;
-    color: black;
-    margin-top: 90px;
+.footer__content {
+    padding: 40px 90px;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, .3);
+    text-align: center;
 }
 
-.redes-sociales a{
-    margin: 50px;
+.footer__text {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.footer__social {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.footer__social-link {
+    display: inline-block;
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.footer__social-link:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.footer__social-icon {
+    width: 40px;
+    height: 40px;
+}
+
+@media screen and (max-width: 768px) {
+    .footer__social-icon {
+        width: 30px;
+        height: 30px;
+    }
 }

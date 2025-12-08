@@ -5,3 +5,6 @@ toggle.addEventListener("click", () => {
   toggle.classList.toggle("active");
   menu.classList.toggle("active");
 });
+
+const header = document.getElementById("header");
+

@@ -13,3 +13,12 @@ function loadComponent(id, file) {
 
 // --- Cargar Header y Footer ---
 loadComponent("header", "header.html");
+loadComponent("footer", "footer.html");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 80) {
+        navbarMenu.classList.add("scrolled");
+    } else {
+        navbarMenu.classList.remove("scrolled");
+    }
+});
