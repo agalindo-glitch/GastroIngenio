@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <link rel="stylesheet" href="../assets/css/home.css" />
+  <link rel="stylesheet" href="../assets/css/usuario.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
+  <link rel="stylesheet" href="../assets/css/resultados.css" />
+
+  <title>Resultados - GastroIngenio</title>
+</head>
+
+<body>
+  <header id="header"></header>
+
+  <main>
+    <div class="contenedor-principal">
+
+      <!-- 🔥 ID CORRECTO PARA CONECTAR CON resultados.js -->
+      <div class="title" id="title-resultados">Resultados</div>
+
+      <div class="contenedor-secundario">
+
+        <!-- 🔥 ID CORRECTO PARA INSERTAR LOS RESULTADOS -->
+        <div class="resultados-recetas" id="resultados-recetas">
+          <!-- Acá tu JS va a insertar las recetas -->
+        </div>
+
+        <!-- FILTROS (no los toqué) -->
+        <div class="contenedor-filtros">
+          <div class="filtros">
+            <div class="filtros-grupo">
+              <button class="filtros-title">Dificultad</button>
+              <div class="filtros-content">
+                <label><input type="checkbox"> Muy baja <span>63</span></label>
+                <label><input type="checkbox"> Baja <span>1475</span></label>
+                <label><input type="checkbox"> Media <span>487</span></label>
+                <label><input type="checkbox"> Alta <span>20</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filtros">
+            <div class="filtros-grupo">
+              <button class="filtros-title">Propiedades</button>
+              <div class="filtros-content">
+                <label><input type="checkbox"> Sin sal <span>63</span></label>
+                <label><input type="checkbox"> Sin azúcar <span>1475</span></label>
+                <label><input type="checkbox"> Sin gluten <span>487</span></label>
+                <label><input type="checkbox"> Sin lactosa <span>20</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filtros">
+            <div class="filtros-grupo">
+              <button class="filtros-title">Duración</button>
+              <div class="filtros-content">
+                <label><input type="checkbox"> 60 minutos <span>63</span></label>
+                <label><input type="checkbox"> 80 minutos <span>1475</span></label>
+                <label><input type="checkbox"> 40 minutos <span>487</span></label>
+                <label><input type="checkbox"> 20 minutos <span>20</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filtros">
+            <div class="filtros-grupo">
+              <button class="filtros-title">Categoría</button>
+              <div class="filtros-content">
+                <label><input type="checkbox"> Salsas <span>63</span></label>
+                <label><input type="checkbox"> Verduras <span>1475</span></label>
+                <label><input type="checkbox"> Milanesas <span>487</span></label>
+                <label><input type="checkbox"> Postres <span>20</span></label>
+                <label><input type="checkbox"> Jugos <span>20</span></label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="/assets/js/components.js"></script>
+
+  <!-- 🔥 Conectar el script de resultados -->
+  <script src="/assets/js/resultados.js"></script>
+
+</body>
+
+</html>
