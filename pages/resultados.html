@@ -4,10 +4,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="icon" type="image/jpg" href="/assets/img/icono.jpg" />
+
   <link rel="stylesheet" href="../assets/css/header.css" />
   <link rel="stylesheet" href="../assets/css/home.css" />
-  <link rel="stylesheet" href="../assets/css/usuario.css" />
   <link rel="stylesheet" href="../assets/css/footer.css" />
   <link rel="stylesheet" href="../assets/css/resultados.css" />
 
@@ -17,71 +26,62 @@
 <body>
   <header id="header"></header>
 
-  <main>
-    <div class="contenedor-principal">
+  <main class="resultados">
+    <div class="resultados__container">
 
-      <!-- 🔥 ID CORRECTO PARA CONECTAR CON resultados.js -->
-      <div class="title" id="title-resultados">Resultados</div>
+      <h1 class="resultados__title" id="title-resultados">Resultados</h1>
 
-      <div class="contenedor-secundario">
+      <div class="resultados__layout">
 
-        <!-- 🔥 ID CORRECTO PARA INSERTAR LOS RESULTADOS -->
-        <div class="resultados-recetas" id="resultados-recetas">
-          <!-- Acá tu JS va a insertar las recetas -->
-        </div>
+        <!-- LISTA DE RECETAS -->
+        <div class="resultados__list" id="resultados-recetas"></div>
 
-        <!-- FILTROS (no los toqué) -->
-        <div class="contenedor-filtros">
-          <div class="filtros">
-            <div class="filtros-grupo">
-              <button class="filtros-title">Dificultad</button>
-              <div class="filtros-content">
-                <label><input type="checkbox"> Muy baja <span>63</span></label>
-                <label><input type="checkbox"> Baja <span>1475</span></label>
-                <label><input type="checkbox"> Media <span>487</span></label>
-                <label><input type="checkbox"> Alta <span>20</span></label>
-              </div>
+        <!-- FILTROS -->
+        <aside class="filtros">
+
+          <div class="filtros__grupo">
+            <button class="filtros__title">Dificultad</button>
+            <div class="filtros__content">
+              <label class="filtros__item"><input type="checkbox"> Muy baja <span>63</span></label>
+              <label class="filtros__item"><input type="checkbox"> Baja <span>1475</span></label>
+              <label class="filtros__item"><input type="checkbox"> Media <span>487</span></label>
+              <label class="filtros__item"><input type="checkbox"> Alta <span>20</span></label>
             </div>
           </div>
 
-          <div class="filtros">
-            <div class="filtros-grupo">
-              <button class="filtros-title">Propiedades</button>
-              <div class="filtros-content">
-                <label><input type="checkbox"> Sin sal <span>63</span></label>
-                <label><input type="checkbox"> Sin azúcar <span>1475</span></label>
-                <label><input type="checkbox"> Sin gluten <span>487</span></label>
-                <label><input type="checkbox"> Sin lactosa <span>20</span></label>
-              </div>
+          <div class="filtros__grupo">
+            <button class="filtros__title">Propiedades</button>
+            <div class="filtros__content">
+              <label class="filtros__item"><input type="checkbox"> Sin sal <span>63</span></label>
+              <label class="filtros__item"><input type="checkbox"> Sin azúcar <span>1475</span></label>
+              <label class="filtros__item"><input type="checkbox"> Sin gluten <span>487</span></label>
+              <label class="filtros__item"><input type="checkbox"> Sin lactosa <span>20</span></label>
             </div>
           </div>
 
-          <div class="filtros">
-            <div class="filtros-grupo">
-              <button class="filtros-title">Duración</button>
-              <div class="filtros-content">
-                <label><input type="checkbox"> 60 minutos <span>63</span></label>
-                <label><input type="checkbox"> 80 minutos <span>1475</span></label>
-                <label><input type="checkbox"> 40 minutos <span>487</span></label>
-                <label><input type="checkbox"> 20 minutos <span>20</span></label>
-              </div>
+          <div class="filtros__grupo">
+            <button class="filtros__title">Duración</button>
+            <div class="filtros__content">
+              <label class="filtros__item"><input type="checkbox"> 60 minutos <span>63</span></label>
+              <label class="filtros__item"><input type="checkbox"> 80 minutos <span>1475</span></label>
+              <label class="filtros__item"><input type="checkbox"> 40 minutos <span>487</span></label>
+              <label class="filtros__item"><input type="checkbox"> 20 minutos <span>20</span></label>
             </div>
           </div>
 
-          <div class="filtros">
-            <div class="filtros-grupo">
-              <button class="filtros-title">Categoría</button>
-              <div class="filtros-content">
-                <label><input type="checkbox"> Salsas <span>63</span></label>
-                <label><input type="checkbox"> Verduras <span>1475</span></label>
-                <label><input type="checkbox"> Milanesas <span>487</span></label>
-                <label><input type="checkbox"> Postres <span>20</span></label>
-                <label><input type="checkbox"> Jugos <span>20</span></label>
-              </div>
+          <div class="filtros__grupo">
+            <button class="filtros__title">Categoría</button>
+            <div class="filtros__content">
+              <label class="filtros__item"><input type="checkbox"> Salsas <span>63</span></label>
+              <label class="filtros__item"><input type="checkbox"> Verduras <span>1475</span></label>
+              <label class="filtros__item"><input type="checkbox"> Milanesas <span>487</span></label>
+              <label class="filtros__item"><input type="checkbox"> Postres <span>20</span></label>
+              <label class="filtros__item"><input type="checkbox"> Jugos <span>20</span></label>
             </div>
           </div>
 
-        </div>
+        </aside>
+
       </div>
     </div>
   </main>
@@ -89,10 +89,8 @@
   <footer id="footer"></footer>
 
   <script src="/assets/js/components.js"></script>
-
-  <!-- 🔥 Conectar el script de resultados -->
   <script src="/assets/js/resultados.js"></script>
-
+  <script src="/assets/js/busqueda.js"></script>
 </body>
 
 </html>

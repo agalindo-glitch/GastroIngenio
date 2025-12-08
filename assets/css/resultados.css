@@ -1,104 +1,130 @@
-.contenedor-principal{
-    padding: 30px;
-    max-width: 1100px;
-    margin: 0 auto;
+.resultados {
+    padding: 0 50px;
 }
-.title {      
-    border-bottom: 2px solid grey;  
-    padding-bottom: 10px;       
-    margin-bottom: 20px;        
-    display: inline-block;       
+
+.resultados__container {
+    max-width: 1200px;
+    margin: 200px auto;
+}
+
+.resultados__title {
+    color: #111;
+    border-bottom: 2px solid rgba(213, 162, 68, 0.83);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
     font-style: italic;
+    font-size: 1.6rem;
+    display: inline-block;
 }
-.resultados-recetas{
+
+.resultados__layout {
+    display: grid;
+    grid-template-columns: minmax(560px, 60%) 40%;
+    gap: 30px;
+}
+
+.resultados__list {
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
-.receta {
-    display: flex;
+
+/* Tarjeta (item) */
+.resultados__item {
+    display: grid;
+    grid-template-columns: 220px 1fr;
     gap: 20px;
-    background: #ffffff;
+
     padding: 20px;
+    background: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.432);
     border: 2px solid transparent;
-    transition: 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
+    transition: .2s ease;
 }
-.receta:hover {
-    border-color: rgba(213, 162, 68, 0.844); /* celeste */
+
+.resultados__item:hover {
+    border-color: rgba(213, 162, 68, 0.84);
 }
-.info-receta{
+
+.resultados__img {
+    width: 220px;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.resultados__info {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.receta img {
-    width: 220px;
-    height: 170px;
-    object-fit: cover;
-}
-.categoria h2 {
-  color: rgb(36, 35, 35);        
-  transition: color 0.3s;    
-  font-size: 1.3rem;
-  font-weight: 600;
+.resultados__titulo {
+    font-size: 1.3rem;
+    color: #242424;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color .3s;
 }
 
-.categoria h2:hover {
-  color: rgba(213, 162, 68, 0.844);
+.resultados__titulo:hover {
+    color: rgba(213, 162, 68, 0.84);
 }
 
-
-.dificultad {
-    margin: 0;
-    color: #000000;
+.resultados__meta {
     font-size: 14px;
+    color: #000;
 }
 
-
-.descripcion {
-    margin-top: 5px;
-    color: #7c7c7c;
+.resultados__descripcion {
+    color: #777;
     line-height: 1.4;
 }
 
-.contenedor-secundario{
-    display: flex;
-    flex-direction: row;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.contenedor-filtros{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+/* ================================
+   FILTROS (ASIDE)
+================================ */
 
 .filtros {
-    width: 260px;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
     border-left: 1px solid #ddd;
-    top: 20px;
+    padding-left: 20px;
 }
 
-.filtros-grupo {
-    margin-bottom: 25px;
+.filtros__grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.filtros-content label {
+.filtros__title {
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.filtros__content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filtros__item {
     display: flex;
     justify-content: space-between;
-    margin: 5px 0;
     font-size: 14px;
     cursor: pointer;
 }
-.filtros-content input {
-    margin-right: 8px;
-}
-.filtros-content span {
-    color: grey;
+
+.filtros__item span {
     font-size: 12px;
+    color: #777;
 }
