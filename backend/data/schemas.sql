@@ -1,0 +1,3 @@
+CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(15) NOT NULL, apellido VARCHAR(15) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(15) NOT NULL, contrasena VARCHAR(15) NOT NULL);
+CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuarios INTEGER, nombre TEXT NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(20) NOT NULL, likes INTEGER, dislikes INTEGER, FOREIGN KEY (id_usuarios) REFERENCES usuarios(id));
+CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuarios INTEGER, id_recetas INTEGER, descripcion TEXT NOT NULL, likes INTEGER, dislikes INTEGER, FOREIGN KEY (id_usuarios) REFERENCES usuarios(id), FOREIGN KEY (id_recetas) REFERENCES recetas(id));
