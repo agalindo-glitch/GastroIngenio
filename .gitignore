@@ -1,0 +1,5 @@
+/db_data/
+/mysql_data/
+/postgres_data/
+/sqlite/
+.volumen/postgres
