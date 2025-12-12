@@ -7,7 +7,7 @@ CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuarios INTEGER, id_recetas
 INSERT INTO usuarios (id, nombre, apellido, edad, usuario, contrasena) VALUES ("ricardo", "rodrigues", 23, "tini", "nose");
 
 -comando para enviar una peticion HTTP POST desde la terminal-
-(se envia un JSON como un body parra poder probar el post)
+(se envia un JSON como un body para poder probar el post)
 
 //1- pruebo de forma ideal (pasa)
 curl -X POST \
@@ -28,5 +28,20 @@ curl -X POST \
 -H "Content-Type: application/json" \
 http://localhost:3000/usuarios
 
+-comando para enviar una peticion HTTP DELETE desde la terminal-
 
+//1- elimino un usuario de la base de datos
 
+curl -X DELETE \
+-d '{"id":4}' \
+-H "Content-Type: application/json" \
+http://localhost:3000/usuarios
+
+-comando para enviar una peticion HTTP PUT desde la terminal-
+
+//1- modifico un usuario de la base de datos
+
+curl -X PUT \
+-H "Content-Type: application/json" \
+-d '{"nombre": "Juan", "apellido": "Pérez", "edad": 25, "usuario": "juanperez", "contrasena": "nuevacontra"}' \
+http://localhost:3000/usuarios/1
