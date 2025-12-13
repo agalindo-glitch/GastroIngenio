@@ -2,4 +2,4 @@
 /mysql_data/
 /postgres_data/
 /sqlite/
-.volumen/postgres
+backend/.volumes/postgres/data/
