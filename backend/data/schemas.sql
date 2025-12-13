@@ -117,7 +117,7 @@ http://localhost:3000/recetas
 
 curl -X DELETE \
 -H "Content-Type: application/json" \
--d '{"id": 1}' \
+-d '{"id": 2}' \
 http://localhost:3000/comentarios
 
 -comando para enviar una peticion HTTP PUT desde la terminal-
@@ -139,7 +139,7 @@ http://localhost:3000/recetas/1
 //-1 modifico un comentario especifico de la base de datos 
 curl -X PUT \
 -H "Content-Type: application/json" \
--d '{"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
+-d '{"id_usuario":1,"id_recetas":1,"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
 http://localhost:3000/comentarios/1
 
 
