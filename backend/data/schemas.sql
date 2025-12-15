@@ -27,6 +27,12 @@ curl -X POST \
 -d '{"id_usuario":1,"id_recetas":1,"descripcion":"Muy buena la receta","likes":0,"dislikes":0}' \
 http://localhost:3000/comentarios
 
+curl -X POST -H \
+"Content-Type: application/json" \
+-d '{"usuario":"sergio44","contrasena":"todomas"}' \
+http://localhost:3000/login
+
+
 
 
 

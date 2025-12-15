@@ -321,7 +321,7 @@ app.put("/comentarios/:id", async (req, res) => {
 
 });
 
-// DELETE. /comentarios (elimino un comentarips por su id, pero no como parametro)
+// DELETE. /comentarios (elimino un comentarios por su id, pero no como parametro)
 app.delete("/comentarios", async (req, res) => {
 
   try {
@@ -340,4 +340,24 @@ app.delete("/comentarios", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Servidor corriendo en http://localhost:" + PORT);
+});
+
+//POST. /login (un usuario se logea)
+app.post("/login", async (req, res) => {
+  try{
+    const usuario = req.body.usuario;
+    const contrasena = req.body.contrasena;
+
+    const query = `SELECT id, usuario FROM usuarios WHERE usuario = '${usuario}' AND contrasena = '${contrasena}'`;
+
+    const resultados = await pool.query(query);
+
+    if (resultados.rows.length === 0){
+      return res.status(401).send("No existe el usuario");
+    }
+
+    res.json(resultados.rows[0]);
+  }catch(error){
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
 });
