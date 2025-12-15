@@ -274,7 +274,6 @@ header {
 .navbar__link:hover .navbar__submenu {
     display: flex;
 }
-
 /* Responsive Tablets */
 @media screen and (max-width: 930px) {
 
