@@ -518,6 +518,7 @@ header {
     z-index: 2;
 }
 
+/* Sobre Nosotros */
 .about {
     grid-column: 1 / -1;
     margin: 120px auto;

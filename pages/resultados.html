@@ -34,11 +34,56 @@
       <div class="resultados__layout">
 
         <!-- LISTA DE RECETAS -->
-        <div class="resultados__list" id="resultados-recetas"></div>
+        <div class="resultados__list" id="resultados-recetas">
+          <article class="recipe-card">
+            <a href="#" class="recipe-card__main-link">
+
+              <figure class="recipe-card__media">
+                <img class="recipe-card__image" src="https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg"
+                  alt="imagen de la receta" />
+
+                <div class="recipe-card__actions">
+                  <button class="recipe-card__action-btn" aria-label="Guardar">
+                    <i class="fa-regular fa-bookmark"></i>
+                  </button>
+                  <button class="recipe-card__action-btn" aria-label="Compartir">
+                    <i class="fa-solid fa-share"></i>
+                  </button>
+                </div>
+              </figure>
+
+              <div class="recipe-card__content">
+
+                <h2 class="recipe-card__heading">Pollo al horno</h2>
+
+                <div class="recipe-card__meta">
+
+                  <a class="recipe-card__author" href="#">
+                    <img class="recipe-card__author-avatar"
+                      src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Autor" />
+                    <span class="recipe-card__author-name">Chef Ana</span>
+                  </a>
+
+                  <div class="recipe-card__duration">⏱️ 20 Minutos</div>
+
+                  <div class="recipe-card__rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star empty">★</span>
+                    <span class="reviews">4/5 (58 Reseñas)</span>
+                  </div>
+
+                </div>
+              </div>
+            </a>
+          </article>
+
+        </div>
 
         <!-- FILTROS -->
         <aside class="filtros">
-
           <div class="filtros__grupo">
             <button class="filtros__title">Dificultad</button>
             <div class="filtros__content">
@@ -62,26 +107,15 @@
           <div class="filtros__grupo">
             <button class="filtros__title">Duración</button>
             <div class="filtros__content">
-              <label class="filtros__item"><input type="checkbox"> 60 minutos <span>63</span></label>
-              <label class="filtros__item"><input type="checkbox"> 80 minutos <span>1475</span></label>
-              <label class="filtros__item"><input type="checkbox"> 40 minutos <span>487</span></label>
-              <label class="filtros__item"><input type="checkbox"> 20 minutos <span>20</span></label>
+              <label class="filtros__item"><input type="checkbox"> 20 minutos <span>63</span></label>
+              <label class="filtros__item"><input type="checkbox"> 40 minutos <span>1475</span></label>
+              <label class="filtros__item"><input type="checkbox"> 60 minutos <span>487</span></label>
+              <label class="filtros__item"><input type="checkbox"> 80 minutos <span>20</span></label>
             </div>
           </div>
-
-          <div class="filtros__grupo">
-            <button class="filtros__title">Categoría</button>
-            <div class="filtros__content">
-              <label class="filtros__item"><input type="checkbox"> Salsas <span>63</span></label>
-              <label class="filtros__item"><input type="checkbox"> Verduras <span>1475</span></label>
-              <label class="filtros__item"><input type="checkbox"> Milanesas <span>487</span></label>
-              <label class="filtros__item"><input type="checkbox"> Postres <span>20</span></label>
-              <label class="filtros__item"><input type="checkbox"> Jugos <span>20</span></label>
-            </div>
-          </div>
-
         </aside>
 
+        <div id="paginacion" class="paginacion"></div>
       </div>
     </div>
   </main>
