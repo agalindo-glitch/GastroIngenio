@@ -1,3 +1,11 @@
+main {
+  margin-top: 200px;
+}
+
+footer {
+  background-color: #eee !important;
+}
+
 #usuario {
   display: flex;
   justify-content: space-around;
@@ -11,11 +19,11 @@
   box-sizing: border-box;
 }
 
-main{
+main {
   padding-bottom: 1px;
 }
 
-.perfil{
+.perfil {
   display: flex;
   flex-direction: column;
   margin: 0px 90px;
@@ -30,44 +38,47 @@ main{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.perfil-img-nombre-usuario{
+.perfil-img-nombre-usuario {
   display: flex;
   flex-direction: column;
   align-items: center;
 
 }
-.perfil-img-nombre-usuario h2{
- margin-top: 5px;
+
+.perfil-img-nombre-usuario h2 {
+  margin-top: 5px;
 
 }
-.perfil-stats{
-  display: flex; 
+
+.perfil-stats {
+  display: flex;
   flex-direction: column;
   margin-bottom: 1.50rem;
   margin-top: 1.50rem;
   flex-wrap: wrap;
 }
 
-.perfil-stats strong{
+.perfil-stats strong {
   color: black;
 }
+
 .perfil-stats p:last-child {
   font-weight: 600;
   font-size: 1.05rem;
-  color: rgba(213, 162, 68, 0.83); 
+  color: rgba(213, 162, 68, 0.83);
 }
 
-.perfil-stats-post-likes{
+.perfil-stats-post-likes {
   display: flex;
   justify-content: space-between;
-  
+
 }
 
-.posts{
+.posts {
   margin-right: 20px;
 }
 
-.perfil-stats-post-likes div{
+.perfil-stats-post-likes div {
   flex: 1 1 30%;
   background: #ffff;
   margin-bottom: 1.50rem;
@@ -79,7 +90,7 @@ main{
   text-align: center;
 }
 
-.perfil-stats-sobreMi{
+.perfil-stats-sobreMi {
   display: flex;
   padding-top: 200px;
   flex-direction: column;
@@ -97,13 +108,7 @@ main{
   text-align: center;
 }
 
-.perfil .button{
+.perfil .button {
   background-color: rgba(213, 162, 68, 0.83);
   color: black;
 }
-
-
-
-
-
-

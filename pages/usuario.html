@@ -1,245 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
-    />
 
-    <link rel="stylesheet" href="../assets/css/header.css" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="../assets/css/footer.css" />
-    <link rel="stylesheet" href="../assets/css/usuario.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <title>Perfil Usuario - GastroIngenio</title>
-  </head>
-  <body>
-    <header id="header"></header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
 
-    <main>
-      <section id="usuario">
-        <div class="perfil">
-          <div class="perfil-img-nombre-usuario">
-            <div class="perfil-img">
-              <img
-                src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
-                alt="Foto perfil"
-              />
-            </div>
-            <h2>Nombre</h2>
-            <h2>Nombre_usuario</h2>
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <link rel="stylesheet" href="../assets/css/home.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
+  <link rel="stylesheet" href="../assets/css/usuario.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
+  <title>Perfil Usuario - GastroIngenio</title>
+</head>
+
+<body>
+  <header id="header"></header>
+
+  <main>
+    <section id="usuario">
+      <div class="perfil">
+        <div class="perfil-img-nombre-usuario">
+          <div class="perfil-img">
+            <img
+              src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
+              alt="Foto perfil" />
           </div>
-          <div class="perfil-stats">
-            <div class="perfil-stats-post-likes">
-              <div class="posts">
-                <p><strong>Posts</strong></p>
-                <p>Input</p>
-              </div>
-              <div class="likes">
-                <p><strong>Likes</strong></p>
-                <p>Input</p>
-              </div>
+          <h2>Nombre</h2>
+          <h2>Nombre_usuario</h2>
+        </div>
+        <div class="perfil-stats">
+          <div class="perfil-stats-post-likes">
+            <div class="posts">
+              <p><strong>Posts</strong></p>
+              <p>Input</p>
             </div>
-            <div class="perfil-stats-sobreMi">
-              <p><strong>Sobre mi</strong></p>
+            <div class="likes">
+              <p><strong>Likes</strong></p>
               <p>Input</p>
             </div>
           </div>
-          <a href="./modificar_usuario.html">
-            <button class="button is-link">Editar Perfil</button>
-          </a>
+          <div class="perfil-stats-sobreMi">
+            <p><strong>Sobre mi</strong></p>
+            <p>Input</p>
+          </div>
         </div>
-      </section>
-    </main>
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          © 2025 Angel Galindo, Nicolas Galarce, Tupac Godoy, Marcos Lopez.
-          Todos los derechos reservados.
-        </p>
-        <div class="redes-sociales">
-          <a href="https://www.instagram.com"
-            ><img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACJklEQVR4nO2Y0UobQRSGPyxNLhr6ArE3VUzfxmCrUvIKJjfa9hWq6VtUQq0We1HSN6jtlb2rEvMQJrmJVEYGTmAZkuzOZHbHwPxwYJmdOfP/7Dmz5wxERERELBNKwC7QAa6AEaAWtJH40j53ZI9c8BroeyCcZjfAlk/iT4BPBRBXhrWBFR8CQpBXYoc+wqYosj+AKrAKdBPjdVfypYJiXolp4hO8SIz3XBN7t+BwWZ0hQNu2i4BOwQK6IkKT/2m8O3YRcO1AYgx8Ad4CNeCZWE3GTmSOrd8rFwEDy03OgJcZ/K4B3yx9D1wEZHX+H9h38H8A3Fvsk5sAF/ITvA8tQIeNiTLQAn5LnTOS56a8M3EeSsB4SszrH9HfOWsuZU4S6xkT27sAfdokUU4hnxRhfomvIQToYzGJlkU87xlrGyEEbBjz/1gIuDDW1kIIqBjzhxYC9NwkKssm4NZY+zyG0BTYJnFz2ZL4xJhfliMybd3llPr+NISAsRRmSVRTRMz6kd2FEKCkqjRRkhC5kMTW9kvGpnVW3zPulYsAJVWlKz5Y7JObAF0Sv3OsRO/zFGDb0JxLPKdh3SJs1CINjUtLeSeFmT4WX8nPriLPDTltsiSs8tFSFt3Uqzn22UXAziMgrsTeuAh4KpdKocn3F7mx3noEAjZZEO2A5D/iAfqK+yjQzfQKHlEvKCd6PsJmXmJvy13lP8smZpYNxdexnDZ6j4iIiAiWAw8cZeBzVc3YZgAAAABJRU5ErkJggg=="
-              alt="instagram-new--v1"
-          /></a>
-          <a href="https://www.facebook.com"
-            ><img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWklEQVR4nO2Yz0tUURzFP6mj4UopUSzBFm1aJLiIhEAGWukmI1KU/oNo4SLKha1Ed01J6ODaBH8QI9hGbFlrRV1GaAvRdOFCHIleXLhBPN5j7n33+9485B34wsDcd77nzJt777kXMmTIIIFaoAcYA1aAHeAEuNClPm/r79SY+0ANKUAHMAX8BDzL2gcmgZvVEN4CFIFyBOH+KgMzwPWkxA8DxwLC/fULGIpTeA6Yi0G456tZ3UsUjcDnBMR7utZ0TxHkEhbv6VoH6iUMJPG38UJKTW4njAiI+A2UgBdAn94DeoGHwABQqPD8oMtS6brafANuV+iTr8BxBFyLYqDoKP4r0GDQJ2/A9SHKDuuySan4cMuwV96A79x2x55y/PUXLHrlDTlV7DAOZlGyzf/1LIRbvZUNHe7+1akh555pAOxxFK/qTgj3F0feeyYGxgQMBAWzduCPI+8rEwMrAgaCsswDAd4lEwPbAo3UPPKjT4B3y8TAcUwG+gV4j0wMlFNs4DwOA51As6+CkAsY1ww8t+iltFXEiaWBJtwwaXlqE5/ErgY+WfTalCaUMLBr0WvZhPB1ggbqLOfcyziihHpji74KyizdAeNW44gSV3Rw8lK2jO5rbeIrQ1IGJrA80FykyEAZuIElplNkoEDEQ/1hCgwcutybPk2BgSc44n0VDRQQQC7Cei1hoCR5yXvV0oSrgZLhnZIVlKh3CRgohDwvhsfAQQwGDoBHJAR1EHkLnAkYONNcrqk2EtqAceBHBAPfgTdAKylBFzAKfAxJoyrlzusxd6ugL0OGS4m/FqPitBbQwMEAAAAASUVORK5CYII="
-              alt="facebook-new"
-          /></a>
-          <a href="https://www.youtube.com"
-            ><img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADDUlEQVR4nO2ZXWiOYRjHf4giykixiWisfJZk40AyKWMnJOWrEE6cUfJVWz5OnJBwQEqrSdvk41BGIp8HSD5SyGdh2Gitzby66v/U1dPG3o3nvd+8/7p67/913/d7X//tvp/nuq8Xcsghh3RQAaSAn8Bg538g/0UCxywFalYq3yDgh3xbCBx9gAYFu02+UidqElmAWgV7Vnyn+GugF1mA9Qr4nfgF8ePiM4HLwAfgLXDCnZfJOidmc+U7LH4kKQGj3JbJlxBrLwUKgO/iH4FWtc9p7mw3d4V8d8TvkiAea9F1+rRDnAdsdwEOB7a6p1Z+SAIOaNEb+rwuf534Z/FyF3BZSALKXCBmu+S/Iv5UvMSNWRWSgAFAiwtmhvy3xZ+IF7sxG0ISgJ40tvAXoHcXBGwMTcAZLfzS+a7GtpAXsDobBJyX75P4HBfwopiAlSEK2OcCHAJscnw0MNXxHcBA4FVIAiYAbfJbYM2xLNUC/iaf9X0F7mVKwH4taqmER7n8zXobnwKGuf61wHttswptKxtflXD8OSSCkUAN0BR78yZhTUpNxvUk+OjykklrUJabNmoCCD4lO90dAZnYNqlOzB63aSP+JW3K7zuy+t8sPkLfd6uHItJG/Ass++wMe7NBQLu7z9oBN+wWf5ENAlLOimIX+lQXBbS6VMKbXUkbMyXgoe7DeQrwmNrzYwIqleBZ6WWP+lqVVvfXmEJX5UtMwH03xwI65MorXoBlostcUmdjq8WnA2vUXhCqgHolcRHeAMvVPiqO/ktBCripB0FUvbN5UXGrSmcA9beHKsB4P/Fr2jpIiKXZEVqyTUCxKnuRtYYqwPoj2E0sKtGf1NjnKoolegYeuTlWYjnYiQCr4j1zY62masUuNKdJ+39o0gLs8PUVX6x7cUcCpgDT1C5SX617/tvW6ajq908EzAPGApfEK/VLzUS9ce0SskR9JQq4WpXtMW5eO7BZPivBL1SR4K8I+NOrPfh0ui6AwFMyu1yljfEqfYRwpSykmyjQdS4T26lRf/luB59DDv8DfgFw5QyJMuHdXwAAAABJRU5ErkJggg=="
-              alt="youtube--v1"
-          /></a>
-          <a href="https://www.tiktok.com"
-            ><img
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVR4nO2ZPU4DMRCFP4rQkBwADgERBVFKOuAO9EFJyUUCouAGuQgQQULJAfgRNWyKUKBBSJPGEJa12d2x8JNetRrP+0ZeFzYkJSUlWdcqMADGwAyQkj0DroC+9g7SBnBbQWhZ4imwHjL5OsOLegI0fAAGBsKL+sgHYGwguKgvfQAyA8FF/eoDIMZcWHUHFisArp5jBziOHWAFOI8ZYKFD4C5mgKJ9EoD8EcBm7ADvwAjYBVqWAObAEOgAaz80LmsrflGRxR+BrSX15gHm34SPCmCYU28eYMepO9AtFQ1A06l7yGkcFcC9861lEaDj1O0rxGf4Pedb1yLASYE1z6weo+1frLcNvFkEED112jnhnwLCS9kAotM91X3eVHd124RMXqoCKNuFFT1AZiC0qF/+5dVi30BwUfd8r9enBsJf+16vo48LkxrD34Q8cCzU0Pv5i4p+7Ex79UImn5SUlEQl+gCNAVZEFd7/ygAAAABJRU5ErkJggg=="
-              alt="tiktok"
-          /></a>
-        </div>
+        <a href="./modificar_usuario.html">
+          <button class="button is-link">Editar Perfil</button>
+        </a>
       </div>
-    </footer>
-    <script src="/assets/js/components.js"></script>
-  </body>
-  <!-- <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-        <link rel="stylesheet" href="./styles/navbar.css">
-        <link rel="stylesheet" href="./styles/home.css">
-        <link rel="stylesheet" href="./styles/usuario.css">
-        <link rel="stylesheet" href="./styles/footer.css">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-        <title>Perfil Usuario - GastroIngenio</title>
-    </head>
-    <body>
-        <header>
-            <nav>    
-                <div class="navbar" role="navigation" aria-label="main navigation">
-                    <div class="navbar-brand">
-                        <a class="navbar-item" href="./index.html">
-                            <img src="Resources/icono.png" alt="GastroIngenio" width="340px">
-                        </a>
-                    </div>
-                    
-                    <div class="panel-block">
-                        <p class="control has-icons-right">
-                        <input class="input is-danger" type="text" placeholder="Buscar" />
-                        <span class="icon is-right">
-                            <i class="fas fa-search"
-                                id="icono-busqueda"
-                                title="Buscar"
-                                data-role="buscador"
-                                aria-hidden="true">
-                            </i>
-                        </span>
-                        </p>
-                    </div>
-                        
-                    <div class="navbar-end">
-                        <div class="navbar-item">
-                            <div class="buttons">
-                                <a class="button is-primary">
-                                    <strong>+ Crear</strong>
-                                </a>
-                                <a href="./usuario.html" class="button is-light">
-                                    Usuario
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    </section>
+  </main>
 
-                <div class="navbar-menu">
-                    <ul class="menu">
-                        <li class="navbar-link">
-                            <a href="./index.html">Cenas</a>
-                            <ul class="submenu">
-                                <li><a href="#">Rápidas</a></li>
-                                <li><a href="#">Económicas</a></li>
-                                <li><a href="#">Gourmet</a></li>
-                            </ul>
-                        </li>
-                
-                        <li class="navbar-link">
-                            <a href="./index.html">Comidas</a>
-                            <ul class="submenu">
-                                <li><a href="#">Desayuno</a></li>
-                                <li><a href="#">Almuerzo</a></li>
-                                <li><a href="#">Saludable</a></li>
-                                <li><a href="#">Vegano</a></li>
-                                <li><a href="#">Sin Gluten</a></li>
-                            </ul>
-                        </li>
-                
-                        <li class="navbar-link">
-                            <a href="./index.html">Ocasiones</a>
-                            <ul class="submenu">
-                                <li><a href="#">Cumpleaños</a></li>
-                                <li><a href="#">Navidad</a></li>
-                                <li><a href="#">Aniversarios</a></li>
-                                <li><a href="#">Halloween</a></li>
-                                <li><a href="#">Día de la Madre</a></li>
-                            </ul>
-                        </li>
-                
-                        <li class="navbar-link">
-                            <a href="./index.html">Sobre Nosotros</a>
-                            <ul class="submenu">
-                                <li><a href="#">Historia</a></li>
-                                <li><a href="#">Equipo</a></li>
-                                <li><a href="#">Contacto</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        © 2025 Angel Galindo, Nicolas Galarce, Tupac Godoy, Marcos Lopez.
+        Todos los derechos reservados.
+      </p>
+      <div class="redes-sociales">
+        <a href="https://www.instagram.com"><img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACJklEQVR4nO2Y0UobQRSGPyxNLhr6ArE3VUzfxmCrUvIKJjfa9hWq6VtUQq0We1HSN6jtlb2rEvMQJrmJVEYGTmAZkuzOZHbHwPxwYJmdOfP/7Dmz5wxERERELBNKwC7QAa6AEaAWtJH40j53ZI9c8BroeyCcZjfAlk/iT4BPBRBXhrWBFR8CQpBXYoc+wqYosj+AKrAKdBPjdVfypYJiXolp4hO8SIz3XBN7t+BwWZ0hQNu2i4BOwQK6IkKT/2m8O3YRcO1AYgx8Ad4CNeCZWE3GTmSOrd8rFwEDy03OgJcZ/K4B3yx9D1wEZHX+H9h38H8A3Fvsk5sAF/ITvA8tQIeNiTLQAn5LnTOS56a8M3EeSsB4SszrH9HfOWsuZU4S6xkT27sAfdokUU4hnxRhfomvIQToYzGJlkU87xlrGyEEbBjz/1gIuDDW1kIIqBjzhxYC9NwkKssm4NZY+zyG0BTYJnFz2ZL4xJhfliMybd3llPr+NISAsRRmSVRTRMz6kd2FEKCkqjRRkhC5kMTW9kvGpnVW3zPulYsAJVWlKz5Y7JObAF0Sv3OsRO/zFGDb0JxLPKdh3SJs1CINjUtLeSeFmT4WX8nPriLPDTltsiSs8tFSFt3Uqzn22UXAziMgrsTeuAh4KpdKocn3F7mx3noEAjZZEO2A5D/iAfqK+yjQzfQKHlEvKCd6PsJmXmJvy13lP8smZpYNxdexnDZ6j4iIiAiWAw8cZeBzVc3YZgAAAABJRU5ErkJggg=="
+            alt="instagram-new--v1" /></a>
+        <a href="https://www.facebook.com"><img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWklEQVR4nO2Yz0tUURzFP6mj4UopUSzBFm1aJLiIhEAGWukmI1KU/oNo4SLKha1Ed01J6ODaBH8QI9hGbFlrRV1GaAvRdOFCHIleXLhBPN5j7n33+9485B34wsDcd77nzJt777kXMmTIIIFaoAcYA1aAHeAEuNClPm/r79SY+0ANKUAHMAX8BDzL2gcmgZvVEN4CFIFyBOH+KgMzwPWkxA8DxwLC/fULGIpTeA6Yi0G456tZ3UsUjcDnBMR7utZ0TxHkEhbv6VoH6iUMJPG38UJKTW4njAiI+A2UgBdAn94DeoGHwABQqPD8oMtS6brafANuV+iTr8BxBFyLYqDoKP4r0GDQJ2/A9SHKDuuySan4cMuwV96A79x2x55y/PUXLHrlDTlV7DAOZlGyzf/1LIRbvZUNHe7+1akh555pAOxxFK/qTgj3F0feeyYGxgQMBAWzduCPI+8rEwMrAgaCsswDAd4lEwPbAo3UPPKjT4B3y8TAcUwG+gV4j0wMlFNs4DwOA51As6+CkAsY1ww8t+iltFXEiaWBJtwwaXlqE5/ErgY+WfTalCaUMLBr0WvZhPB1ggbqLOfcyziihHpji74KyizdAeNW44gSV3Rw8lK2jO5rbeIrQ1IGJrA80FykyEAZuIElplNkoEDEQ/1hCgwcutybPk2BgSc44n0VDRQQQC7Cei1hoCR5yXvV0oSrgZLhnZIVlKh3CRgohDwvhsfAQQwGDoBHJAR1EHkLnAkYONNcrqk2EtqAceBHBAPfgTdAKylBFzAKfAxJoyrlzusxd6ugL0OGS4m/FqPitBbQwMEAAAAASUVORK5CYII="
+            alt="facebook-new" /></a>
+        <a href="https://www.youtube.com"><img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADDUlEQVR4nO2ZXWiOYRjHf4giykixiWisfJZk40AyKWMnJOWrEE6cUfJVWz5OnJBwQEqrSdvk41BGIp8HSD5SyGdh2Gitzby66v/U1dPG3o3nvd+8/7p67/913/d7X//tvp/nuq8Xcsghh3RQAaSAn8Bg538g/0UCxywFalYq3yDgh3xbCBx9gAYFu02+UidqElmAWgV7Vnyn+GugF1mA9Qr4nfgF8ePiM4HLwAfgLXDCnZfJOidmc+U7LH4kKQGj3JbJlxBrLwUKgO/iH4FWtc9p7mw3d4V8d8TvkiAea9F1+rRDnAdsdwEOB7a6p1Z+SAIOaNEb+rwuf534Z/FyF3BZSALKXCBmu+S/Iv5UvMSNWRWSgAFAiwtmhvy3xZ+IF7sxG0ISgJ40tvAXoHcXBGwMTcAZLfzS+a7GtpAXsDobBJyX75P4HBfwopiAlSEK2OcCHAJscnw0MNXxHcBA4FVIAiYAbfJbYM2xLNUC/iaf9X0F7mVKwH4taqmER7n8zXobnwKGuf61wHttswptKxtflXD8OSSCkUAN0BR78yZhTUpNxvUk+OjykklrUJabNmoCCD4lO90dAZnYNqlOzB63aSP+JW3K7zuy+t8sPkLfd6uHItJG/Ass++wMe7NBQLu7z9oBN+wWf5ENAlLOimIX+lQXBbS6VMKbXUkbMyXgoe7DeQrwmNrzYwIqleBZ6WWP+lqVVvfXmEJX5UtMwH03xwI65MorXoBlostcUmdjq8WnA2vUXhCqgHolcRHeAMvVPiqO/ktBCripB0FUvbN5UXGrSmcA9beHKsB4P/Fr2jpIiKXZEVqyTUCxKnuRtYYqwPoj2E0sKtGf1NjnKoolegYeuTlWYjnYiQCr4j1zY62masUuNKdJ+39o0gLs8PUVX6x7cUcCpgDT1C5SX617/tvW6ajq908EzAPGApfEK/VLzUS9ce0SskR9JQq4WpXtMW5eO7BZPivBL1SR4K8I+NOrPfh0ui6AwFMyu1yljfEqfYRwpSykmyjQdS4T26lRf/luB59DDv8DfgFw5QyJMuHdXwAAAABJRU5ErkJggg=="
+            alt="youtube--v1" /></a>
+        <a href="https://www.tiktok.com"><img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVR4nO2ZPU4DMRCFP4rQkBwADgERBVFKOuAO9EFJyUUCouAGuQgQQULJAfgRNWyKUKBBSJPGEJa12d2x8JNetRrP+0ZeFzYkJSUlWdcqMADGwAyQkj0DroC+9g7SBnBbQWhZ4imwHjL5OsOLegI0fAAGBsKL+sgHYGwguKgvfQAyA8FF/eoDIMZcWHUHFisArp5jBziOHWAFOI8ZYKFD4C5mgKJ9EoD8EcBm7ADvwAjYBVqWAObAEOgAaz80LmsrflGRxR+BrSX15gHm34SPCmCYU28eYMepO9AtFQ1A06l7yGkcFcC9861lEaDj1O0rxGf4Pedb1yLASYE1z6weo+1frLcNvFkEED112jnhnwLCS9kAotM91X3eVHd124RMXqoCKNuFFT1AZiC0qF/+5dVi30BwUfd8r9enBsJf+16vo48LkxrD34Q8cCzU0Pv5i4p+7Ex79UImn5SUlEQl+gCNAVZEFd7/ygAAAABJRU5ErkJggg=="
+            alt="tiktok" /></a>
+      </div>
+    </div>
+  </footer>
 
-            </nav>
+  <script src="/assets/js/components.js"></script>
+  <script src="/assets/js/busqueda.js"></script>
 
-            <article class="panel is-link">
-            </article>
-        </header>
-        <main>
-            <section id="usuario">
-                <div class="perfil">
-                    <div class="perfil-img-nombre-usuario">
-                        <div class="perfil-img">
-                            <img src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg" alt="Foto perfil">
-                        </div>
-                        <h2>Nombre</h2>
-                        <h2>Nombre_usuario</h2>
-                    </div>
-                    <div class="perfil-stats">
-                        <div class="perfil-stats-post-likes">
-                            <div class="posts">
-                                <p><strong>Posts</strong></p>
-                                <p> Input </p>
-                            </div>
-                            <div class="likes">
-                                <p><strong>Likes</strong></p>
-                                <p>Input</p>
-                            </div>
-                        </div>
-                        <div class="perfil-stats-sobreMi">
-                            <p><strong>Sobre mi</strong></p>
-                            <p>Input</p>
-                        </div>
-                    </div>
-                    <a href="./modificar_usuario.html">
-                        <button class="button is-link">Editar Perfil</button>
-                    </a>
-                </div>
-            </section>
-        </main>
-        <footer class="footer">
-            <div class="content has-text-centered">
-                <p>© 2025 Angel Galindo, Nicolas Galarce, Tupac Godoy, Marcos Lopez. Todos los derechos reservados.</p>
-                <div class="redes-sociales">
-                    <a href="https://www.instagram.com"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACJklEQVR4nO2Y0UobQRSGPyxNLhr6ArE3VUzfxmCrUvIKJjfa9hWq6VtUQq0We1HSN6jtlb2rEvMQJrmJVEYGTmAZkuzOZHbHwPxwYJmdOfP/7Dmz5wxERERELBNKwC7QAa6AEaAWtJH40j53ZI9c8BroeyCcZjfAlk/iT4BPBRBXhrWBFR8CQpBXYoc+wqYosj+AKrAKdBPjdVfypYJiXolp4hO8SIz3XBN7t+BwWZ0hQNu2i4BOwQK6IkKT/2m8O3YRcO1AYgx8Ad4CNeCZWE3GTmSOrd8rFwEDy03OgJcZ/K4B3yx9D1wEZHX+H9h38H8A3Fvsk5sAF/ITvA8tQIeNiTLQAn5LnTOS56a8M3EeSsB4SszrH9HfOWsuZU4S6xkT27sAfdokUU4hnxRhfomvIQToYzGJlkU87xlrGyEEbBjz/1gIuDDW1kIIqBjzhxYC9NwkKssm4NZY+zyG0BTYJnFz2ZL4xJhfliMybd3llPr+NISAsRRmSVRTRMz6kd2FEKCkqjRRkhC5kMTW9kvGpnVW3zPulYsAJVWlKz5Y7JObAF0Sv3OsRO/zFGDb0JxLPKdh3SJs1CINjUtLeSeFmT4WX8nPriLPDTltsiSs8tFSFt3Uqzn22UXAziMgrsTeuAh4KpdKocn3F7mx3noEAjZZEO2A5D/iAfqK+yjQzfQKHlEvKCd6PsJmXmJvy13lP8smZpYNxdexnDZ6j4iIiAiWAw8cZeBzVc3YZgAAAABJRU5ErkJggg==" alt="instagram-new--v1"></a>
-                    <a href="https://www.facebook.com"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACWklEQVR4nO2Yz0tUURzFP6mj4UopUSzBFm1aJLiIhEAGWukmI1KU/oNo4SLKha1Ed01J6ODaBH8QI9hGbFlrRV1GaAvRdOFCHIleXLhBPN5j7n33+9485B34wsDcd77nzJt777kXMmTIIIFaoAcYA1aAHeAEuNClPm/r79SY+0ANKUAHMAX8BDzL2gcmgZvVEN4CFIFyBOH+KgMzwPWkxA8DxwLC/fULGIpTeA6Yi0G456tZ3UsUjcDnBMR7utZ0TxHkEhbv6VoH6iUMJPG38UJKTW4njAiI+A2UgBdAn94DeoGHwABQqPD8oMtS6brafANuV+iTr8BxBFyLYqDoKP4r0GDQJ2/A9SHKDuuySan4cMuwV96A79x2x55y/PUXLHrlDTlV7DAOZlGyzf/1LIRbvZUNHe7+1akh555pAOxxFK/qTgj3F0feeyYGxgQMBAWzduCPI+8rEwMrAgaCsswDAd4lEwPbAo3UPPKjT4B3y8TAcUwG+gV4j0wMlFNs4DwOA51As6+CkAsY1ww8t+iltFXEiaWBJtwwaXlqE5/ErgY+WfTalCaUMLBr0WvZhPB1ggbqLOfcyziihHpji74KyizdAeNW44gSV3Rw8lK2jO5rbeIrQ1IGJrA80FykyEAZuIElplNkoEDEQ/1hCgwcutybPk2BgSc44n0VDRQQQC7Cei1hoCR5yXvV0oSrgZLhnZIVlKh3CRgohDwvhsfAQQwGDoBHJAR1EHkLnAkYONNcrqk2EtqAceBHBAPfgTdAKylBFzAKfAxJoyrlzusxd6ugL0OGS4m/FqPitBbQwMEAAAAASUVORK5CYII=" alt="facebook-new"></a>
-                    <a href="https://www.youtube.com"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAADDUlEQVR4nO2ZXWiOYRjHf4giykixiWisfJZk40AyKWMnJOWrEE6cUfJVWz5OnJBwQEqrSdvk41BGIp8HSD5SyGdh2Gitzby66v/U1dPG3o3nvd+8/7p67/913/d7X//tvp/nuq8Xcsghh3RQAaSAn8Bg538g/0UCxywFalYq3yDgh3xbCBx9gAYFu02+UidqElmAWgV7Vnyn+GugF1mA9Qr4nfgF8ePiM4HLwAfgLXDCnZfJOidmc+U7LH4kKQGj3JbJlxBrLwUKgO/iH4FWtc9p7mw3d4V8d8TvkiAea9F1+rRDnAdsdwEOB7a6p1Z+SAIOaNEb+rwuf534Z/FyF3BZSALKXCBmu+S/Iv5UvMSNWRWSgAFAiwtmhvy3xZ+IF7sxG0ISgJ40tvAXoHcXBGwMTcAZLfzS+a7GtpAXsDobBJyX75P4HBfwopiAlSEK2OcCHAJscnw0MNXxHcBA4FVIAiYAbfJbYM2xLNUC/iaf9X0F7mVKwH4taqmER7n8zXobnwKGuf61wHttswptKxtflXD8OSSCkUAN0BR78yZhTUpNxvUk+OjykklrUJabNmoCCD4lO90dAZnYNqlOzB63aSP+JW3K7zuy+t8sPkLfd6uHItJG/Ass++wMe7NBQLu7z9oBN+wWf5ENAlLOimIX+lQXBbS6VMKbXUkbMyXgoe7DeQrwmNrzYwIqleBZ6WWP+lqVVvfXmEJX5UtMwH03xwI65MorXoBlostcUmdjq8WnA2vUXhCqgHolcRHeAMvVPiqO/ktBCripB0FUvbN5UXGrSmcA9beHKsB4P/Fr2jpIiKXZEVqyTUCxKnuRtYYqwPoj2E0sKtGf1NjnKoolegYeuTlWYjnYiQCr4j1zY62masUuNKdJ+39o0gLs8PUVX6x7cUcCpgDT1C5SX617/tvW6ajq908EzAPGApfEK/VLzUS9ce0SskR9JQq4WpXtMW5eO7BZPivBL1SR4K8I+NOrPfh0ui6AwFMyu1yljfEqfYRwpSykmyjQdS4T26lRf/luB59DDv8DfgFw5QyJMuHdXwAAAABJRU5ErkJggg==" alt="youtube--v1"></a>
-                    <a href="https://www.tiktok.com"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABY0lEQVR4nO2ZPU4DMRCFP4rQkBwADgERBVFKOuAO9EFJyUUCouAGuQgQQULJAfgRNWyKUKBBSJPGEJa12d2x8JNetRrP+0ZeFzYkJSUlWdcqMADGwAyQkj0DroC+9g7SBnBbQWhZ4imwHjL5OsOLegI0fAAGBsKL+sgHYGwguKgvfQAyA8FF/eoDIMZcWHUHFisArp5jBziOHWAFOI8ZYKFD4C5mgKJ9EoD8EcBm7ADvwAjYBVqWAObAEOgAaz80LmsrflGRxR+BrSX15gHm34SPCmCYU28eYMepO9AtFQ1A06l7yGkcFcC9861lEaDj1O0rxGf4Pedb1yLASYE1z6weo+1frLcNvFkEED112jnhnwLCS9kAotM91X3eVHd124RMXqoCKNuFFT1AZiC0qF/+5dVi30BwUfd8r9enBsJf+16vo48LkxrD34Q8cCzU0Pv5i4p+7Ex79UImn5SUlEQl+gCNAVZEFd7/ygAAAABJRU5ErkJggg==" alt="tiktok"></a>
-                </div>
-            </div>
-        </footer>
-    </body>   
-</html>  -->
+</body>
+
 </html>
