@@ -57,38 +57,48 @@
             </div>
           </div>
         </div>
-        <form class="perfil-form">
+        <form id="editarForm" class="perfil-form">
           <div class="field">
             <label class="label">Nombre</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Tu nombre" />
+              <input id="nombrePerfilMod" class="input" type="text" placeholder="Tu nombre" />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Apellido</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Tu apellido" />
+              <input id="apellidoPerfilMod"class="input" type="text" placeholder="Tu apellido" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Edad</label>
+            <div class="control">
+              <input id="edadPerfilMod" class="input" type="text" placeholder="Tu edad" />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Usuario</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Tu usuario" />
+              <input id="usuarioPerfilMod" class="input" type="text" placeholder="Tu usuario" />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Contraseña</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Tu contraseña" />
+              <input id="contrasenaPerfilMod" class="input" type="text" placeholder="Tu contraseña" />
             </div>
           </div>
 
           <div class="field has-text-right">
-            <a href="./usuario.html">
-              <button class="button is-link">Guardar</button>
+            <a>
+              <button id="eliminar_boton" class="button is-link">Eliminar Perfil</button>
+            </a>
+            <a>
+              <button type="submit" class="button is-link">Guardar</button>
             </a>
           </div>
         </form>
@@ -124,6 +134,8 @@
         </div>
       </div>
     </footer>
+    <script src="/assets/js/eliminar_usuario.js"></script>
+    <script src="/assets/js/modificar_usuario.js"></script>
     <script src="/assets/js/login.js"></script>
     <script src="/assets/js/components.js"></script>
   </body>

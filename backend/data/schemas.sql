@@ -108,9 +108,7 @@ http://localhost:3000/comentarios
 //1- elimino un usuario de la base de datos
 
 curl -X DELETE \
--d '{"id":4}' \
--H "Content-Type: application/json" \
-http://localhost:3000/usuarios
+http://localhost:3000/usuarios/2
 
 //-1 elimino una receta de la base de datos dado su id
 

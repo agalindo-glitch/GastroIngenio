@@ -106,15 +106,13 @@ app.put("/usuarios/:id", async (req, res) => {
 });
 
 // DELETE. /usuarios (elimino un usuario por su id, pero no como parametro)
-app.delete("/usuarios", async (req, res) => {
-
+app.delete("/usuarios/:id", async (req, res) => {
   try {
-    const id = req.body.id;
+    const id = req.params.id;
     const query = `delete from usuarios where id = '${id}'`;
 
     await pool.query(query);
-    res.json(`usuario con el id: '${id}' fue eliminado`);
-    res.status(204).json({ message: 'Usuario eliminado correctamente' });
+    res.status(200).json({ message: `Usuario con el id: ${id} fue eliminado` });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }
