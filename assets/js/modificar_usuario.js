@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const from = document.getElementById("editarForm");
     const id_usuario = localStorage.getItem("id_usuario");
-    const error = document.getElementById("error");
 
     if (!id_usuario) {
         window.location.href = "/login.html";
@@ -19,35 +18,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     from.addEventListener("submit", e => {
         e.preventDefault();
-        editarUsuario();
+        editarUsuario(id_usuario);
     });
+});
 
-    function editarUsuario() {
+async function editarUsuario(id_usuario) {
+    try {
         const nombre = document.getElementById("nombrePerfilMod").value;
         const apellido = document.getElementById("apellidoPerfilMod").value;
         const edad = document.getElementById("edadPerfilMod").value;
         const usuario = document.getElementById("usuarioPerfilMod").value;
         const contrasena = document.getElementById("contrasenaPerfilMod").value;
 
-        fetch(`http://localhost:3000/usuarios/${id_usuario}`, {
+        const respuesta = await fetch(`http://localhost:3000/usuarios/${id_usuario}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ nombre, apellido, edad, usuario, contrasena })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error();
-            return res.json(); // Si quieres manejar los datos devueltos por el servidor
-        })
-        .then(data => {
-            // Aquí puedes manejar la respuesta exitosa, por ejemplo, mostrar un mensaje de éxito
-        })
-        .catch(() => {
-            if (error) {
-                error.innerText = "Error al actualizar";
-            }
         });
-    }
-});
 
+        if (respuesta.ok) {
+            alert("Usuario modificado correctamente");
+            window.location.href = "/pages/usuario.html"
+        } else {
+            alert("Error no se pudo modificar el usuario (revise que todos los campos esten llenos)")
+        }
+
+    } catch (error) {
+        alert("Algo salio mal");
+        console.error(error);
+    }
+}
