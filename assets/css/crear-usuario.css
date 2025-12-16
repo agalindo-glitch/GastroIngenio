@@ -1,0 +1,92 @@
+body {
+  background-color: #fdfdfd;
+  color: #333333;
+}
+
+.register-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background-color: #fdfdfd;
+}
+
+.register-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 0.4rem;
+  color: #333333;
+  font-weight: 700;
+}
+
+.register-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555555;
+  margin-bottom: 1.8rem;
+}
+
+label.label {
+  color: #555555;
+}
+
+.register-extra {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0.5rem 0 1.4rem;
+  font-size: 0.9rem;
+  color: #555555;
+}
+
+.register-bottom-text {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #555555;
+}
+
+.register-link {
+  color: var(--gi-orange, #f59a1b);
+  font-weight: 500;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+input.input {
+  background-color: #ffffff;
+  border-color: #dddddd;
+  color: #333333;
+}
+
+input.input::placeholder {
+  color: #aaaaaa;
+}
+
+input.input:focus {
+  border-color: var(--gi-orange, #f59a1b);
+  box-shadow: 0 0 0 0.1em rgba(245, 154, 27, 0.25);
+}
+
+.register-button {
+  font-weight: 600;
+  border-radius: 999px;
+  background-color: var(--gi-orange, #f59a1b);
+  border-color: var(--gi-orange, #f59a1b);
+  color: #ffffff;
+}
+
+.register-button:hover {
+  filter: brightness(0.95);
+}
