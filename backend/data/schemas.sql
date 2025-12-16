@@ -1,12 +1,12 @@
-CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(15) NOT NULL, apellido VARCHAR(15) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(15) NOT NULL, contrasena VARCHAR(15) NOT NULL);
-CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER, nombre VARCHAR(30) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(20) NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id));
-CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_recetas INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_recetas) REFERENCES recetas(id));
+CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL);
+CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER, nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id));
+CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
 
 -insertar clientes de prueba-
 
 INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena) VALUES ('ricardo', 'rodrigues', 23, 'tini', 'nose');
-INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, likes, dislikes) VALUES (1,'Pizza con queso','Hago una pizza casera simple de muzzarela', 35, 'comida', 5, 7);
-INSERT INTO comentarios (id_usuario, id_recetas, descripcion, likes, dislikes) VALUES (1 , 1, 'muy buena la receta', 5, 8);
+INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review) VALUES (1,'Pizza con queso','Hago una pizza casera simple de muzzarela', 35, 'comida', 'false', 7);
+INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes) VALUES (1 , 1, 'muy buena la receta', 5, 8);
 
 -comando para enviar una peticion HTTP POST desde la terminal-
 (se envia un JSON como un body para poder probar el post)
@@ -18,13 +18,13 @@ curl -X POST \
 http://localhost:3000/usuarios
 
 curl -X POST \
--d '{"id_usuario":1,"nombre":"Tarta de verdu","descripcion":"tarta echa con verdura","tiempo_preparacion":30,"categoria":"comida","likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"nombre":"Tarta de verdu","descripcion":"tarta echa con verdura","tiempo_preparacion":30,"categoria":"comida","elegidos_comunidad":"false","review":0}' \
 -H "Content-Type: application/json" \
 http://localhost:3000/recetas
 
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_recetas":1,"descripcion":"Muy buena la receta","likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"id_receta":1,"descripcion":"Muy buena la receta","likes":0,"dislikes":0}' \
 http://localhost:3000/comentarios
 
 curl -X POST -H \
@@ -46,7 +46,7 @@ http://localhost:3000/usuarios
 
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"descripcion":"","tiempo_preparacion":30,"categoria":"comida", "likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"descripcion":"","tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
 http://localhost:3000/recetas
 
 
@@ -54,7 +54,7 @@ http://localhost:3000/recetas
 
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_recetas":1,"descripcion":"","likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"id_receta":1,"descripcion":"","likes":0,"dislikes":0}' \
 http://localhost:3000/comentarios
 
 
@@ -69,7 +69,7 @@ http://localhost:3000/usuarios
 //3- pruebo errores de la receta, falta un campo obligatorio, no pongo la descripcion ( se espera error 400 )
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"tiempo_preparacion":30,"categoria":"comida", "likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
 http://localhost:3000/recetas
 
 //3- receta con usuario indexistente (se espera error 400 o 404)
@@ -84,20 +84,20 @@ http://localhost:3000/recetas
 curl -X POST \
 
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_recetas":1, "likes":0,"dislikes":0}' \
+-d '{"id_usuario":1,"id_receta":1, "likes":0,"dislikes":0}' \
 http://localhost:3000/comentarios
 
 //3- POST comentario con receta inexistente (se espera error 400 o 404)
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_recetas":999,"descripcion":"Prueba"}' \
+-d '{"id_usuario":1,"id_receta":999,"descripcion":"Prueba"}' \
 http://localhost:3000/comentarios
 
 //3 -usuario indexistente (se espera error 400 o 404)
 
 curl -X POST \
 -H "Content-Type: application/json" \
--d '{"id_usuario":999,"id_recetas":1,"descripcion":"Prueba"}' \
+-d '{"id_usuario":999,"id_receta":1,"descripcion":"Prueba"}' \
 http://localhost:3000/comentarios
 
 
@@ -137,13 +137,13 @@ http://localhost:3000/usuarios/1
 
 curl -X PUT \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"nombre":"Pizza casera","descripcion": "Pizza casera mejorada","tiempo_preparacion": 40,"categoria": "comida","likes": 10,"dislikes": 2}' \
+-d '{"id_usuario":1,"nombre":"Pizza casera","descripcion": "Pizza casera mejorada","tiempo_preparacion": 40,"categoria": "comida","elegidos_comunidad":"false","review":0}' \
 http://localhost:3000/recetas/1
 
 //-1 modifico un comentario especifico de la base de datos 
 curl -X PUT \
 -H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_recetas":1,"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
+-d '{"id_usuario":1,"id_receta":1,"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
 http://localhost:3000/comentarios/1
 
 

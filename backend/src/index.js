@@ -49,8 +49,8 @@ app.post("/usuarios", async (req, res) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-        if (nombre.length > 15 || apellido.length > 15 || usuario.length > 15 || contrasena.length > 15) {
-      return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
+        if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
+      return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
     }
 
     if (edad <= 0) {
@@ -85,8 +85,8 @@ app.put("/usuarios/:id", async (req, res) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-    if (nombre.length > 15 || apellido.length > 15 || usuario.length > 15 || contrasena.length > 15) {
-      return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
+    if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
+      return res.status(400).json({ error: 'Un campo tiene muchps caracteres' });
     }
 
     if (edad <= 0) {
@@ -151,8 +151,8 @@ app.post("/recetas", async (req, res) => {
     const descripcion = req.body.descripcion;
     const tiempo_preparacion = req.body.tiempo_preparacion;
     const categoria = req.body.categoria;
-    const likes = req.body.likes;
-    const dislikes = req.body.dislikes;
+    const elegidos_comunidad = req.body.elegidos_comunidad;
+    const review = req.body.review;
 
 
     //trim() sirve para que no te permita dejar espacios en blanco
@@ -160,16 +160,16 @@ app.post("/recetas", async (req, res) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-    if (nombre.length > 30 || categoria.length > 15) {
+    if (nombre.length > 50 || categoria.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
     }
 
-    if (tiempo_preparacion <= 0 || likes < 0 || dislikes < 0) {
+    if (tiempo_preparacion <= 0 || review < 0) {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
 
-    const query = `insert into recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, likes, dislikes) 
-    values ('${id_usuario}','${nombre}', '${descripcion}', '${tiempo_preparacion}', '${categoria}', '${likes}', '${dislikes}')`;
+    const query = `insert into recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review) 
+    values ('${id_usuario}','${nombre}', '${descripcion}', '${tiempo_preparacion}', '${categoria}', '${elegidos_comunidad}', '${review}')`;
 
     await pool.query(query);
     res.status(200).json({ message: 'Receta creada correctamente' });
@@ -189,24 +189,24 @@ app.put("/recetas/:id", async (req, res) => {
     const descripcion = req.body.descripcion;
     const tiempo_preparacion = req.body.tiempo_preparacion;
     const categoria = req.body.categoria;
-    const likes = req.body.likes;
-    const dislikes = req.body.dislikes;
+    const elegidos_comunidad = req.body.elegidos_comunidad;
+    const review = req.body.review;
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!id_usuario || !nombre.trim() || !descripcion.trim() || !tiempo_preparacion || !categoria.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-    if (nombre.length > 30 || categoria.length > 15) {
+    if (nombre.length > 50 || categoria.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
     }
 
-    if (tiempo_preparacion <= 0 || likes < 0 || dislikes < 0) {
+    if (tiempo_preparacion <= 0 || review < 0) {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
 
     const query = `update recetas
-    set id_usuario = '${id_usuario}', nombre = '${nombre}', descripcion = '${descripcion}', tiempo_preparacion = '${tiempo_preparacion}', categoria = '${categoria}', likes = '${likes}', dislikes = '${dislikes}'
+    set id_usuario = '${id_usuario}', nombre = '${nombre}', descripcion = '${descripcion}', tiempo_preparacion = '${tiempo_preparacion}', categoria = '${categoria}', elegidos_comunidad = '${elegidos_comunidad}', review = '${review}'
     where id = '${id}'`;
     
     await pool.query(query)
@@ -222,11 +222,11 @@ app.delete("/recetas", async (req, res) => {
 
   try {
     const id = req.body.id;
-    const query = `delete from recetas where id = '${id}'`;
-
+    const queryComentario = `DELETE FROM comentarios WHERE id_receta = '${id}'`
+    const query = `DELETE FROM recetas WHERE id = '${id}'`;
+    await pool.query(queryComentario);
     await pool.query(query);
-    res.json(`la receta con el id: '${id}' fue eliminado`);
-    res.status(204).json({ message: 'Receta eliminada correctamente' });
+    res.status(204).json();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }
@@ -261,14 +261,14 @@ app.post("/comentarios", async (req, res) => {
   try {
     //guarda los valores
     const id_usuario = req.body.id_usuario;
-    const id_recetas = req.body.id_recetas;
+    const id_receta = req.body.id_receta;
     const descripcion = req.body.descripcion;
     const likes = req.body.likes;
     const dislikes = req.body.dislikes;
 
 
     //trim() sirve para que no te permita dejar espacios en blanco
-    if (!id_usuario || !id_recetas || !descripcion.trim()) {
+    if (!id_usuario || !id_receta || !descripcion.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
@@ -277,7 +277,7 @@ app.post("/comentarios", async (req, res) => {
     }
 
     const query = `insert into comentarios (id_usuario, id_recetas, descripcion, likes, dislikes) 
-    values ('${id_usuario}','${id_recetas}', '${descripcion}', '${likes}', '${dislikes}')`;
+    values ('${id_usuario}','${id_receta}', '${descripcion}', '${likes}', '${dislikes}')`;
 
     await pool.query(query);
     res.status(200).json({ message: 'Comentario creado correctamente' });
@@ -293,14 +293,14 @@ app.put("/comentarios/:id", async (req, res) => {
     //guarda los valores
     const id = req.params.id;
     const id_usuario = req.body.id_usuario;
-    const id_recetas = req.body.id_recetas;
+    const id_receta = req.body.id_receta;
     const descripcion = req.body.descripcion;
     const likes = req.body.likes;
     const dislikes = req.body.dislikes;
 
 
     //trim() sirve para que no te permita dejar espacios en blanco
-    if (!id_usuario || !id_recetas || !descripcion.trim()) {
+    if (!id_usuario || !id_receta || !descripcion.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
@@ -308,7 +308,7 @@ app.put("/comentarios/:id", async (req, res) => {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
     const query = `update comentarios
-    set id_usuario = '${id_usuario}', id_recetas = '${id_recetas}', descripcion = '${descripcion}', likes = '${likes}', dislikes = '${dislikes}'
+    set id_usuario = '${id_usuario}', id_recetas = '${id_receta}', descripcion = '${descripcion}', likes = '${likes}', dislikes = '${dislikes}'
     where id = '${id}'`;
     
     await pool.query(query)
