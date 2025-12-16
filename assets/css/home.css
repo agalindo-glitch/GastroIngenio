@@ -326,7 +326,7 @@ header {
 .trends__title {
     font-size: 2.3rem;
     font-weight: 750;
-    color: rgb(140, 238, 28);
+    color: #111;
     margin-bottom: 25px;
     position: relative;
     display: inline-block;
