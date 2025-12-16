@@ -4,6 +4,7 @@ form.addEventListener("submit", manejarSubmit);
 
 function manejarSubmit(event) {
     event.preventDefault(); 
+    console.log("crear-receta.js cargado");
     guardarReceta();
 }
 
