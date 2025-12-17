@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GastroIngenio - ver receta</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../assets/css/header.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+    <link rel="stylesheet" href="../assets/css/recetas.css">
+    <link rel="stylesheet" href="../assets/css/ver-receta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet" />
+
+</head>
+
+<body>
+    <header id="header"></header>
+    <section class="ver-receta">
+
+        <header class="receta-header">
+            <h1 class="receta-titulo"> Ensalada casera </h1>
+            <p class="receta-autos" creada por: usuario></p>
+        </header>
+
+        <div class="receta-imagen">
+            <img src="https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/52bf/live/5bc2da50-f03a-11ee-93c8-19dcc8295613.jpg.webp" alt="Imagen principal de la receta">
+        </div>
+
+        <section class="receta-info">
+            <div>
+                <p>Tiempo de cocinar:</p>
+                <span>45 min</span>
+            </div>
+            <div>
+                <p>Comensales:</p>
+                <span>4</span>
+            </div>
+        </section>
+
+        <section class="receta-ingredientes">
+            <h2>Ingredientes</h2>
+            <ul>
+                <li>2 huevos</li>
+                <li>300 ml de agua</li>
+                <li>25 g de levadura</li>
+                <li>2 cucharadas de aceite</li>
+                <li>1 cucharadita de sal</li>
+            </ul>
+        </section>
+
+        <section class="receta-pasos">
+            <h2>Pasos</h2>
+
+            <article class="paso">
+                <h3>Paso 1</h3>
+                <p>Mezclar la harina con la levadura y la sal.</p>
+                <img src="https://via.placeholder.com/600x300" alt="Paso 1">
+            </article>
+
+            <article class="paso">
+                <h3>Paso 2</h3>
+                <p>Amasar agregando el agua y el aceite hasta lograr una masa suave.</p>
+            </article>
+
+            <article class="paso">
+                <h3>Paso 3</h3>
+                <p>Dejar reposar 30 minutos y luego hornear.</p>
+                <img src="https://via.placeholder.com/600x300" alt="Paso 3">
+            </article>
+
+        </section>
+        <section class="reviews">
+
+            <h2>Reseñas</h2>
+
+            <div class="rating">
+                <span>★★★★☆</span>
+                <span>4.0 (12)</span>
+            </div>
+
+            <article class="review">
+                <strong>usuario1</strong>
+                <span>★★★★★</span>
+                <p>Muy rica y fácil.</p>
+            </article>
+
+            <article class="review">
+                <strong>usuario2</strong>
+                <span>★★★★☆</span>
+                <p>Buena, le agregué más queso.</p>
+            </article>
+
+        </section>
+
+        <section class="agregar-review">
+            <h3>Dejar una reseña</h3>
+
+            <form>
+                <label>
+                    Puntaje:
+                    <select>
+                        <option>5</option>
+                        <option>4</option>
+                        <option>3</option>
+                        <option>2</option>
+                        <option>1</option>
+                    </select>
+                </label>
+
+                <label>
+                    Comentario:
+                    <textarea placeholder="Escribí tu opinión..."></textarea>
+                </label>
+
+                <button type="submit" class="btn-enviar">Enviar reseña</button>
+            </form>
+        </section>
+
+
+    </section>
+    <footer id="footer"></footer>
+    <script src="/assets/js/components.js"></script>
+</body>
+
+</html>
