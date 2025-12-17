@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crear cuenta | GastroIngenio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Crea tu cuenta en GastroIngenio para disfrutar y crear tus recetas favoritas.">
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet" />
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+
+  <link rel="icon" type="image/jpg" href="../assets/img/icono.jpg" />
+
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
+  <link rel="stylesheet" href="../assets/css/crear-usuario.css" />
+</head>
+
+<body>
+  <header id="header"></header>
+
+  <main class="register-page">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-5-desktop is-7-tablet">
+          <div class="box register-card">
+            <h1 class="title is-4 has-text-centered register-title">
+              Crear cuenta
+            </h1>
+            <p class="has-text-centered register-subtitle">
+              Unite a GastroIngenio para guardar tus recetas favoritas y compartir las tuyas ✨
+            </p>
+
+            <form>
+              <div class="field">
+                <label class="label">Nombre</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Tu nombre" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Apellido</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Tu apellido" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Edad</label>
+                <div class="control">
+                  <input class="input" type="number" placeholder="Tu edad" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Nombre de usuario</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="Elegi tu nombre de usuario" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Contraseña</label>
+                <div class="control">
+                  <input class="input" type="password" placeholder="Crea una contraseña" required>
+                </div>
+              </div>
+
+              <div class="field register-extra">
+                <label class="checkbox">>
+                  <input type="checkbox" required>
+                  Acepto los terminos y condiciones.
+                </label>
+              </div>             
+
+
+
+              <div class="field">
+                <button class="button is-fullwidth is-primary register-button" type="submit">
+                  Crear cuenta
+                </button>
+              </div>
+
+              <p class="has-text-centered login-bottom-text">
+                ¿Ya tenes cuenta?
+                <a href="login.html" class="register-link">Iniciar sesion</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer"></footer>
+
+
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/busqueda.js"></script>
+</body>
+</html>
