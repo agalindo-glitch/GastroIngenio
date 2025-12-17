@@ -1,0 +1,186 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.ver-receta {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.receta-header {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.receta-titulo {
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.receta-autor {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.receta-imagen img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.receta-info {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.receta-info div {
+    display: flex;
+    gap: 10px;
+    background-color: #F28C43;
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.receta-descripcion,
+.receta-ingredientes,
+.receta-pasos,
+.reviews {
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    margin-bottom: 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.receta-ingredientes ul {
+    padding-left: 1.2rem;
+}
+
+.receta-ingredientes li {
+    margin-bottom: 0.4rem;
+    font-size: larger;
+}
+
+.paso {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.paso h3 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.paso p {
+    font-size: 0.95rem;
+    color: #374151;
+    font-size: larger;
+}
+
+.paso img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 0.6rem;
+}
+
+
+.rating {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.review {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.review strong {
+    margin-right: 0.5rem;
+}
+
+.review p {
+    margin-top: 0.3rem;
+    color: #374151;
+    font-size: larger;
+}
+
+.agregar-review {
+    margin-top: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.agregar-review h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.agregar-review textarea {
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: 2px solid #F28C43;
+    font-size: 0.95rem;
+}
+
+.agregar-review button {
+    margin-top: 0.5rem;
+    background-color: #F28C43;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+
+}
+
+.agregar-review form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.agregar-review label{
+    display: flex;
+    gap: 20px;
+    font-size: larger;
+}
+
+.btn-enviar {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.btn-enviar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
