@@ -8,22 +8,25 @@ function manejarSubmit(event) {
     guardarReceta();
 }
 
-function guardarReceta(){
-
-
+function guardarReceta() {
     const formData = new FormData(form);
 
     const receta = {
-        title: formData.get("title"),
-        imageUrl: formData.get("imageUrl"),
-        cookTime: formData.get("cookTime"),
-         servings: Number(formData.get("servings")),
-        shortDescription: formData.get("shortDescription"),
-        ingredients: formData.getAll("ingredients[]"),
-        steps: obtenerPasos()
+        id_usuario: 1, 
+        nombre: formData.get("title")?.trim() || "Receta sin nombre",
+        descripcion: formData.get("shortDescription")?.trim() || "Sin descripción",
+        tiempo_preparacion: Number(formData.get("cookTime")) || 1, 
+        categoria: "General",
+        elegidos_comunidad: false,
+        review: 0,
+        ingredients: formData.getAll("ingredients[]").filter(i => i.trim() !== ""), 
+        steps: obtenerPasos().filter(p => p.text.trim() !== "") 
     };
+
+    console.log("Receta a enviar:", receta); 
     enviarReceta(receta);
 }
+
 
 function obtenerPasos() {
     const pasos = [];
