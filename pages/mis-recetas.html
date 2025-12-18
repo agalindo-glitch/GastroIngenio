@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,24 +10,58 @@
   <link rel="stylesheet" href="../assets/css/header.css">
   <link rel="stylesheet" href="../assets/css/footer.css">
   <link rel="stylesheet" href="../assets/css/recetas.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet" />
 </head>
 
 <body>
+
   <header id="header"></header>
 
   <main class="section">
-    <h1 class="title has-text-centered">Mis recetas</h1>
+    <div class="container">
 
-    
-    <div id="contenedor-recetas" class="columns is-multiline">
-     
+      <h1 class="title is-3 has-text-centered mb-6">
+        Mis recetas
+      </h1>
+
+      <div id="mis-recetas" class="columns is-multiline"></div>
+
+      <template id="receta-template">
+        <div class="column is-one-third">
+          <div class="card receta-card">
+
+            <div class="card-content">
+              <p class="title is-5 receta-nombre"></p>
+              <p class="subtitle is-6 receta-categoria"></p>
+              <p class="receta-tiempo"></p>
+            </div>
+
+            <footer class="card-footer">
+              <a class="card-footer-item btn-ver">Ver</a>
+              <a class="card-footer-item btn-editar">Editar</a>
+              <a class="card-footer-item btn-eliminar has-text-danger">Eliminar</a>
+            </footer>
+
+          </div>
+        </div>
+      </template>
+
     </div>
   </main>
 
   <footer id="footer"></footer>
 
+  <script src="../assets/js/components.js"></script>
   <script src="../assets/js/botones_login.js"></script>
   <script src="../assets/js/mis-recetas.js"></script>
-  <script src="../assets/js/components.js"></script>
+
 </body>
+
 </html>

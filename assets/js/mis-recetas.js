@@ -1,49 +1,73 @@
-// Agarramos el contenedor
-const contenedor = document.getElementById("contenedor-recetas");
+document.addEventListener("DOMContentLoaded", () => {
+  const contenedor = document.getElementById("mis-recetas");
+  const template = document.getElementById("receta-template");
 
-// Traemos el usuario logueado
-const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const token = localStorage.getItem("token");
 
-if (!usuario) {
-  alert("Tenés que iniciar sesión");
-  window.location.href = "login.html";
-}
+  if (!token) {
+    alert("Tenés que iniciar sesión para ver tus recetas");
+    window.location.href = "login.html";
+    return;
+  }
 
-// Pedimos las recetas del usuario
-fetch(`http://localhost:3000/recetas/usuario/${usuario.id}`)
-  .then(res => res.json())
-  .then(recetas => {
-    if (recetas.length === 0) {
-      contenedor.innerHTML = "<p>No tenés recetas aún.</p>";
-      return;
+  fetch("http://localhost:3000/mis-recetas", {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-
-    recetas.forEach(receta => {
-      const columna = document.createElement("div");
-      columna.className = "column is-4";
-
-      columna.innerHTML = `
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img src="${receta.imagen}" alt="${receta.titulo}">
-          </figure>
-          </div>
-
-          <div class="card-content">
-            <p class="title is-5">${receta.titulo}</p>
-
-            <a href="ver-receta.html?id=${receta.id}" class="button is-link is-small">
-              Ver receta
-            </a>
-          </div>
-        </div>
-      `;
-
-      contenedor.appendChild(columna);
-    });
   })
-  .catch(err => {
-    console.error(err);
-    contenedor.innerHTML = "<p>Error al cargar recetas</p>";
-  });
+    .then(res => {
+      if (!res.ok) throw new Error("Error al cargar recetas");
+      return res.json();
+    })
+    .then(recetas => {
+      if (recetas.length === 0) {
+        contenedor.innerHTML = "<p>No tenés recetas cargadas.</p>";
+        return;
+      }
+
+      recetas.forEach(receta => {
+        const clone = template.content.cloneNode(true);
+
+        clone.querySelector(".receta-nombre").textContent = receta.nombre;
+        clone.querySelector(".receta-categoria").textContent = receta.categoria;
+        clone.querySelector(".receta-tiempo").textContent =
+          `⏱ ${receta.tiempo} min`;
+
+        clone.querySelector(".btn-ver").addEventListener("click", () => {
+          window.location.href = `ver-receta.html?id=${receta.id}`;
+        });
+
+        clone.querySelector(".btn-editar").addEventListener("click", () => {
+          window.location.href = `editar-receta.html?id=${receta.id}`;
+        });
+
+        clone.querySelector(".btn-eliminar").addEventListener("click", () => {
+          if (!confirm("¿Seguro que querés eliminar esta receta?")) return;
+
+          fetch(`http://localhost:3000/recetas/${receta.id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then(res => {
+              if (!res.ok) throw new Error("Error al eliminar");
+              alert("Receta eliminada");
+              location.reload();
+            })
+            .catch(err => {
+              console.error(err);
+              alert("No se pudo eliminar la receta");
+            });
+        });
+
+        contenedor.appendChild(clone);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      contenedor.innerHTML =
+        "<p>Error al cargar las recetas.</p>";
+    });
+});
+
