@@ -1,6 +1,6 @@
 // --- Función para cargar cualquier componente HTML ---
 function loadComponent(id, file) {
-    return fetch(`../components/${file}`)
+    return fetch(`../../components/${file}`)
         .then(res => {
             if (!res.ok) throw new Error(`No se pudo cargar ${file}`);
             return res.text();
