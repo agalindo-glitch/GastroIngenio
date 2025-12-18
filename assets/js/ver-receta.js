@@ -2,13 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const recetaId = params.get('id');
 
-  if(!recetaId){
+  if (!recetaId) {
     alert('No se encontro el ID de la receta');
     return;
   }
 
   //Traer la receta y sus comentarios
-  fetch(`/recetas/${recetaId}`)
+  fetch(`http://localhost:3000/recetas/${recetaId}`)
+
     .then(res => res.json())
     .then(receta => renderReceta(receta))
     .catch(err => console.error(err));
@@ -28,11 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        id_usuario: localStorage.getItem("id_usuario"),
         id_receta: recetaId,
         descripcion: comentario,
-        puntaje: puntaje 
+        likes: 0,
+        dislikes: 0
       })
     })
+
       .then(res => res.json())
       .then(nuevaReview => {
         //Agregar la reseña recién creada al listado
@@ -48,19 +52,25 @@ function renderReceta(receta) {
   document.getElementById('receta-titulo').textContent = receta.nombre;
   document.getElementById('receta-autor').textContent = `Creada por: ${receta.autor}`;
   document.getElementById('receta-tiempo').textContent = `${receta.tiempo_preparacion} min`;
-  document.getElementById('receta-comensales')?.textContent = receta.comensales || 'N/A';
 
-  //Mostramos descripción como unico “ingrediente”
+  const comensalesEl = document.getElementById('receta-comensales');
+  if (comensalesEl) {
+    comensalesEl.textContent = receta.comensales || 'N/A';
+  }
+
   const ingredientes = document.getElementById('lista-ingredientes');
   ingredientes.innerHTML = `<li>${receta.descripcion}</li>`;
 
-  //Renderizamos comentarios existentes
   const reviews = document.getElementById('lista-reviews');
   reviews.innerHTML = '';
-  if(receta.comentarios.length > 0){
+
+  if (receta.comentarios.length > 0) {
     receta.comentarios.forEach(c => agregarReview(c));
+  } else {
+    reviews.innerHTML = '<p>No hay reseñas todavía</p>';
   }
 }
+
 
 function agregarReview(c) {
   const reviews = document.getElementById('lista-reviews');
@@ -69,9 +79,9 @@ function agregarReview(c) {
   article.classList.add('review');
 
   article.innerHTML = `
-    <strong>${c.usuario || 'Anónimo'}</strong>
+    <strong>${c.usuario}</strong>
     <p>${c.descripcion}</p>
-    <small> 👍${c.likes || 0} | 👎${c.dislikes || 0}</small>
+    <small>👍 ${c.likes} | 👎 ${c.dislikes}</small>
   `;
 
   reviews.appendChild(article);

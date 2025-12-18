@@ -168,11 +168,35 @@ app.get("/recetas", async (req, res) => {
 app.get("/recetas/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await pool.query("SELECT * FROM recetas WHERE id = $1",[id]);
 
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
+
+    const recetaQuery = `
+      SELECT r.*, u.usuario AS autor
+      FROM recetas r
+      JOIN usuarios u ON u.id = r.id_usuario
+      WHERE r.id = $1
+    `;
+    const recetaResult = await pool.query(recetaQuery, [id]);
+
+    if (recetaResult.rows.length === 0) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+
+    const receta = recetaResult.rows[0];
+
+    const comentariosQuery = `
+      SELECT c.*, u.usuario
+      FROM comentarios c
+      JOIN usuarios u ON u.id = c.id_usuario
+      WHERE c.id_receta = $1
+    `;
+    const comentariosResult = await pool.query(comentariosQuery, [id]);
+
+    receta.comentarios = comentariosResult.rows;
+
+    res.json(receta);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "DB error" });
   }
 });
