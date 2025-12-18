@@ -112,3 +112,13 @@ main {
   background-color: rgba(213, 162, 68, 0.83);
   color: black;
 }
+
+.botones{
+  display: flex;
+  justify-content: space-between;
+}
+
+#eliminar_boton{
+  background-color: rgb(221, 0, 0);
+
+}
