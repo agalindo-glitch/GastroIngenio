@@ -3,13 +3,27 @@
     margin: 0;
     padding: 0;
 }
+html, body {
+  height: 100%;
+}
+
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
 
 .ver-receta {
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 1000px;  
+    width: 100%;
+    margin: 2rem auto;
+    padding: 2rem;
     background-color: #ffffff;
     border-radius: 12px;
-    padding: 2rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -164,7 +178,7 @@ h2 {
 .agregar-review form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 4rem;
 }
 
 .agregar-review label{
