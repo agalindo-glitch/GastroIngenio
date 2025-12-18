@@ -49,7 +49,7 @@ app.post("/usuarios", async (req, res) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-        if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
+    if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
     }
 
@@ -57,11 +57,18 @@ app.post("/usuarios", async (req, res) => {
       return res.status(406).json({ error: 'Numero de edad invalido' });
     }
 
+    const chequeoQuery = 'SELECT usuario FROM usuarios WHERE usuario = $1';
+    const resultados = await pool.query(chequeoQuery, [usuario]);
+
+    if (resultados.rows.length > 0) {
+      return res.status(400).json({ error: 'El nombre de usuario ya está registrado' });
+    }
+
+
     const query = `insert into usuarios (nombre, apellido, edad, usuario, contrasena) 
     values ('${nombre}', '${apellido}', '${edad}', '${usuario}', '${contrasena}')`;
 
     await pool.query(query);
-    res.json();
     res.status(200).json({ message: 'Usuario creado correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -357,5 +364,44 @@ app.post("/login", async (req, res) => {
     res.json(resultados.rows[0]);
   }catch(error){
     res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
+// GET. /usuariosElegidosComunidad/<id> (busca el numero de elegidos por la comunidad de un usuario)
+app.get("/usuariosElegidosComunidad/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await pool.query(`SELECT u.id AS usuario_id, COUNT(r.id) AS elegidos
+    FROM usuarios u
+    LEFT JOIN recetas r ON u.id = r.id_usuario AND r.elegidos_comunidad = TRUE
+    WHERE u.id = ${id}
+    GROUP BY u.id;`);
+
+    if (result.rows.length === 0 || result.rows[0].elegidos === 0) {
+      return res.json({ usuario_id: id, elegidos: 0 });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// GET. /usuariosPosts/<id> (busca el numero de posteos de un usuario)
+app.get("/usuariosPosts/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await pool.query(`SELECT usuarios.id, COUNT(recetas.id) AS posts
+    FROM usuarios
+    INNER JOIN recetas ON recetas.id_usuario = usuarios.id
+    GROUP BY usuarios.id;`);
+    if (result.rows.length === 0 || result.rows[0].posts === 0) {
+      return res.json({ usuario_id: id, posts: 0 });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
   }
 });

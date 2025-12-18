@@ -1,63 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+    <link rel="stylesheet" href="../assets/css/header.css" />
+    <link rel="stylesheet" href="../assets/css/home.css" />
+    <link rel="stylesheet" href="../assets/css/modificar_usuario.css" />
+    <link rel="stylesheet" href="../assets/css/footer.css" />
 
-  <link rel="stylesheet" href="../assets/css/header.css" />
-  <link rel="stylesheet" href="../assets/css/home.css" />
-  <link rel="stylesheet" href="../assets/css/modificar_usuario.css" />
-  <link rel="stylesheet" href="../assets/css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/jpg" href="assets/img/icono.jpg" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-    rel="stylesheet" />
-  <link rel="icon" type="image/jpg" href="assets/img/icono.jpg" />
-
-  <title>Perfil Usuario - GastroIngenio</title>
-</head>
-
-<body>
-  <header id="header"></header>
-
-  <main class="profile">
-    <section class="profile__container">
-      <article class="profile__card">
-        <div class="profile__header">
-          <figure class="profile__image">
-            <img
-              src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
-              alt="Foto perfil" />
-          </figure>
-
-          <h2 class="profile__name">Nombre</h2>
-        </div>
-
-        <section class="profile__stats">
-          <div class="profile__stat">
-            <p class="profile__stat-title">Posts</p>
-            <p class="profile__stat-value">Input</p>
+    <title>Perfil Usuario - GastroIngenio</title>
+  </head>
+  <body>
+    <header id="header"></header>
+    <main>
+      <section id="usuario">
+        <div class="perfil-card-img">
+          <div class="perfil-card">
+            <div class="perfil-img">
+              <img
+                src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
+                alt="Foto perfil"
+              />
+            </div>
+            <h2 class="nombre-perfil">Nombre</h2>
           </div>
-          <div class="profile__stat">
-            <p class="profile__stat-title">Likes</p>
-            <p class="profile__stat-value">Input</p>
-          </div>
-          <div class="profile__stat">
-            <p class="profile__stat-title">Sobre mí</p>
-            <p class="profile__stat-value">Input</p>
-          </div>
-        </section>
-      </article>
 
-      <form class="profile__form">
-        <div class="profile__field">
-          <label class="profile__label" for="nombre">Nombre</label>
-          <input class="profile__input" type="text" id="nombre" placeholder="Tu nombre" />
+          <div class="perfil-stats">
+            <div>
+              <p><strong>Posts</strong></p>
+              <p id="numPosts">Input</p>
+            </div>
+            <div>
+              <p><strong>Elegidos por la Comunidad</strong></p>
+              <p id="numElegidos">Input</p>
+            </div>
+          </div>
         </div>
         <form id="editarForm" class="perfil-form">
           <div class="field">
@@ -97,9 +91,6 @@
 
           <div class="field has-text-right">
             <a>
-              <button id="eliminar_boton" class="button is-link">Eliminar Perfil</button>
-            </a>
-            <a>
               <button type="submit" class="button is-link">Guardar</button>
             </a>
           </div>
@@ -136,9 +127,9 @@
         </div>
       </div>
     </footer>
-    <script src="/assets/js/eliminar_usuario.js"></script>
-    <script src="/assets/js/modificar_usuario.js"></script>
-    <script src="/assets/js/login.js"></script>
-    <script src="/assets/js/components.js"></script>
+    <script src="../assets/js/perfil.js"></script>
+    <script src="../assets/js/modificar_usuario.js"></script>
+    <script src="../assets/js/botones_login.js"></script>
+    <script src="../assets/js/components.js"></script>
   </body>
 </html>

@@ -5,7 +5,7 @@ CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta I
 -insertar clientes de prueba-
 
 INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena) VALUES ('ricardo', 'rodrigues', 23, 'tini', 'nose');
-INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review) VALUES (1,'Pizza con queso','Hago una pizza casera simple de muzzarela', 35, 'comida', 'false', 7);
+INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review) VALUES (1,'zapallo','zapallo del bueno', 35, 'comida', 'true', 7);
 INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes) VALUES (1 , 1, 'muy buena la receta', 5, 8);
 
 -comando para enviar una peticion HTTP POST desde la terminal-

@@ -14,8 +14,8 @@ async function eliminarUsuario(id_usuario){
         })
 
         if(respuesta.ok){
-            localStorage.clear();
             alert("Su usuario se elimino correctamente");
+            localStorage.clear();
             window.location.href = "/index.html";
         } else {
             alert("No se pudo eliminar su usuario")

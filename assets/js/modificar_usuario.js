@@ -2,10 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const from = document.getElementById("editarForm");
     const id_usuario = localStorage.getItem("id_usuario");
 
-    if (!id_usuario) {
-        window.location.href = "/login.html";
-    }
-
     fetch(`http://localhost:3000/usuarios/${id_usuario}`)
     .then(res => res.json())
     .then(user => {
