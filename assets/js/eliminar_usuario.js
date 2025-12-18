@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function eliminarUsuario(id_usuario){
+    const confirmacion = window.confirm("Seguro que quieres eliminar el usuario?");
+    
+    if (!confirmacion) {
+        return;
+    }
     try {
         const respuesta = await fetch(`http://localhost:3000/usuarios/${id_usuario}`, {
             method: "DELETE"
