@@ -89,7 +89,7 @@ async function cargarResultados() {
 
         rating: 4,
         reviews: r.review ?? 0,
-        link: `receta.html?id=${r.id}`
+        link: `ver-receta.html?id=${r.id}`
       };
     });
 
