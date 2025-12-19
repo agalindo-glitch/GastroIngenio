@@ -17,8 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("usuarioPerfil").textContent = `@${user.usuario}`;
 
         // Foto de perfil
-        if (user.foto_perfil) {
-            document.getElementById("perfilImg").src = user.foto_perfil;
+        const perfilImg = document.getElementById("perfilImg");
+
+        if (user.foto_perfil && user.foto_perfil.trim() !== "") {
+            perfilImg.src = user.foto_perfil;
         }
 
         // ==========================

@@ -26,11 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`http://localhost:3000/usuarios/${id_usuario}`);
       const user = await res.json();
 
-      if (user.foto_perfil && user.foto_perfil.trim() !== "") {
+      if (user.foto_perfil?.trim()) {
         perfilImg.src = user.foto_perfil;
-      } else {
-        perfilImg.src = "../assets/img/default-user.png";
       }
+
+      perfilImg.onerror = () => {
+        perfilImg.src = "../assets/img/default-user.png";
+      };
+
 
       // Si la imagen falla
       perfilImg.onerror = () => {
