@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       if (!res.ok) { alert("Error: " + (data.error || "No se pudo crear la receta")); return; }
       alert("Receta creada correctamente");
-      window.location.href = `/ver-receta.html?id=${data.id}`;
+      window.location.href = `/pages/ver-receta.html?id=${data.id}`;
     } catch (err) { console.error(err); alert("Error de red o servidor"); }
   });
 });

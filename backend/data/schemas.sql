@@ -10,10 +10,6 @@ CREATE TABLE bloqueados (id SERIAL PRIMARY KEY, bloqueador_id INT NOT NULL, bloq
 
 CREATE TABLE mensajes (id SERIAL PRIMARY KEY, emisor_id INT NOT NULL, receptor_id INT NOT NULL, contenido TEXT NOT NULL, leido BOOLEAN DEFAULT FALSE, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_emisor FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_receptor FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT no_auto_mensaje CHECK (emisor_id <> receptor_id));
 
-CREATE TABLE tags (id SERIAL PRIMARY KEY, nombre VARCHAR(50) NOT NULL UNIQUE);
-
-CREATE TABLE receta_tag (id_receta INT NOT NULL REFERENCES recetas(id), id_tag INT NOT NULL REFERENCES tags(id), PRIMARY KEY (id_receta, id_tag));
-
 CREATE TABLE ingredientes (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE NOT NULL);
 
 CREATE TABLE receta_ingredientes (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, id_ingrediente INTEGER NOT NULL REFERENCES ingredientes(id), cantidad VARCHAR(50), unidad VARCHAR(50));

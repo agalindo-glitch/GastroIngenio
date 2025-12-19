@@ -285,17 +285,7 @@ app.get("/recetas/:id/completo", async (req, res) => {
     const pasosResult = await pool.query(pasosQuery, [id]);
     receta.pasos = pasosResult.rows;
 
-    // 4️⃣ Tags de la receta
-    const tagsQuery = `
-      SELECT t.id, t.nombre
-      FROM tags t
-      JOIN receta_tag rt ON rt.id_tag = t.id
-      WHERE rt.id_receta = $1
-    `;
-    const tagsResult = await pool.query(tagsQuery, [id]);
-    receta.tags = tagsResult.rows;
-
-    // 5️⃣ Comentarios
+    // 4️⃣ Comentarios
     const comentariosQuery = `
       SELECT c.id, c.descripcion, c.likes, c.dislikes, u.id AS usuario_id, u.usuario AS autor
       FROM comentarios c
@@ -312,6 +302,7 @@ app.get("/recetas/:id/completo", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
+
 
 // GET /mis-recetas?id_usuario=1
 app.get("/mis-recetas", async (req, res) => {
