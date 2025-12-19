@@ -1,39 +1,60 @@
-document.addEventListener("DOMContentLoaded", () =>{
+document.addEventListener("DOMContentLoaded", async () => {
     const id_usuario = localStorage.getItem("id_usuario");
 
-    fetch(`http://localhost:3000/usuarios/${id_usuario}`)
-    .then(res => res.json())
-    .then(user => {
-        document.getElementById("nombrePerfil").textContent = `${user.nombre}`;
+    if (!id_usuario) return;
+
+    try {
+        // ==========================
+        // 👤 DATOS DEL USUARIO
+        // ==========================
+        const resUser = await fetch(`http://localhost:3000/usuarios/${id_usuario}`);
+        const user = await resUser.json();
+
+        document.getElementById("nombrePerfil").textContent = user.nombre;
         document.getElementById("usuarioPerfil").textContent = `@${user.usuario}`;
-    })
 
-    tomarElegidosComunidad(id_usuario);
-    tomarPost(id_usuario);
-})
-
-async function tomarElegidosComunidad(id_usuario){
-    try{
-        const respuesta = await fetch (`http://localhost:3000/usuariosElegidosComunidad/${id_usuario}`);
-        if(respuesta.ok){
-            const data = await respuesta.json();
-            document.getElementById("numElegidos").textContent = `${data.elegidos}`;
+        // Foto de perfil
+        if (user.foto_perfil) {
+            document.getElementById("perfilImg").src = user.foto_perfil;
         }
-    }catch(error){
-        document.getElementById("numElegidos").textContent = `Error`;
-        console.error("No se pudo encontrar el numero de Elegidos por la comunidad", error);
+
+        // ==========================
+        // 📊 ESTADÍSTICAS
+        // ==========================
+        cargarEstadisticas(id_usuario);
+
+    } catch (error) {
+        console.error("Error cargando perfil", error);
     }
-}
+});
 
-async function tomarPost(id_usuario){
-    try{
-        const respuesta = await fetch (`http://localhost:3000/usuariosPosts/${id_usuario}`);
-        if(respuesta.ok){
-            const data = await respuesta.json();
-            document.getElementById("numPosts").textContent = `${data.posts}`;
-        }
-    }catch(error){
-        document.getElementById("numPosts").textContent = `Error`;
-        console.error("No se pudo encontrar el numero de posteos", error);
+
+// ==========================
+// 📊 RECETAS / POSTS
+// ==========================
+async function cargarEstadisticas(id_usuario) {
+    try {
+        const res = await fetch("http://localhost:3000/recetas");
+        const recetas = await res.json();
+
+        // Recetas del usuario
+        const recetasUsuario = recetas.filter(
+            r => r.id_usuario == id_usuario
+        );
+
+        // Total posts
+        document.getElementById("numPosts").textContent = recetasUsuario.length;
+
+        // Elegidos por la comunidad
+        const elegidos = recetasUsuario.filter(
+            r => r.elegidos_comunidad === true
+        );
+
+        document.getElementById("numElegidos").textContent = elegidos.length;
+
+    } catch (error) {
+        console.error("Error cargando estadísticas", error);
+        document.getElementById("numPosts").textContent = "0";
+        document.getElementById("numElegidos").textContent = "0";
     }
 }
