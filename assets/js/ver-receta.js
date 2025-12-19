@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  window.recetaId = recetaId;
+
   fetch(`http://localhost:3000/recetas/${recetaId}/completo`)
     .then(res => {
       if (!res.ok) throw new Error("Error al cargar receta");
@@ -17,14 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
       alert("No se pudo cargar la receta");
     });
-
-  const form = document.getElementById("form-review");
-  if (form) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      alert("Reviews todavía no habilitadas");
-    });
-  }
 });
 
 function renderReceta(receta) {
@@ -59,24 +53,32 @@ function renderReceta(receta) {
 
   // Ingredientes
   const ingredientesList = document.getElementById("lista-ingredientes");
-  if (ingredientesList && Array.isArray(receta.ingredientes)) {
-    ingredientesList.innerHTML = receta.ingredientes
-      .map(ing => `<li>${ing.nombre}${ing.cantidad ? `: ${ing.cantidad}${ing.unidad ? ' ' + ing.unidad : ''}` : ''}</li>`)
-      .join("");
+  if (ingredientesList) {
+    if (Array.isArray(receta.ingredientes) && receta.ingredientes.length) {
+      ingredientesList.innerHTML = receta.ingredientes
+        .map(ing => `<li>${ing.nombre}${ing.cantidad ? `: ${ing.cantidad}${ing.unidad ? ' ' + ing.unidad : ''}` : ''}</li>`)
+        .join("");
+    } else {
+      ingredientesList.innerHTML = "<li>(Ingredientes pendientes)</li>";
+    }
   }
 
   // Pasos
   const pasosContainer = document.getElementById("lista-pasos");
-  if (pasosContainer && Array.isArray(receta.pasos)) {
-    pasosContainer.innerHTML = receta.pasos
-      .map(p => `
-        <div class="paso">
-          <h3>Paso ${p.numero}</h3>
-          <p>${p.descripcion}</p>
-          ${p.foto_url ? `<img src="${p.foto_url}" alt="Paso ${p.numero}">` : ""}
-        </div>
-      `)
-      .join("");
+  if (pasosContainer) {
+    if (Array.isArray(receta.pasos) && receta.pasos.length) {
+      pasosContainer.innerHTML = receta.pasos
+        .map(p => `
+          <div class="paso">
+            <h3>Paso ${p.numero}</h3>
+            <p>${p.descripcion}</p>
+            ${p.foto_url ? `<img src="${p.foto_url}" alt="Paso ${p.numero}">` : ""}
+          </div>
+        `)
+        .join("");
+    } else {
+      pasosContainer.innerHTML = "<p>(Pasos pendientes)</p>";
+    }
   }
 
   // Fecha de creación
@@ -91,21 +93,25 @@ function renderReceta(receta) {
     comunidadBadge.style.color = "#F28C43";
     comunidadBadge.style.fontWeight = "bold";
     const header = document.querySelector(".receta-header");
-    header.appendChild(comunidadBadge);
+    if (header) header.appendChild(comunidadBadge);
   }
 
-  // Reseñas
+  // Reseñas / comentarios
   const reviews = document.getElementById("lista-reviews");
   if (!reviews) return;
 
   reviews.innerHTML = "";
 
-  if (!receta.comentarios || receta.comentarios.length === 0) {
+  const total = receta.comentarios?.length || 0;
+  const contador = document.getElementById("comentarios-count");
+  if (contador) contador.textContent = total;
+
+  if (total === 0) {
     reviews.innerHTML = "<p>No hay reseñas todavía</p>";
     return;
   }
 
-  receta.comentarios.forEach(c => agregarReview(c));
+  receta.comentarios.slice(0, 3).forEach(c => agregarReview(c));
 }
 
 function agregarReview(c) {
@@ -115,6 +121,8 @@ function agregarReview(c) {
   const article = document.createElement("article");
   article.className = "review";
 
+  const usuarioLogueado = Number(localStorage.getItem("id_usuario"));
+
   article.innerHTML = `
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
       ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.autor}" style="width:40px; height:40px; border-radius:50%;">` : ''}
@@ -123,6 +131,26 @@ function agregarReview(c) {
     <p>${c.descripcion}</p>
     <small>👍 ${c.likes} | 👎 ${c.dislikes}</small>
   `;
+
+  if (usuarioLogueado === c.id_usuario) {
+    const botones = document.createElement("div");
+    botones.className = "comentario-botones";
+
+    botones.innerHTML = `
+      <button class="btn-editar" data-id="${c.id}">Editar</button>
+      <button class="btn-eliminar" data-id="${c.id}">Eliminar</button>
+    `;
+
+    botones.querySelector(".btn-editar").addEventListener("click", () => {
+      iniciarEdicionComentario(c, article);
+    });
+
+    botones.querySelector(".btn-eliminar").addEventListener("click", () => {
+      eliminarComentario(c.id);
+    });
+
+    article.appendChild(botones);
+  }
 
   reviews.appendChild(article);
 }

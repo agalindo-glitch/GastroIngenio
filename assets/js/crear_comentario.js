@@ -10,13 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function crearComentario() {
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-    if (!usuario) {
-        alert("Tenés que estar logueado para comentar");
-        return;
-    }
-
+    const id_usuario = JSON.parse(localStorage.getItem("id_usuario"));
     const params = new URLSearchParams(window.location.search);
     const id_receta = params.get("id");
 
@@ -40,7 +34,7 @@ async function crearComentario() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                id_usuario: usuario.id,
+                id_usuario: id_usuario,
                 id_receta: id_receta,
                 descripcion: comentario,
                 likes: 0,

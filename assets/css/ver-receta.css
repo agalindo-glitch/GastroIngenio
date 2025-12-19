@@ -198,3 +198,89 @@ h2 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+.review .comentario-botones .btn-editar,
+.review .comentario-botones .btn-eliminar {
+  all: unset; 
+  font-family: "Funnel Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px; 
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+
+.review .comentario-botones .btn-editar {
+  background-color: #e0ecff;
+  color: #2563eb;
+}
+
+.review .comentario-botones .btn-editar:hover {
+  background-color: #c7ddff;
+  transform: scale(1.05);
+}
+
+
+.review .comentario-botones .btn-eliminar {
+  background-color: #ffe4e6;
+  color: #dc2626;
+}
+
+.review .comentario-botones .btn-eliminar:hover {
+  background-color: #fecdd3;
+  transform: scale(1.05);
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db; 
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: none;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.btn-guardar {
+  background-color: #e0ecff;
+  color: #2563eb;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-guardar:hover {
+  background-color: #c7ddff;
+  transform: scale(1.05);
+}
+
+.btn-cancelar {
+  background-color: #ffe4e6;
+  color: #dc2626;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #fecdd3;
+  transform: scale(1.05);
+}
+
