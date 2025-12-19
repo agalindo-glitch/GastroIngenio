@@ -1,20 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const contenedor = document.getElementById("mis-recetas");
+  const contenedor = document.getElementById("recetas-container");
   const template = document.getElementById("receta-template");
 
-  const token = localStorage.getItem("token");
+  const idUsuario = localStorage.getItem("id_usuario");
 
-  if (!token) {
+  if (!idUsuario) {
     alert("Tenés que iniciar sesión para ver tus recetas");
     window.location.href = "login.html";
     return;
   }
 
-  fetch("http://localhost:3000/mis-recetas", {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+  fetch(`http://localhost:3000/mis-recetas?id_usuario=${idUsuario}`)
     .then(res => {
       if (!res.ok) throw new Error("Error al cargar recetas");
       return res.json();
@@ -31,24 +27,30 @@ document.addEventListener("DOMContentLoaded", () => {
         clone.querySelector(".receta-nombre").textContent = receta.nombre;
         clone.querySelector(".receta-categoria").textContent = receta.categoria;
         clone.querySelector(".receta-tiempo").textContent =
-          `⏱ ${receta.tiempo} min`;
+          `${receta.tiempo_preparacion} min`;
 
+        //ver
         clone.querySelector(".btn-ver").addEventListener("click", () => {
           window.location.href = `ver-receta.html?id=${receta.id}`;
         });
 
+        //editar
         clone.querySelector(".btn-editar").addEventListener("click", () => {
           window.location.href = `editar-receta.html?id=${receta.id}`;
         });
 
+        //eliminar
         clone.querySelector(".btn-eliminar").addEventListener("click", () => {
           if (!confirm("¿Seguro que querés eliminar esta receta?")) return;
 
-          fetch(`http://localhost:3000/recetas/${receta.id}`, {
+          fetch("http://localhost:3000/recetas", {
             method: "DELETE",
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: receta.id
+            })
           })
             .then(res => {
               if (!res.ok) throw new Error("Error al eliminar");
@@ -66,8 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => {
       console.error(err);
-      contenedor.innerHTML =
-        "<p>Error al cargar las recetas.</p>";
+      contenedor.innerHTML = "<p>Error al cargar las recetas.</p>";
     });
 });
-

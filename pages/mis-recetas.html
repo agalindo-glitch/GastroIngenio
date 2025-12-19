@@ -24,37 +24,57 @@
 
   <header id="header"></header>
 
-  <main class="section">
+  <section class="section">
     <div class="container">
-
-      <h1 class="title is-3 has-text-centered mb-6">
+      <h1 class="title is-2 has-text-centered mb-6">
         Mis recetas
       </h1>
+      <div
+        id="recetas-container"
+        class="columns is-multiline is-variable is-5"
+      ></div>
 
-      <div id="mis-recetas" class="columns is-multiline"></div>
-
+ 
       <template id="receta-template">
-        <div class="column is-one-third">
+        <div class="column is-4">
           <div class="card receta-card">
 
-            <div class="card-content">
-              <p class="title is-5 receta-nombre"></p>
-              <p class="subtitle is-6 receta-categoria"></p>
-              <p class="receta-tiempo"></p>
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img
+                  class="receta-imagen"
+                  src=""
+                  alt="Imagen de la receta"
+                />
+              </figure>
             </div>
 
-            <footer class="card-footer">
-              <a class="card-footer-item btn-ver">Ver</a>
-              <a class="card-footer-item btn-editar">Editar</a>
-              <a class="card-footer-item btn-eliminar has-text-danger">Eliminar</a>
-            </footer>
+            <div class="card-content">
+              <h2 class="title is-5 receta-nombre"></h2>
+
+              <p class="receta-categoria has-text-grey"></p>
+
+              <p class="receta-tiempo mt-2"></p>
+
+              <div class="buttons is-right mt-4">
+                <button class="button is-info is-small btn-ver">
+                  Ver
+                </button>
+                <button class="button is-warning is-small btn-editar">
+                  Editar
+                </button>
+                <button class="button is-danger is-small btn-eliminar">
+                  Eliminar
+                </button>
+              </div>
+            </div>
 
           </div>
         </div>
       </template>
 
     </div>
-  </main>
+  </section>
 
   <footer id="footer"></footer>
 
