@@ -1,15 +1,24 @@
 CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL, foto_perfil TEXT);
-CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER REFERENCES usuarios(id), nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, comensales INTEGER, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, imagen_url TEXT);
-CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
-CREATE TABLE seguidores (id SERIAL PRIMARY KEY, seguidor_id INT NOT NULL, seguido_id INT NOT NULL, fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_seguido FOREIGN KEY (seguido_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_seguimiento UNIQUE (seguidor_id, seguido_id), CONSTRAINT no_auto_seguimiento CHECK (seguidor_id <> seguido_id));
-CREATE TABLE bloqueados (id SERIAL PRIMARY KEY, bloqueador_id INT NOT NULL, bloqueado_id INT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_bloqueador FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_bloqueado FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_bloqueo UNIQUE (bloqueador_id, bloqueado_id), CONSTRAINT no_auto_bloqueo CHECK (bloqueador_id <> bloqueado_id));
-CREATE TABLE mensajes (id SERIAL PRIMARY KEY, emisor_id INT NOT NULL, receptor_id INT NOT NULL, contenido TEXT NOT NULL, leido BOOLEAN DEFAULT FALSE, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_emisor FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_receptor FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT no_auto_mensaje CHECK (emisor_id <> receptor_id));
-CREATE TABLE tags (id SERIAL PRIMARY KEY, nombre VARCHAR(50) NOT NULL UNIQUE);
-CREATE TABLE receta_tag (id_receta INT NOT NULL REFERENCES recetas(id), id_tag INT NOT NULL REFERENCES tags(id), PRIMARY KEY (id_receta, id_tag));
-CREATE TABLE ingredientes (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE NOT NULL);
-CREATE TABLE receta_ingredientes (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, id_ingrediente INTEGER NOT NULL REFERENCES ingredientes(id), cantidad VARCHAR(50), unidad VARCHAR(50));
-CREATE TABLE pasos_receta (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, numero SMALLINT NOT NULL CHECK (numero BETWEEN 1 AND 15), descripcion TEXT NOT NULL, foto_url TEXT, CONSTRAINT pasos_unicos UNIQUE (id_receta, numero));
 
+CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER REFERENCES usuarios(id), nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, comensales INTEGER, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, imagen_url TEXT);
+
+CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
+
+CREATE TABLE seguidores (id SERIAL PRIMARY KEY, seguidor_id INT NOT NULL, seguido_id INT NOT NULL, fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_seguido FOREIGN KEY (seguido_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_seguimiento UNIQUE (seguidor_id, seguido_id), CONSTRAINT no_auto_seguimiento CHECK (seguidor_id <> seguido_id));
+
+CREATE TABLE bloqueados (id SERIAL PRIMARY KEY, bloqueador_id INT NOT NULL, bloqueado_id INT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_bloqueador FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_bloqueado FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_bloqueo UNIQUE (bloqueador_id, bloqueado_id), CONSTRAINT no_auto_bloqueo CHECK (bloqueador_id <> bloqueado_id));
+
+CREATE TABLE mensajes (id SERIAL PRIMARY KEY, emisor_id INT NOT NULL, receptor_id INT NOT NULL, contenido TEXT NOT NULL, leido BOOLEAN DEFAULT FALSE, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_emisor FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_receptor FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT no_auto_mensaje CHECK (emisor_id <> receptor_id));
+
+CREATE TABLE tags (id SERIAL PRIMARY KEY, nombre VARCHAR(50) NOT NULL UNIQUE);
+
+CREATE TABLE receta_tag (id_receta INT NOT NULL REFERENCES recetas(id), id_tag INT NOT NULL REFERENCES tags(id), PRIMARY KEY (id_receta, id_tag));
+
+CREATE TABLE ingredientes (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE NOT NULL);
+
+CREATE TABLE receta_ingredientes (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, id_ingrediente INTEGER NOT NULL REFERENCES ingredientes(id), cantidad VARCHAR(50), unidad VARCHAR(50));
+
+CREATE TABLE pasos_receta (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, numero SMALLINT NOT NULL CHECK (numero BETWEEN 1 AND 15), descripcion TEXT NOT NULL, foto_url TEXT, CONSTRAINT pasos_unicos UNIQUE (id_receta, numero));
 
 
 -insertar clientes de prueba-
