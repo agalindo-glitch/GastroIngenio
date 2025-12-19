@@ -47,11 +47,17 @@ app.post("/usuarios", async (req, res) => {
     const edad = req.body.edad;
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
+    const foto_perfil = req.body.foto_perfil;
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
+
+    if (foto_perfil && foto_perfil.length > 255) {
+      return res.status(400).json({ error: 'URL de foto demasiado larga' });
+    }
+
 
     if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
@@ -70,16 +76,18 @@ app.post("/usuarios", async (req, res) => {
 
 
     const query = `
-    INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil)
+    VALUES ($1, $2, $3, $4, $5, $6)
     `;
+
 
     await pool.query(query, [
       nombre,
       apellido,
       edad,
       usuario,
-      contrasena
+      contrasena,
+      foto_perfil || null
     ]);
 
 
@@ -100,6 +108,8 @@ app.put("/usuarios/:id", async (req, res) => {
     const edad = req.body.edad;
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
+    const foto_perfil = req.body.foto_perfil;
+
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
@@ -116,10 +126,15 @@ app.put("/usuarios/:id", async (req, res) => {
 
     const query = `
     UPDATE usuarios
-    SET nombre = $1, apellido = $2, edad = $3,
-        usuario = $4, contrasena = $5
-    WHERE id = $6
+    SET nombre = $1,
+        apellido = $2,
+        edad = $3,
+        usuario = $4,
+        contrasena = $5,
+        foto_perfil = $6
+    WHERE id = $7
     `;
+
 
     await pool.query(query, [
       nombre,
@@ -127,6 +142,7 @@ app.put("/usuarios/:id", async (req, res) => {
       edad,
       usuario,
       contrasena,
+      foto_perfil || null,
       id
     ]);
 
