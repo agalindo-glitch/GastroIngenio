@@ -248,6 +248,140 @@ app.get("/recetas/:id", async (req, res) => {
   }
 });
 
+app.get("/recetas/:id/ingredientes", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+
+    const result = await pool.query(
+      "SELECT * FROM ingredientes_receta WHERE id_receta = $1 ORDER BY id ASC",
+      [id_receta]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+app.post("/recetas/:id/ingredientes", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+    const { ingredientes } = req.body; // [{nombre, cantidad}]
+
+    if (!Array.isArray(ingredientes) || ingredientes.length === 0) {
+      return res.status(400).json({ error: "Debe enviar un array de ingredientes" });
+    }
+
+    for (const ing of ingredientes) {
+      await pool.query(
+        `INSERT INTO ingredientes_receta (id_receta, nombre, cantidad)
+         VALUES ($1, $2, $3)`,
+        [id_receta, ing.nombre, ing.cantidad]
+      );
+    }
+
+    res.status(201).json({ message: "Ingredientes agregados" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+app.delete("/recetas/:id/ingredientes/:ingredienteId", async (req, res) => {
+  try {
+    const { ingredienteId } = req.params;
+
+    await pool.query(
+      "DELETE FROM ingredientes_receta WHERE id = $1",
+      [ingredienteId]
+    );
+
+    res.json({ message: "Ingrediente eliminado" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+
+app.get("/recetas/:id/pasos", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+
+    const result = await pool.query(
+      "SELECT * FROM pasos_receta WHERE id_receta = $1 ORDER BY numero_paso ASC",
+      [id_receta]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+
+app.post("/recetas/:id/pasos", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+    const { pasos } = req.body; 
+    // [{numero_paso, descripcion, imagen_url}]
+
+    if (!Array.isArray(pasos) || pasos.length === 0) {
+      return res.status(400).json({ error: "Debe enviar un array de pasos" });
+    }
+
+    if (pasos.length > 15) {
+      return res.status(400).json({ error: "Máximo 15 pasos permitidos" });
+    }
+
+    for (const paso of pasos) {
+      await pool.query(
+        `INSERT INTO pasos_receta (id_receta, numero_paso, descripcion, imagen_url)
+         VALUES ($1, $2, $3, $4)`,
+        [id_receta, paso.numero_paso, paso.descripcion, paso.imagen_url || null]
+      );
+    }
+
+    res.status(201).json({ message: "Pasos agregados" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+app.put("/recetas/:id/pasos/:pasoId", async (req, res) => {
+  try {
+    const { pasoId } = req.params;
+    const { numero_paso, descripcion, imagen_url } = req.body;
+
+    await pool.query(
+      `UPDATE pasos_receta
+       SET numero_paso = $1,
+           descripcion = $2,
+           imagen_url = $3
+       WHERE id = $4`,
+      [numero_paso, descripcion, imagen_url || null, pasoId]
+    );
+
+    res.json({ message: "Paso actualizado" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+app.delete("/recetas/:id/pasos/:pasoId", async (req, res) => {
+  try {
+    const { pasoId } = req.params;
+
+    await pool.query(
+      "DELETE FROM pasos_receta WHERE id = $1",
+      [pasoId]
+    );
+
+    res.json({ message: "Paso eliminado" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+
 // GET /mis-recetas?id_usuario=1
 app.get("/mis-recetas", async (req, res) => {
   try {
