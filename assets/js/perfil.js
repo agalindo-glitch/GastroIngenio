@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const id_usuario = localStorage.getItem("id_usuario");
 
-    if (!id_usuario) return;
+    if (!id_usuario) {
+        window.location.href = "/pages/login.html";
+        return;
+    }
 
     try {
         // ==========================
@@ -26,6 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         console.error("Error cargando perfil", error);
     }
+
+    // ==========================
+    // 🚪 DESLOGUEARSE
+    // ==========================
+    const logoutBtn = document.getElementById("logoutPerfilBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            if (confirm("¿Seguro que querés cerrar sesión?")) {
+                localStorage.clear();
+                window.location.href = "/index.html";
+            }
+        });
+    }
 });
 
 
@@ -37,15 +53,12 @@ async function cargarEstadisticas(id_usuario) {
         const res = await fetch("http://localhost:3000/recetas");
         const recetas = await res.json();
 
-        // Recetas del usuario
         const recetasUsuario = recetas.filter(
             r => r.id_usuario == id_usuario
         );
 
-        // Total posts
         document.getElementById("numPosts").textContent = recetasUsuario.length;
 
-        // Elegidos por la comunidad
         const elegidos = recetasUsuario.filter(
             r => r.elegidos_comunidad === true
         );
