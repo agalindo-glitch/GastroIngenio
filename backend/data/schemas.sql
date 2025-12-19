@@ -4,8 +4,6 @@ CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta I
 CREATE TABLE seguidores (id SERIAL PRIMARY KEY, seguidor_id INT NOT NULL, seguido_id INT NOT NULL, fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_seguido FOREIGN KEY (seguido_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_seguimiento UNIQUE (seguidor_id, seguido_id), CONSTRAINT no_auto_seguimiento CHECK (seguidor_id <> seguido_id));
 CREATE TABLE bloqueados (id SERIAL PRIMARY KEY, bloqueador_id INT NOT NULL, bloqueado_id INT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_bloqueador FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_bloqueado FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_bloqueo UNIQUE (bloqueador_id, bloqueado_id), CONSTRAINT no_auto_bloqueo CHECK (bloqueador_id <> bloqueado_id));
 CREATE TABLE mensajes (id SERIAL PRIMARY KEY, emisor_id INT NOT NULL, receptor_id INT NOT NULL, contenido TEXT NOT NULL, leido BOOLEAN DEFAULT FALSE, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_emisor FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_receptor FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT no_auto_mensaje CHECK (emisor_id <> receptor_id));
-CREATE TABLE tags (id SERIAL PRIMARY KEY, nombre VARCHAR(50) NOT NULL UNIQUE);
-CREATE TABLE receta_tag (id_receta INT NOT NULL REFERENCES recetas(id), id_tag INT NOT NULL REFERENCES tags(id), PRIMARY KEY (id_receta, id_tag));
 
 
 -insertar clientes de prueba-
