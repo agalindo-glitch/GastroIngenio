@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+    />
+
+    <link rel="stylesheet" href="../assets/css/header.css" />
+    <link rel="stylesheet" href="../assets/css/home.css" />
+    <link rel="stylesheet" href="../assets/css/modificar_usuario.css" />
+    <link rel="stylesheet" href="../assets/css/footer.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/jpg" href="assets/img/icono.jpg" />
+
+    <title>Perfil Usuario - GastroIngenio</title>
+  </head>
+  <body>
+    <header id="header"></header>
+    <main>
+      <section id="usuario">
+        <div class="perfil-card-img">
+          <div class="perfil-card">
+            <div class="perfil-img">
+              <img
+                id="perfilImg"
+                src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
+                alt="Foto de perfil del usuario"
+              />
+
+            </div>
+            <h2 class="nombre-perfil" id="nombrePerfil"></h2>
+
+          </div>
+
+          <div class="perfil-stats">
+            <div>
+              <p><strong>Posts</strong></p>
+              <p id="numPosts">Input</p>
+            </div>
+            <div>
+              <p><strong>Elegidos por la Comunidad</strong></p>
+              <p id="numElegidos">Input</p>
+            </div>
+          </div>
+        </div>
+        <form id="editarForm" class="perfil-form">
+
+          <section class="perfil-form__foto">
+            <label class="perfil-form__label">Foto de perfil</label>
+
+            <div class="perfil-form__foto-control">
+              <input
+                id="fotoPerfilInput"
+                class="perfil-form__input"
+                type="url"
+                placeholder="Pegá la URL de tu imagen"
+              />
+
+              <button
+                type="button"
+                id="previewFotoBtn"
+                class="perfil-form__btn-preview button is-light"
+              >
+                Ver foto
+              </button>
+            </div>
+          </section>
+
+
+          <div class="field">
+            <label class="label">Nombre</label>
+            <div class="control">
+              <input id="nombrePerfilMod" class="input" type="text" placeholder="Tu nombre" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Apellido</label>
+            <div class="control">
+              <input id="apellidoPerfilMod"class="input" type="text" placeholder="Tu apellido" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Edad</label>
+            <div class="control">
+              <input id="edadPerfilMod" class="input" type="text" placeholder="Tu edad" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Usuario</label>
+            <div class="control">
+              <input id="usuarioPerfilMod" class="input" type="text" placeholder="Tu usuario" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Contraseña</label>
+            <div class="control">
+              <input id="contrasenaPerfilMod" class="input" type="text" placeholder="Tu contraseña" />
+            </div>
+          </div>
+
+          <div class="field has-text-right">
+            <a>
+              <button type="submit" class="button is-link">Guardar</button>
+            </a>
+          </div>
+        </form>
+      </section>
+    </main>
+    
+    <footer id="footer"></footer>
+
+    <script src="../assets/js/perfil.js"></script>
+    <script src="../assets/js/modificar_usuario.js"></script>
+    <script src="../assets/js/botones_login.js"></script>
+    <script src="../assets/js/components.js"></script>
+  </body>
+</html>

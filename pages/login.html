@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Iniciar sesión | GastroIngenio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="Inicia sesión en GastroIngenio para guardar tus recetas favoritas y crear las tuyas.">
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet" />
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+
+  <link rel="icon" type="image/jpg" href="../assets/img/icono.jpg" />
+
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
+  <link rel="stylesheet" href="../assets/css/login.css" />
+</head>
+
+<body>
+  <header id="header"></header>
+
+  <main class="login-page">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-4-desktop is-6-tablet">
+          <div class="box login-card">
+            <h1 class="title is-4 has-text-centered login-title">
+              Iniciar sesión
+            </h1>
+            <p class="has-text-centered login-subtitle">
+              Ingresa para guardar tus recetas favoritas y crear las tuyas ✨
+            </p>
+
+            <form id="formularioLogin">
+              <div class="field">
+                <label class="label">Usuario</label>
+                <div class="control">
+                  <input id="usuario" class="input" type="text" placeholder="Tu nombre de usuario" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Contraseña</label>
+                <div class="control">
+                  <input id="contrasena" class="input" type="password" placeholder="••••••••" required>
+                </div>
+              </div>
+
+              <div class="field is-flex is-justify-content-space-between is-align-items-center login-extra">
+                <label class="checkbox">
+                  <input type="checkbox">
+                  Recuérdame
+                </label>
+                <a href="#" class="login-link">¿Olvidaste tu contraseña?</a>
+              </div>
+
+              <div class="field">
+                <button class="button is-fullwidth is-primary login-button" type="submit">
+                  Ingresar
+                </button>
+              </div>
+
+              <p class="has-text-centered login-bottom-text">
+                ¿Todavía no tenés cuenta?
+                <a href="./crear-usuario.html" class="login-link">Crear una cuenta</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer"></footer>
+  <script src="../assets/js/botones_login.js"></script>
+  <script src="../assets/js/login.js"></script>
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/busqueda.js"></script>
+</body>
+</html>

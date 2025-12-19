@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+
+  <link rel="stylesheet" href="../assets/css/header.css" />
+  <link rel="stylesheet" href="../assets/css/home.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
+  <link rel="stylesheet" href="../assets/css/usuario.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
+  <title>Perfil Usuario - GastroIngenio</title>
+</head>
+
+<body>
+  <header id="header"></header>
+
+    <main>
+      <section id="usuario">
+        <div class="perfil">
+          <div class="perfil-img-nombre-usuario">
+            <div class="perfil-img">
+              <img
+                id="perfilImg"
+                src="https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg"
+                alt="Foto perfil"
+              />
+            </div>
+            <h2 id="nombrePerfil">Nombre</h2>
+            <h2 id="usuarioPerfil">Nombre_usuario</h2>
+          </div>
+          <div class="perfil-stats">
+            <div class="perfil-stats-post-likes">
+              <div class="posts">
+                <p><strong>Posts</strong></p>
+                <p id="numPosts">Input</p>
+              </div>
+              <div class="likes">
+                <p><strong>Elegidos por la comunidad</strong></p>
+                <p id="numElegidos">Input</p>
+              </div>
+            </div>
+            <div class="botones" id="botones-propios">       
+              <a href="./modificar_usuario.html">
+                <button id="editar_boton" class="button is-link">Editar Perfil</button>
+              </a>
+              <a href="./mis-recetas.html">
+                <button class="button is-link">Mis recetas</button>
+              </a>
+
+              <a>
+                <button id="logoutPerfilBtn" class="button is-link logout-btn">
+                  Desloguearse
+                </button>
+              </a>
+              
+              <a>
+                <button id="eliminar_boton" class="button is-link">Eliminar Perfil</button>
+              </a>
+            </div>
+
+            <div class="botones" id="botones-ajenos" style="display:none;">
+              <button id="btnSeguir" class="button is-link">
+                Seguir ➕
+              </button>
+
+              <button id="btnMensaje" class="button is-link">
+                Mensaje 💬
+              </button>
+
+              <button id="btnCompartir" class="button is-link">
+                Compartir 🔗
+              </button>
+
+              <button id="btnBloquear" class="button is-danger">
+                Bloquear 🚫
+              </button>
+            </div>
+
+            <div class="modal" id="chatModal">
+              <div class="modal-background"></div>
+              <div class="modal-content box">
+                <h3 class="title is-5">Chat con @<span id="chatUser"></span></h3>
+
+                <div id="chatMensajes" class="chat-box"></div>
+
+                <input id="chatInput" class="input" placeholder="Escribí un mensaje..." />
+                <button id="enviarMensaje" class="button is-link mt-2">Enviar</button>
+              </div>
+            </div>
+            
+            
+        </div>
+      </section>
+    </main>
+    
+    <footer id="footer"></footer>
+    
+    <script src="../assets/js/eliminar_usuario.js"></script> 
+    <script src="../assets/js/botones_login.js"></script>
+    <script src="../assets/js/busqueda.js"></script>
+    <script src="../assets/js/perfil.js"></script>
+    <script src="../assets/js/components.js"></script>
+  </body>
+</html>
