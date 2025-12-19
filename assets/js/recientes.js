@@ -24,11 +24,14 @@ async function loadRecientes() {
     const html = recientes.map(receta => crearCardReciente(receta)).join("");
 
     // Insertar contenido
-    lista.innerHTML = html + `
-      <a href="./pages/resultados.html?query=recientes" class="recent__more">
-        Ver Más
-      </a>
-    `;
+    lista.innerHTML = html 
+    // + 
+    // `
+    //   <a href="./pages/resultados.html?query=recientes" class="recent__more">
+    //     Ver Más
+    //   </a>
+    // `
+    ;
 
   } catch (error) {
     console.error("Error cargando recientes:", error);
@@ -41,10 +44,11 @@ async function loadRecientes() {
 // Función para calcular el tiempo transcurrido
 // ----------------------
 function tiempoDesde(fechaString) {
-  const fecha = new Date(fechaString);
-  const ahora = new Date();
+  const fecha = new Date(fechaString); // no agregar 'Z'
+  if (isNaN(fecha)) return "Fecha inválida"; // chequeo extra
 
-  let diff = Math.floor((ahora - fecha) / 1000); // segundos
+  const ahora = new Date();
+  let diff = Math.floor((ahora - fecha) / 1000); // en segundos
 
   if (diff < 5) return "Hace unos segundos";
 
@@ -59,6 +63,7 @@ function tiempoDesde(fechaString) {
   const dias = Math.floor(horas / 24);
   return `Hace ${dias} días`;
 }
+
 
 
 

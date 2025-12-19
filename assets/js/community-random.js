@@ -39,7 +39,6 @@ function renderRecipe(recipe, usuario) {
 
     cardLink.href = recetaLink;
     titleLink.href = recetaLink;
-
     cardLink.onclick = () => window.location.href = recetaLink;
 
     // Título
@@ -76,7 +75,6 @@ function renderRecipe(recipe, usuario) {
     const shareBtn = card.querySelector("[aria-label='Compartir']");
     shareBtn.onclick = async () => {
         const url = `${window.location.origin}/pages/ver-receta.html?id=${recipe.id}`;
-
         try {
             await navigator.clipboard.writeText(url);
             alert("📋 ¡Enlace copiado al portapapeles!");
@@ -84,7 +82,17 @@ function renderRecipe(recipe, usuario) {
             alert("No se pudo copiar el enlace");
         }
     };
+
+    // ---------- Badge "Elegidos por la comunidad" ----------
+    const badgeEl = card.querySelector(".community-card__badge");
+    if (recipe.elegidos_comunidad === true) {
+        badgeEl.textContent = "⭐ Elegido por la comunidad";
+        badgeEl.style.display = "inline-block"; // mostrar
+    } else {
+        badgeEl.style.display = "none"; // ocultar si es false o null
+    }
 }
+
 
 
 async function renderRandomRecipe() {
@@ -93,15 +101,21 @@ async function renderRandomRecipe() {
 
     if (!recetas || recetas.length === 0) return;
 
+    // Filtrar solo las recetas elegidas por la comunidad
+    const recetasComunidad = recetas.filter(r => r.elegidos_comunidad === true);
+    if (recetasComunidad.length === 0) return; // si no hay ninguna, no mostrar nada
+
     const usersById = {};
     if (usuarios) {
         usuarios.forEach(u => usersById[u.id] = u);
     }
 
-    const random = recetas[Math.floor(Math.random() * recetas.length)];
+    // Elegir una receta aleatoria de las filtradas
+    const random = recetasComunidad[Math.floor(Math.random() * recetasComunidad.length)];
     const usuario = usersById[random.id_usuario];
 
     renderRecipe(random, usuario);
 }
+
 
 document.addEventListener("DOMContentLoaded", renderRandomRecipe);
