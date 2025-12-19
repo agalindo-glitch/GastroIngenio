@@ -1,106 +1,94 @@
-const STORAGE_KEY = "communityRecipes";
+const API_URL = "http://localhost:3000/recetas";
+const API_USERS = "http://localhost:3000/usuarios";
 
-/* 1. Crear recetas solo si no existen */
-function initRecipes() {
-    const recipes = [
-        {
-            title: "Milanesa Napolitana con Papas Fritas",
-            image: "https://i.pinimg.com/originals/ee/42/0c/ee420cee3da5a303b3ebfa7dc8852700.jpg",
-            author: "Chef Martín",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "40 min",
-            rating: 1,
-            reviews: 58
-        },
-        {
-            title: "Hamburguesa Casera Gourmet",
-            image: "https://images.unsplash.com/photo-1550547660-d9450f859349",
-            author: "Chef Laura",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "30 min",
-            rating: 0,
-            reviews: 102
-        },
-        {
-            title: "Pizza Napolitana",
-            image: "https://images.unsplash.com/photo-1601924582975-7e6706c8f7f3",
-            author: "Chef Juan",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "90 min",
-            rating: 4,
-            reviews: 88
-        },
-        {
-            title: "Tacos Mexicanos",
-            image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-            author: "Chef Ana",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "25 min",
-            rating: 2,
-            reviews: 64
-        },
-        {
-            title: "Ensalada César",
-            image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9",
-            author: "Chef Diego",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "15 min",
-            rating: 1,
-            reviews: 39
-        },
-        {
-            title: "Empanadas Criollas",
-            image: "https://images.unsplash.com/photo-1604908812841-1c90d97c4c4b",
-            author: "Chef Luis",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "50 min",
-            rating: 4,
-            reviews: 56
-        },
-        {
-            title: "Brownies de Chocolate",
-            image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c",
-            author: "Chef Carla",
-            authorImg: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            duration: "35 min",
-            rating: 5,
-            reviews: 120
-        }
-    ];
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
-
+async function getRecipesFromBackend() {
+    try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("Error obteniendo recetas del backend");
+        return await res.json();
+    } catch (err) {
+        console.error("Error al obtener recetas:", err);
+        return null;
+    }
 }
 
-function renderRandomRecipe() {
-    const recipes = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!recipes) return;
+async function getUsersFromBackend() {
+    try {
+        const res = await fetch(API_USERS);
+        if (!res.ok) throw new Error("Error obteniendo usuarios");
+        return await res.json();
+    } catch (err) {
+        console.error("Error usuarios:", err);
+        return null;
+    }
+}
 
-    const recipe = recipes[Math.floor(Math.random() * recipes.length)];
-
+function renderRecipe(recipe, usuario) {
     const card = document.querySelector(".community-card");
-    if (!card) return;
+    if (!card || !recipe) return;
 
-    card.querySelector(".community-card__image").src = recipe.image;
-    card.querySelector(".community-card__image").alt = recipe.title;
+    // Imagen principal
+    card.querySelector(".community-card__image").src =
+        recipe.imagen_url || "https://via.placeholder.com/400x250?text=Sin+Imagen";
+    card.querySelector(".community-card__image").alt = recipe.nombre;
 
-    card.querySelector(".community-card__title-link").textContent = recipe.title;
-    card.querySelector(".community-card__author-name").textContent = recipe.author;
-    card.querySelector(".community-card__author-avatar").src = recipe.authorImg;
-    card.querySelector(".community-card__duration span").textContent = recipe.duration;
+    // Título
+    card.querySelector(".community-card__title-link").textContent = recipe.nombre;
 
+    // Autor
+    const authorNameEl = card.querySelector(".community-card__author-name");
+    const authorAvatarEl = card.querySelector(".community-card__author-avatar");
+
+    authorNameEl.textContent = usuario?.usuario || "Autor desconocido";
+
+    authorAvatarEl.src =
+        usuario?.foto_perfil ||
+        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+    // Link al perfil del usuario
+    const authorLink = `/pages/usuario.html?userId=${usuario?.id}`;
+
+    authorNameEl.style.cursor = "pointer";
+    authorNameEl.onclick = () => window.location.href = authorLink;
+
+    authorAvatarEl.style.cursor = "pointer";
+    authorAvatarEl.onclick = () => window.location.href = authorLink;
+
+    // Duración
+    card.querySelector(".community-card__duration span").textContent =
+        recipe.tiempo_preparacion
+            ? `${recipe.tiempo_preparacion} min`
+            : "—";
+
+    // ⭐⭐⭐⭐✩ Estrellas fijas en 4
     const stars = card.querySelectorAll(".community-card__star");
     stars.forEach((star, index) => {
-        star.classList.toggle(
-            "community-card__star--empty",
-            index >= recipe.rating
-        );
+        star.classList.toggle("community-card__star--empty", index >= 4);
     });
 
+    // review = cantidad de reseñas
+    const reviews = recipe.review ?? 0;
+
+    // Texto: 4/5 (7 reseñas)
     card.querySelector(".community-card__score").textContent =
-        `${recipe.rating}/5 (${recipe.reviews} Reseñas)`;
+        `4/5 (${reviews} reseñas)`;
 }
-document.addEventListener("DOMContentLoaded", () => {
-    initRecipes();
-    renderRandomRecipe();
-});
+
+async function renderRandomRecipe() {
+    const recetas = await getRecipesFromBackend();
+    const usuarios = await getUsersFromBackend();
+
+    if (!recetas || recetas.length === 0) return;
+
+    const usersById = {};
+    if (usuarios) {
+        usuarios.forEach(u => usersById[u.id] = u);
+    }
+
+    const random = recetas[Math.floor(Math.random() * recetas.length)];
+    const usuario = usersById[random.id_usuario];
+
+    renderRecipe(random, usuario);
+}
+
+document.addEventListener("DOMContentLoaded", renderRandomRecipe);

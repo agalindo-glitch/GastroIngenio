@@ -52,18 +52,19 @@ async function cargarResultados() {
     .filter(r => {
       if (!query) return true;
 
+      // ⭐ FILTRO ESPECIAL: Elegidos por la Comunidad
+      if (query === "elegidos_por-la_comunidad") {
+        return r.elegidos_comunidad === true;
+      }
+
       const usuario = usuariosPorId[r.id_usuario];
 
-      const tituloMatch = r.nombre
-        ?.toLowerCase()
-        .includes(query);
-
-      const usuarioMatch = usuario?.usuario
-        ?.toLowerCase()
-        .includes(query);
+      const tituloMatch = r.nombre?.toLowerCase().includes(query);
+      const usuarioMatch = usuario?.usuario?.toLowerCase().includes(query);
 
       return tituloMatch || usuarioMatch;
     })
+
 
     .map(r => {
       const usuario = usuariosPorId[r.id_usuario];
