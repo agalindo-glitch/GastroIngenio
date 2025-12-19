@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  window.recetaId = recetaId;
+
   fetch(`http://localhost:3000/recetas/${recetaId}`)
     .then(res => {
       if (!res.ok) throw new Error("Error al cargar receta");
@@ -18,13 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("No se pudo cargar la receta");
     });
 
-  const form = document.getElementById("form-review");
-  if (form) {
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      alert("Reviews todavía no habilitadas");
-    });
-  }
 });
 
 function renderReceta(receta) {
@@ -39,12 +34,12 @@ function renderReceta(receta) {
 
   const ingredientes = document.getElementById("lista-ingredientes");
   if (ingredientes) {
-    ingredientes.innerHTML = `<li>${receta.descripcion}</li>`;
+    ingredientes.innerHTML = `<li>(Ingedientes pendientes)</li>`;
   }
 
   const pasos = document.getElementById("lista-pasos");
-  if (pasos && receta.descripcion) {
-    pasos.innerHTML += `<p>${receta.descripcion}</p>`;
+  if (pasos) {
+    pasos.insertAdjacentHTML("beforeend", "<p>(Pasos pendientes)</p>");
   }
 
   const reviews = document.getElementById("lista-reviews");
@@ -52,13 +47,20 @@ function renderReceta(receta) {
 
   reviews.innerHTML = "";
 
-  if (receta.comentarios.length === 0) {
+  const total = receta.comentarios?.length || 0;
+
+  const contador = document.getElementById("comentarios-count");
+  if (contador) contador.textContent = total;
+
+  if (total === 0) {
     reviews.innerHTML = "<p>No hay reseñas todavía</p>";
     return;
   }
 
-  receta.comentarios.forEach(c => agregarReview(c));
+   receta.comentarios.slice(0, 3).forEach((c) => agregarReview(c));
 }
+
+
 
 function agregarReview(c) {
   const reviews = document.getElementById("lista-reviews");
@@ -67,11 +69,33 @@ function agregarReview(c) {
   const article = document.createElement("article");
   article.className = "review";
 
+  const usuarioLogueado = Number(localStorage.getItem("id_usuario"));
+
   article.innerHTML = `
     <strong>${c.usuario}</strong>
     <p>${c.descripcion}</p>
-    <small>${c.likes} | ${c.dislikes}</small>
+    <small>👍 ${c.likes} | 👎 ${c.dislikes}</small>
   `;
+
+  if (usuarioLogueado === c.id_usuario) {
+    const botones = document.createElement("div");
+    botones.className = "comentario-botones";
+
+    botones.innerHTML = `
+      <button class="btn-editar" data-id="${c.id}">Editar</button>
+      <button class="btn-eliminar" data-id="${c.id}">Eliminar</button>
+    `;
+
+    botones.querySelector(".btn-editar").addEventListener("click", () => {
+      iniciarEdicionComentario(c, article);
+    });
+
+    botones.querySelector(".btn-eliminar").addEventListener("click", () => {
+      eliminarComentario(c.id);
+    });
+
+    article.appendChild(botones);
+  }
 
   reviews.appendChild(article);
 }

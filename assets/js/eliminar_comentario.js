@@ -1,11 +1,5 @@
 async function eliminarComentario(idComentario) {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
-
-    if (!usuario) {
-        alert("Tenés que estar logueado para eliminar un comentario");
-        return;
-    }
-
     const confirmar = confirm("¿Estás seguro de que querés eliminar este comentario?");
     if (!confirmar) return;
 
