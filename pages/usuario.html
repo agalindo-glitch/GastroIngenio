@@ -47,7 +47,7 @@
                 <p id="numElegidos">Input</p>
               </div>
             </div>
-            <div class="botones">            
+            <div class="botones" id="botones-propios">       
               <a href="./modificar_usuario.html">
                 <button id="editar_boton" class="button is-link">Editar Perfil</button>
               </a>
@@ -65,6 +65,39 @@
                 <button id="eliminar_boton" class="button is-link">Eliminar Perfil</button>
               </a>
             </div>
+
+            <div class="botones" id="botones-ajenos" style="display:none;">
+              <button id="btnSeguir" class="button is-link">
+                Seguir ➕
+              </button>
+
+              <button id="btnMensaje" class="button is-link">
+                Mensaje 💬
+              </button>
+
+              <button id="btnCompartir" class="button is-link">
+                Compartir 🔗
+              </button>
+
+              <button id="btnBloquear" class="button is-danger">
+                Bloquear 🚫
+              </button>
+            </div>
+brt
+
+            <div class="modal" id="chatModal">
+              <div class="modal-background"></div>
+              <div class="modal-content box">
+                <h3 class="title is-5">Chat con @<span id="chatUser"></span></h3>
+
+                <div id="chatMensajes" class="chat-box"></div>
+
+                <input id="chatInput" class="input" placeholder="Escribí un mensaje..." />
+                <button id="enviarMensaje" class="button is-link mt-2">Enviar</button>
+              </div>
+            </div>
+            
+            
         </div>
       </section>
     </main>
