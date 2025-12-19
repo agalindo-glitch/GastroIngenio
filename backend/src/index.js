@@ -825,3 +825,16 @@ app.delete("/recetas/:id/tags/:tagId", async (req, res) => {
   }
 });
 
+app.get("/receta_ingredientes", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT ri.id_receta, i.nombre AS ingrediente
+      FROM receta_ingredientes ri
+      JOIN ingredientes i ON ri.id_ingrediente = i.id
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
