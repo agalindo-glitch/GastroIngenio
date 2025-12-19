@@ -33,14 +33,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error al cargar usuario", error);
     }
 
-    // ====== PREVIEW FOTO ======
-    previewBtn.addEventListener("click", () => {
+    // ====== PREVIEW FOTO (VALIDADO) ======
+    previewBtn.addEventListener("click", async () => {
         const url = fotoInput.value.trim();
+
         if (!url) {
-            alert("Pegá una URL válida");
+            marcarErrorFoto(fotoInput, "Ingresá una URL de imagen");
             return;
         }
-        fotoPreview.src = url;
+
+        try {
+            await validarImagen(url);
+            limpiarErrorFoto(fotoInput);
+            fotoPreview.src = url; // ✅ solo si es válida
+        } catch {
+            marcarErrorFoto(fotoInput, "La URL no corresponde a una imagen válida");
+        }
     });
 
     // ====== GUARDAR CAMBIOS ======
@@ -59,15 +67,12 @@ async function cargarEstadisticas(id_usuario) {
         const res = await fetch("http://localhost:3000/recetas");
         const recetas = await res.json();
 
-        // Recetas del usuario
         const recetasUsuario = recetas.filter(
             receta => receta.id_usuario == id_usuario
         );
 
-        // Total posts
         document.getElementById("numPosts").textContent = recetasUsuario.length;
 
-        // Elegidos por la comunidad
         const elegidos = recetasUsuario.filter(
             receta => receta.elegidos_comunidad === true
         );
@@ -83,7 +88,7 @@ async function cargarEstadisticas(id_usuario) {
 
 
 // ==============================
-// ✏️ EDITAR USUARIO
+// ✏️ EDITAR USUARIO (VALIDADO)
 // ==============================
 async function editarUsuario(id_usuario) {
     try {
@@ -92,7 +97,20 @@ async function editarUsuario(id_usuario) {
         const edad = document.getElementById("edadPerfilMod").value;
         const usuario = document.getElementById("usuarioPerfilMod").value;
         const contrasena = document.getElementById("contrasenaPerfilMod").value;
-        const foto_perfil = document.getElementById("fotoPerfilInput").value || null;
+
+        const fotoInput = document.getElementById("fotoPerfilInput");
+        const foto_perfil = fotoInput.value.trim() || null;
+
+        // 🚫 Validar imagen antes de guardar
+        if (foto_perfil) {
+            try {
+                await validarImagen(foto_perfil);
+                limpiarErrorFoto(fotoInput);
+            } catch {
+                marcarErrorFoto(fotoInput, "La URL de la foto no es válida");
+                return; // ⛔ NO guarda
+            }
+        }
 
         const respuesta = await fetch(`http://localhost:3000/usuarios/${id_usuario}`, {
             method: "PUT",
@@ -118,4 +136,32 @@ async function editarUsuario(id_usuario) {
         console.error(error);
         alert("Algo salió mal");
     }
+}
+
+
+// ==============================
+// 🖼️ VALIDAR IMAGEN REAL
+// ==============================
+function validarImagen(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => reject(false);
+        img.src = url;
+    });
+}
+
+
+// ==============================
+// ❌ / ✅ MANEJO DE ERRORES
+// ==============================
+function marcarErrorFoto(input, mensaje) {
+    input.classList.add("is-danger");
+    input.setCustomValidity(mensaje);
+    input.reportValidity();
+}
+
+function limpiarErrorFoto(input) {
+    input.classList.remove("is-danger");
+    input.setCustomValidity("");
 }
