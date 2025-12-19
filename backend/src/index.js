@@ -248,6 +248,31 @@ app.get("/recetas/:id", async (req, res) => {
   }
 });
 
+// GET /mis-recetas?id_usuario=1
+app.get("/mis-recetas", async (req, res) => {
+  try {
+    const id_usuario = req.query.id_usuario;
+
+    if (!id_usuario) {
+      return res.status(400).json({ error: "Falta id_usuario" });
+    }
+
+    const query = `
+      SELECT id, nombre, categoria, tiempo_preparacion
+      FROM recetas
+      WHERE id_usuario = $1
+    `;
+
+    const result = await pool.query(query, [id_usuario]);
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+
 // POST. /recetas (creo un receta)
 app.post("/recetas", async (req, res) => {
   try {
