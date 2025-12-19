@@ -1,3 +1,16 @@
+const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+document.addEventListener("click", e => {
+  const card = e.target.closest(".recipe-card__main-link");
+  if (!card) return;
+
+  // Si clickeó el autor, NO navegar a la receta
+  if (e.target.closest(".recipe-card__author")) return;
+
+  window.location.href = card.dataset.link;
+});
+
+
 // ----------- 1. Obtener parámetro ?query= de la URL -----------
 const params = new URLSearchParams(window.location.search);
 const query = (params.get("query") || "").trim().toLowerCase();
@@ -62,19 +75,23 @@ async function cargarResultados() {
         descripcion: r.descripcion,
         imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
 
-        // 👇 ACÁ está la magia
-        autor: usuario
-          ? usuario.usuario
-          : "Usuario desconocido",    
+        autor: usuario ? usuario.usuario : "Usuario desconocido",
 
-        avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+        avatar: usuario?.foto_perfil?.trim()
+          ? usuario.foto_perfil
+          : AVATAR_DEFAULT,
 
-        rating: 4,            
-        reviews: r.review ?? 0, 
+        userLink: usuario
+          ? `usuario.html?userId=${usuario.id}`
+          : "#",
 
+
+        rating: 4,
+        reviews: r.review ?? 0,
         link: `receta.html?id=${r.id}`
       };
     });
+
 
   mostrarPagina();
 }
@@ -121,7 +138,7 @@ function mostrarPagina() {
           <h2 class="recipe-card__heading">${r.titulo}</h2>
 
           <div class="recipe-card__meta">
-            <a class="recipe-card__author" href="#">
+            <a class="recipe-card__author" href="${r.userLink}">
               <img class="recipe-card__author-avatar" 
                    src="${r.avatar}"
                    alt="Autor" />
