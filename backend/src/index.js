@@ -248,6 +248,71 @@ app.get("/recetas/:id", async (req, res) => {
   }
 });
 
+app.get("/recetas/:id/completo", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // 1️⃣ Datos principales de la receta y autor
+    const recetaQuery = `
+      SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto
+      FROM recetas r
+      JOIN usuarios u ON u.id = r.id_usuario
+      WHERE r.id = $1
+    `;
+    const recetaResult = await pool.query(recetaQuery, [id]);
+    if (recetaResult.rows.length === 0) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+    const receta = recetaResult.rows[0];
+
+    // 2️⃣ Ingredientes con cantidad y unidad
+    const ingredientesQuery = `
+      SELECT i.id, i.nombre, ri.cantidad, ri.unidad
+      FROM receta_ingredientes ri
+      JOIN ingredientes i ON i.id = ri.id_ingrediente
+      WHERE ri.id_receta = $1
+    `;
+    const ingredientesResult = await pool.query(ingredientesQuery, [id]);
+    receta.ingredientes = ingredientesResult.rows;
+
+    // 3️⃣ Pasos de la receta
+    const pasosQuery = `
+      SELECT numero, descripcion, foto_url
+      FROM pasos_receta
+      WHERE id_receta = $1
+      ORDER BY numero ASC
+    `;
+    const pasosResult = await pool.query(pasosQuery, [id]);
+    receta.pasos = pasosResult.rows;
+
+    // 4️⃣ Tags de la receta
+    const tagsQuery = `
+      SELECT t.id, t.nombre
+      FROM tags t
+      JOIN receta_tag rt ON rt.id_tag = t.id
+      WHERE rt.id_receta = $1
+    `;
+    const tagsResult = await pool.query(tagsQuery, [id]);
+    receta.tags = tagsResult.rows;
+
+    // 5️⃣ Comentarios
+    const comentariosQuery = `
+      SELECT c.id, c.descripcion, c.likes, c.dislikes, u.id AS usuario_id, u.usuario AS autor
+      FROM comentarios c
+      JOIN usuarios u ON u.id = c.id_usuario
+      WHERE c.id_receta = $1
+      ORDER BY c.id ASC
+    `;
+    const comentariosResult = await pool.query(comentariosQuery, [id]);
+    receta.comentarios = comentariosResult.rows;
+
+    res.json(receta);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 // GET /mis-recetas?id_usuario=1
 app.get("/mis-recetas", async (req, res) => {
   try {
