@@ -1,85 +1,123 @@
-const form = document.getElementById("recipe-form");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("recipe-form");
 
-form.addEventListener("submit", manejarSubmit);
+  // Enviar formulario
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-function manejarSubmit(event) {
-    event.preventDefault(); 
-    console.log("crear-receta.js cargado");
-    guardarReceta();
-}
-
-function guardarReceta() {
     const formData = new FormData(form);
 
-    const receta = {
-        id_usuario: 1, 
-        nombre: formData.get("title")?.trim() || "Receta sin nombre",
-        descripcion: formData.get("shortDescription")?.trim() || "Sin descripción",
-        tiempo_preparacion: Number(formData.get("cookTime")) || 1, 
-        categoria: "General",
-        elegidos_comunidad: false,
-        review: 0,
-        ingredients: formData.getAll("ingredients[]").filter(i => i.trim() !== ""), 
-        steps: obtenerPasos().filter(p => p.text.trim() !== "") 
-    };
+    const nombre = formData.get("title")?.trim();
+    const descripcion = formData.get("shortDescription")?.trim();
+    const tiempo_preparacion = formData.get("cookTime")?.trim() || null;
+    const comensales = parseInt(formData.get("servings")) || null;
+    const categoria = "general";
+    const imagen_url = formData.get("imageUrl")?.trim() || null;
 
-    console.log("Receta a enviar:", receta); 
-    enviarReceta(receta);
-}
+    const id_usuario = localStorage.getItem("id_usuario");
+    if (!id_usuario) {
+      alert("Tenés que iniciar sesión antes de crear una receta.");
+      return;
+    }
 
-
-function obtenerPasos() {
-    const pasos = [];
-    const pasosHTML = document.querySelectorAll(".step-item");
-
-    pasosHTML.forEach((paso, index) => {
-        const texto = paso.querySelector("textarea").value;
-        const imagen = paso.querySelector("input").value;
-
-        pasos.push({
-            order: index + 1,
-            text: texto,
-            image: imagen
-        });
+    // Ingredientes
+    const ingredientes = [];
+    document.querySelectorAll("#ingredients-container .ingredient-item").forEach((item) => {
+      const nombre = item.querySelector('input[name="ingredients[]"]').value.trim();
+      if (nombre) ingredientes.push({ nombre, cantidad: null, unidad: null });
     });
 
-    return pasos;
-}
+    // Pasos
+    const pasos = [];
+    document.querySelectorAll("#steps-container .step-item").forEach((item, index) => {
+      const descripcion = item.querySelector('textarea[name="steps[][text]"]').value.trim();
+      const imagen = item.querySelector('input[name="steps[][image]"]').value.trim();
+      if (descripcion) pasos.push({ numero: index + 1, descripcion, imagen: imagen || null });
+    });
 
+    const body = { id_usuario, nombre, descripcion, tiempo_preparacion, categoria, comensales, imagen_url, ingredientes, pasos, tags: [] };
 
+    console.log("Enviando:", body);
 
-function enviarReceta(receta) {
-    fetch("http://localhost:3000/recetas" , {
+    try {
+      const res = await fetch("http://localhost:3000/recetas", {
         method: "POST",
-        headers: {
-      "Content-Type": "application/json"
-      },
-      body: JSON.stringify(receta)
-    })
-        .then(response => {
-            if(!response.ok) {
-                throw new Error("Error al guardar receta");
-            }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
 
-            return response.json();
-        })
+      const data = await res.json();
 
-        .then(() => {
-            alert("Receta guardada con exito");
-            form.reset();
-        })
-        .catch(error => {
-        console.error(error);
-        alert("Ocurrió un error al guardar la receta");
-        });
-}
+      if (!res.ok) {
+        alert("Error: " + (data.error || "No se pudo crear la receta"));
+        return;
+      }
 
-// flujo:
+      alert("Receta creada correctamente");
+      window.location.href = `/receta.html?id=${data.id}`;
+    } catch (err) {
+      console.error(err);
+      alert("Error de red o servidor");
+    }
+  });
 
-// Usuario clickea "Guardar"
-// submit del form
-// manejarSubmit
-// guardarReceta
-// obtenerPasos
-// enviarReceta
-// backend recibe POST /recetas
+  // Agregar ingrediente
+  document.getElementById("add-ingredient").addEventListener("click", () => {
+    const c = document.getElementById("ingredients-container");
+    c.insertAdjacentHTML("beforeend", `
+      <div class="field is-grouped ingredient-item">
+        <div class="control is-expanded">
+          <input class="input" type="text" name="ingredients[]" placeholder="Ingrediente">
+        </div>
+        <div class="control">
+          <button type="button" class="button is-danger is-light remove-ingredient">X</button>
+        </div>
+      </div>
+    `);
+  });
+
+  // Agregar paso
+  document.getElementById("add-step").addEventListener("click", () => {
+    const c = document.getElementById("steps-container");
+    const stepNumber = c.children.length + 1;
+    c.insertAdjacentHTML("beforeend", `
+      <div class="box step-item">
+        <div class="field is-grouped is-align-items-center">
+          <label class="label mr-2">Paso</label>
+          <div class="control">
+            <input class="input step-number-input" type="number" min="1" value="${stepNumber}" readonly>
+          </div>
+          <div class="control ml-auto">
+            <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label is-small">Descripción del paso</label>
+          <div class="control">
+            <textarea class="textarea" name="steps[][text]" rows="2" placeholder="Explicá qué hay que hacer en este paso" required></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label is-small">URL de imagen (opcional)</label>
+          <div class="control">
+            <input class="input" type="url" name="steps[][image]" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+    `);
+  });
+
+  // Delegar eventos para eliminar ingredientes o pasos
+  document.body.addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-ingredient")) {
+      e.target.closest(".ingredient-item").remove();
+    }
+    if (e.target.classList.contains("remove-step")) {
+      e.target.closest(".step-item").remove();
+      // Re-numerar pasos
+      document.querySelectorAll("#steps-container .step-number-input").forEach((input, idx) => {
+        input.value = idx + 1;
+      });
+    }
+  });
+});
