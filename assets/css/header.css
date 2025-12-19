@@ -215,9 +215,30 @@ header {
     transition: background 0.2s ease;
 }
 
-.navbar__button:hover {
+.navbar__button:not(.navbar__perfil):hover{
     background: linear-gradient(135deg, #F6A75A, #E0A24A);
 }
+
+.navbar__perfil {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+#perfil_img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0px 0px 3px 3px rgba(213, 162, 68, 0.83);
+}
+
+#perfil_img:hover {
+  transform: scale(1.05);
+}
+
 
 /* MENU */
 .navbar__menu {

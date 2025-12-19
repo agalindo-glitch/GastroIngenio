@@ -26,7 +26,11 @@ app.get("/usuarios", async (req, res) => {
 app.get("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await pool.query(`SELECT * FROM usuarios where id = ${id}`);
+    const result = await pool.query(
+      "SELECT * FROM usuarios WHERE id = $1",
+      [id]
+    );
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
@@ -43,11 +47,17 @@ app.post("/usuarios", async (req, res) => {
     const edad = req.body.edad;
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
+    const foto_perfil = req.body.foto_perfil;
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
+
+    if (foto_perfil && foto_perfil.length > 255) {
+      return res.status(400).json({ error: 'URL de foto demasiado larga' });
+    }
+
 
     if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
@@ -65,10 +75,22 @@ app.post("/usuarios", async (req, res) => {
     }
 
 
-    const query = `insert into usuarios (nombre, apellido, edad, usuario, contrasena) 
-    values ('${nombre}', '${apellido}', '${edad}', '${usuario}', '${contrasena}')`;
+    const query = `
+    INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    `;
 
-    await pool.query(query);
+
+    await pool.query(query, [
+      nombre,
+      apellido,
+      edad,
+      usuario,
+      contrasena,
+      foto_perfil || null
+    ]);
+
+
     res.status(200).json({ message: 'Usuario creado correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -86,6 +108,8 @@ app.put("/usuarios/:id", async (req, res) => {
     const edad = req.body.edad;
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
+    const foto_perfil = req.body.foto_perfil;
+
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
@@ -100,11 +124,29 @@ app.put("/usuarios/:id", async (req, res) => {
       return res.status(406).json({ error: 'Numero de edad invalido' });
     }
 
-    const query = `update usuarios 
-    set nombre = '${nombre}', apellido = '${apellido}', edad = '${edad}', usuario = '${usuario}', contrasena = '${contrasena}'
-    where id = '${id}'`;
+    const query = `
+    UPDATE usuarios
+    SET nombre = $1,
+        apellido = $2,
+        edad = $3,
+        usuario = $4,
+        contrasena = $5,
+        foto_perfil = $6
+    WHERE id = $7
+    `;
+
+
+    await pool.query(query, [
+      nombre,
+      apellido,
+      edad,
+      usuario,
+      contrasena,
+      foto_perfil || null,
+      id
+    ]);
+
     
-    await pool.query(query)
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -112,13 +154,16 @@ app.put("/usuarios/:id", async (req, res) => {
 
 });
 
+
+
 // DELETE. /usuarios (elimino un usuario por su id, pero no como parametro)
 app.delete("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const query = `delete from usuarios where id = '${id}'`;
+    const query = `DELETE FROM usuarios WHERE id = $1`;
+    await pool.query(query, [id]);
 
-    await pool.query(query);
+
     res.status(200).json({ message: `Usuario con el id: ${id} fue eliminado` });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -126,21 +171,51 @@ app.delete("/usuarios/:id", async (req, res) => {
 
 });
 
-// GET. /recetas (busco todos los recetas de la tabla)
-app.get("/recetas", async (req, res) => {
+app.get("/usuarios/:usuario", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM recetas");
-    res.json(result.rows);
+    const { usuario } = req.params;
+    const result = await pool.query(
+      "SELECT * FROM usuarios WHERE usuario = $1",
+      [usuario]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "DB error" });
   }
 });
 
+
+// GET. /recetas (busco todos los recetas de la tabla)
+app.get("/recetas", async (req, res) => {
+  const { id_usuario } = req.query;
+
+  let query = "SELECT * FROM recetas";
+  let params = [];
+
+  if (id_usuario) {
+    query = `
+      SELECT r.*
+      FROM recetas r
+      WHERE NOT EXISTS (
+        SELECT 1 FROM bloqueados b
+        WHERE b.bloqueador_id = $1
+        AND b.bloqueado_id = r.id_usuario
+      )
+    `;
+    params = [id_usuario];
+  }
+
+  const result = await pool.query(query, params);
+  res.json(result.rows);
+});
+
+
 // GET. /recetas/<id> (busco una receta por su id)
 app.get("/recetas/:id", async (req, res) => {
   try {
     const id = req.params.id;
+
 
     const recetaQuery = `
       SELECT r.*, u.usuario AS autor
@@ -224,10 +299,23 @@ app.post("/recetas", async (req, res) => {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
 
-    const query = `insert into recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review) 
-    values ('${id_usuario}','${nombre}', '${descripcion}', '${tiempo_preparacion}', '${categoria}', '${elegidos_comunidad}', '${review}')`;
+    const query = `
+    INSERT INTO recetas
+    (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, elegidos_comunidad, review)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `;
 
-    await pool.query(query);
+await pool.query(query, [
+  id_usuario,
+  nombre,
+  descripcion,
+  tiempo_preparacion,
+  categoria,
+  elegidos_comunidad,
+  review
+]);
+
+
     res.status(200).json({ message: 'Receta creada correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -261,11 +349,30 @@ app.put("/recetas/:id", async (req, res) => {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
 
-    const query = `update recetas
-    set id_usuario = '${id_usuario}', nombre = '${nombre}', descripcion = '${descripcion}', tiempo_preparacion = '${tiempo_preparacion}', categoria = '${categoria}', elegidos_comunidad = '${elegidos_comunidad}', review = '${review}'
-    where id = '${id}'`;
+    const query = `
+    UPDATE recetas
+    SET id_usuario = $1,
+        nombre = $2,
+        descripcion = $3,
+        tiempo_preparacion = $4,
+        categoria = $5,
+        elegidos_comunidad = $6,
+        review = $7
+    WHERE id = $8
+    `;
+
+    await pool.query(query, [
+      id_usuario,
+      nombre,
+      descripcion,
+      tiempo_preparacion,
+      categoria,
+      elegidos_comunidad,
+      review,
+      id
+    ]);
+
     
-    await pool.query(query)
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -278,10 +385,12 @@ app.delete("/recetas", async (req, res) => {
 
   try {
     const id = req.body.id;
-    const queryComentario = `DELETE FROM comentarios WHERE id_receta = '${id}'`
-    const query = `DELETE FROM recetas WHERE id = '${id}'`;
-    await pool.query(queryComentario);
-    await pool.query(query);
+    const queryComentario = `DELETE FROM comentarios WHERE id_receta = $1`;
+    const query = `DELETE FROM recetas WHERE id = $1`;
+
+    await pool.query(queryComentario, [id]);
+    await pool.query(query, [id]);
+
     res.status(204).json();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -293,6 +402,8 @@ app.delete("/recetas", async (req, res) => {
 app.get("/comentarios", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM comentarios");
+
+
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -302,15 +413,11 @@ app.get("/comentarios", async (req, res) => {
 
 // GET. /comentarios/<id> (busco un comentario por su id)
 app.get("/comentarios/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const result = await pool.query(`SELECT * FROM comentarios where id = ${id}`);
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
+  const id = req.params.id;
+  const result = await pool.query("SELECT * FROM comentarios WHERE id = $1", [id]);
+  res.json(result.rows[0]);
 });
+
 
 // POST. /comentarios (creo un comentario)
 app.post("/comentarios", async (req, res) => {
@@ -332,10 +439,19 @@ app.post("/comentarios", async (req, res) => {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
 
-    const query = `insert into comentarios (id_usuario, id_recetas, descripcion, likes, dislikes) 
-    values ('${id_usuario}','${id_receta}', '${descripcion}', '${likes}', '${dislikes}')`;
+    const query = `
+    INSERT INTO comentarios (id_usuario, id_recetas, descripcion, likes, dislikes)
+    VALUES ($1, $2, $3, $4, $5)
+    `;
 
-    await pool.query(query);
+    await pool.query(query, [
+      id_usuario,
+      id_receta,
+      descripcion,
+      likes,
+      dislikes
+    ]);
+
     res.status(200).json({ message: 'Comentario creado correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -363,11 +479,25 @@ app.put("/comentarios/:id", async (req, res) => {
     if (likes < 0 || dislikes < 0) {
       return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
     }
-    const query = `update comentarios
-    set id_usuario = '${id_usuario}', id_recetas = '${id_receta}', descripcion = '${descripcion}', likes = '${likes}', dislikes = '${dislikes}'
-    where id = '${id}'`;
-    
-    await pool.query(query)
+    const query = `
+    UPDATE comentarios
+    SET id_usuario = $1,
+        id_recetas = $2,
+        descripcion = $3,
+        likes = $4,
+        dislikes = $5
+    WHERE id = $6
+    `;
+
+    await pool.query(query, [
+      id_usuario,
+      id_receta,
+      descripcion,
+      likes,
+      dislikes,
+      id
+    ]);
+
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -377,19 +507,16 @@ app.put("/comentarios/:id", async (req, res) => {
 
 // DELETE. /comentarios (elimino un comentarios por su id, pero no como parametro)
 app.delete("/comentarios", async (req, res) => {
-
   try {
     const id = req.body.id;
-    const query = `delete from comentarios where id = '${id}'`;
+    await pool.query("DELETE FROM comentarios WHERE id = $1", [id]);
 
-    await pool.query(query);
-    res.json(`el comentarios con el id: '${id}' fue eliminado`);
-    res.status(204).json({ message: 'Comentario eliminado correctamente' });
+    res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    res.status(500).json({ error: "Error en el servidor" });
   }
-
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -402,9 +529,14 @@ app.post("/login", async (req, res) => {
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
 
-    const query = `SELECT id, usuario FROM usuarios WHERE usuario = '${usuario}' AND contrasena = '${contrasena}'`;
+    const query = `
+    SELECT id, usuario
+    FROM usuarios
+    WHERE usuario = $1 AND contrasena = $2
+    `;
 
-    const resultados = await pool.query(query);
+    const resultados = await pool.query(query, [usuario, contrasena]);
+
 
     if (resultados.rows.length === 0){
       return res.status(401).send("No existe el usuario");
@@ -454,3 +586,92 @@ app.get("/usuariosPosts/:id", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
+
+// POST /seguidores (seguir usuario)
+app.post("/seguidores", async (req, res) => {
+  try {
+    const { seguidor_id, seguido_id } = req.body;
+
+    if (!seguidor_id || !seguido_id) {
+      return res.status(400).json({ error: "Faltan datos" });
+    }
+
+    const query = `
+      INSERT INTO seguidores (seguidor_id, seguido_id)
+      VALUES ($1, $2)
+      ON CONFLICT DO NOTHING
+    `;
+
+    await pool.query(query, [seguidor_id, seguido_id]);
+
+    res.status(201).json({ message: "Usuario seguido" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// DELETE /seguidores (dejar de seguir)
+app.delete("/seguidores", async (req, res) => {
+  try {
+    const { seguidor_id, seguido_id } = req.body;
+
+    await pool.query(
+      "DELETE FROM seguidores WHERE seguidor_id = $1 AND seguido_id = $2",
+      [seguidor_id, seguido_id]
+    );
+
+    res.status(200).json({ message: "Dejaste de seguir al usuario" });
+  } catch (error) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// GET /seguidores/estado?seguidor_id=1&seguido_id=2
+app.get("/seguidores/estado", async (req, res) => {
+  const { seguidor_id, seguido_id } = req.query;
+
+  const result = await pool.query(
+    "SELECT 1 FROM seguidores WHERE seguidor_id = $1 AND seguido_id = $2",
+    [seguidor_id, seguido_id]
+  );
+
+  res.json({ sigue: result.rows.length > 0 });
+});
+
+// GET /seguidores/count/:id
+app.get("/seguidores/count/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await pool.query(
+    "SELECT COUNT(*) FROM seguidores WHERE seguido_id = $1",
+    [id]
+  );
+
+  res.json({ seguidores: Number(result.rows[0].count) });
+});
+
+// GET /seguidos/count/:id
+app.get("/seguidos/count/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await pool.query(
+    "SELECT COUNT(*) FROM seguidores WHERE seguidor_id = $1",
+    [id]
+  );
+
+  res.json({ siguiendo: Number(result.rows[0].count) });
+});
+
+// POST /bloqueados
+app.post("/bloqueados", async (req, res) => {
+  const { bloqueador_id, bloqueado_id } = req.body;
+
+  await pool.query(
+    "INSERT INTO bloqueados (bloqueador_id, bloqueado_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+    [bloqueador_id, bloqueado_id]
+  );
+
+  res.status(201).json({ message: "Usuario bloqueado" });
+});
+

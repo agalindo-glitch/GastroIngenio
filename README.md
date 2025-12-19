@@ -1,37 +1,78 @@
-# GastroIngenio
-Pagina web para recetas ingeniosas.
 
-marcos@Ubuntu:~/Desktop/Desarrollo-de-aplicaciones/GastroIngenio/backend$ docker compose up -d
-[+] Running 2/2
- ✔ Network backend_default  Created                                        0.0s 
- ✔ Container backend-db-1   Started                                        0.4s 
-marcos@Ubuntu:~/Desktop/Desarrollo-de-aplicaciones/GastroIngenio/backend$ docker ps
-CONTAINER ID   IMAGE         COMMAND                  CREATED              STATUS              PORTS                                         NAMES
-6a050872299f   postgres:17   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   backend-db-1
-marcos@Ubuntu:~/Desktop/Desarrollo-de-aplicaciones/GastroIngenio/backend$ docker exec -it 6a050872299f -d postgres
-OCI runtime exec failed: exec failed: unable to start container process: exec: "-d": executable file not found in $PATH: unknown
-marcos@Ubuntu:~/Desktop/Desarrollo-de-aplicaciones/GastroIngenio/backend$ docker exec -it 6a050872299f bash
-root@6a050872299f:/# psql -U posgres -d gastroingenio
-psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  role "posgres" does not exist
-root@6a050872299f:/# psql -U postgres -d gastroingenio
-psql (17.7 (Debian 17.7-3.pgdg13+1))
-Type "help" for help.
+# Gastroingenio
 
-gastroingenio=# INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena) VALUES ('ricardo', 'rodrigues', 23, 'tini', 'nose');
-INSERT 0 1
-gastroingenio=# \d usuarios
-gastroingenio=# SELECT * FROM usuarios
-gastroingenio-# SELECT * FROM usuarios
-gastroingenio-# ^C
-gastroingenio=# 
+#### Que es Gastroingenio?
 
+GastroIngenio es una innovadora página web diseñada para facilitar el acceso a recetas de cocina de todo tipo. Esta plataforma está orientada a usuarios que buscan mejorar sus habilidades culinarias o descubrir nuevas ideas para sus menús diarios. A través de una interfaz intuitiva y atractiva, GastroIngenio ofrece una experiencia completa, desde la búsqueda de recetas hasta la visualización detallada de ingredientes y pasos de preparación.
 
-marcos@Ubuntu:~/Desktop/Desarrollo-de-aplicaciones/GastroIngenio/backend$ npm run dev
+## Backend
 
-> backend@1.0.0 dev
-> node --watch src/index.js
+El proyecto está respaldado por un robusto backend donde se emplea un servidor Express.js, que gestiona las solicitudes y respuestas de la aplicación, asegurando una estructura de rutas flexible y optimizada para el manejo de las recetas. Se implementa el uso de CORS para permitir el acceso controlado a recursos desde diferentes dominios. Por otro lado, tambien usamos dotev donde permite cargar las variables de entorno desde un archivo `.env`. Y por ultimo, El paquete `pg` nos permite interactuar con la base de datos PostgreSQL
 
-[dotenv@17.2.3] injecting env (1) from .env -- tip: ⚙️  override existing env vars with { override: true }
-Servidor corriendo en http://localhost:3000
+#### como se inicia el backend?
 
+1- Debemos asegurarnos que las dependencias se encuentren en el proyecto.
 
+Dependencias:
+
+   - `cors`
+   - `dotenv`
+   - `express`
+   - `pg`
+
+Si no están instaladas, puedes ejecutarlas con el siguiente comando en la teminal:
+
+    npm install
+
+Asegurese de que las dependencias aparezcan en tu archivo `package.json`.
+
+![App Screenshot](./assets/img/dependecias.png)
+
+2- Levantamos el contenedor que contiene la base de datos usando el siguiente comando, desde la terminal, en el directorio donde se encuentra el `docker-compose.yml` del backend. 
+
+Directorio: GastroIngenio/backend
+
+    docker compose up -d
+
+![App Screenshot](./assets/img/docker_backend.png)
+
+3- Ingresamos a la base de datos ingresando los siguientes comandos.    
+Ejecutamos el container donde se encuentra la base de datos
+
+    docker exec -it bd_gastroingenio bash
+
+![App Screenshot](./assets/img/dentro_del_container.png)
+
+Luego accedemos a la base de datos con el siguiente comando
+
+    psql -U postgres -d gastroingenio
+
+![App Screenshot](./assets/img/dentro_bd.png)
+
+4- Las tablas y la estructura de la base de datos están definidas en el archivo schemas.sql. Asegúrate de ejecutar las sentencias SQL para crear las tablas necesarias.
+
+    CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL);
+
+    CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER, nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id));
+
+    CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
+
+5- Una vez configurada la base de datos, abri otra terminal en el directorio del backend y ejecuta el siguiente comando para levantar el servidor del backend.
+
+    npm run dev
+
+![App Screenshot](./assets/img/sv_levantado.png)
+
+Con esto ya tendriamos el backend.
+
+## Frontend
+
+1- Levantamos el contenedor que contiene el Frontend con el siguiente comando en el directorio raiz.
+
+    docker-compose up -d
+
+![App Screenshot](./assets/img/docker_front.png)
+
+2- Ingresamos en esta URL desde un navegador.
+
+    http://localhost:8080/

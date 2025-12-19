@@ -1,3 +1,16 @@
+const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+document.addEventListener("click", e => {
+  const card = e.target.closest(".recipe-card__main-link");
+  if (!card) return;
+
+  // Si clickeó el autor, NO navegar a la receta
+  if (e.target.closest(".recipe-card__author")) return;
+
+  window.location.href = card.dataset.link;
+});
+
+
 // ----------- 1. Obtener parámetro ?query= de la URL -----------
 const params = new URLSearchParams(window.location.search);
 const query = (params.get("query") || "").trim().toLowerCase();
@@ -5,64 +18,85 @@ const query = (params.get("query") || "").trim().toLowerCase();
 const titleResultados = document.getElementById("title-resultados");
 titleResultados.textContent = query ? `Resultados para "${query}"` : "Resultados";
 
+async function obtenerRecetas() {
+  try {
+    const response = await fetch("http://localhost:3000/recetas");
 
-// ----------- 2. Ejemplo de recetas -----------
-const recetas = [
-  {
-    titulo: "Pollo al horno clásico",
-    dificultad: "Media",
-    duracion: "45 minutos",
-    descripcion: "Pollo al horno jugoso con papas.",
-    imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
-    autor: "Chef Ana",
-    avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-    rating: 5,
-    reviews: 58,
-    link: "hola"
-  },
-  {
-    titulo: "Milanesa de pollo",
-    dificultad: "Baja",
-    duracion: "30 minutos",
-    descripcion: "Crocante y dorada milanesa casera.",
-    imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
-    autor: "Chef Martín",
-    avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-    rating: 5,
-    reviews: 103,
-    link: "hola"
-  },
-  {
-    titulo: "Ensalada fresca con pollo grillado",
-    dificultad: "Muy baja",
-    duracion: "20 minutos",
-    descripcion: "Ensalada fresca, liviana y saludable.",
-    imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
-    autor: "Chef Laura",
-    avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-    rating: 4,
-    reviews: 41,
-    link: "hola"
-  },
-  {
-    titulo: "Milanesa de pollo",
-    dificultad: "Baja",
-    duracion: "30 minutos",
-    descripcion: "Crocante y dorada milanesa casera.",
-    imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
-    autor: "Chef Martín",
-    avatar: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-    rating: 5,
-    reviews: 103,
-    link: "hola"
+    if (!response.ok) {
+      throw new Error("Error al obtener recetas");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
   }
-];
+}
 
 
 // ----------- 3. Filtrar recetas -----------
-const resultados = recetas.filter(r =>
-  r.titulo.toLowerCase().includes(query)
-);
+let resultados = [];
+
+async function cargarResultados() {
+  const recetasDB = await obtenerRecetas();
+  const usuariosDB = await obtenerUsuarios();
+  const query = (params.get("query") || "").trim().toLowerCase();
+
+  // 🔹 Crear un mapa: id_usuario → usuario
+  const usuariosPorId = {};
+  usuariosDB.forEach(u => {
+    usuariosPorId[u.id] = u;
+  });
+
+  resultados = recetasDB
+    .filter(r => {
+      if (!query) return true;
+
+      const usuario = usuariosPorId[r.id_usuario];
+
+      const tituloMatch = r.nombre
+        ?.toLowerCase()
+        .includes(query);
+
+      const usuarioMatch = usuario?.usuario
+        ?.toLowerCase()
+        .includes(query);
+
+      return tituloMatch || usuarioMatch;
+    })
+
+    .map(r => {
+      const usuario = usuariosPorId[r.id_usuario];
+
+      return {
+        titulo: r.nombre,
+        dificultad: "Media",
+        duracion: `${r.tiempo_preparacion} minutos`,
+        descripcion: r.descripcion,
+        imagen: "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg",
+
+        autor: usuario ? usuario.usuario : "Usuario desconocido",
+
+        avatar: usuario?.foto_perfil?.trim()
+          ? usuario.foto_perfil
+          : AVATAR_DEFAULT,
+
+        userLink: usuario
+          ? `usuario.html?userId=${usuario.id}`
+          : "#",
+
+
+        rating: 4,
+        reviews: r.review ?? 0,
+        link: `receta.html?id=${r.id}`
+      };
+    });
+
+
+  mostrarPagina();
+}
+
+
 
 
 // ----------- PAGINACIÓN -----------
@@ -104,7 +138,7 @@ function mostrarPagina() {
           <h2 class="recipe-card__heading">${r.titulo}</h2>
 
           <div class="recipe-card__meta">
-            <a class="recipe-card__author" href="#">
+            <a class="recipe-card__author" href="${r.userLink}">
               <img class="recipe-card__author-avatar" 
                    src="${r.avatar}"
                    alt="Autor" />
@@ -126,6 +160,22 @@ function mostrarPagina() {
 
   generarPaginacion();
 }
+
+async function obtenerUsuarios() {
+  try {
+    const response = await fetch("http://localhost:3000/usuarios");
+
+    if (!response.ok) {
+      throw new Error("Error al obtener usuarios");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 
 function generarPaginacion() {
   const totalPaginas = Math.ceil(resultados.length / porPagina);
@@ -155,4 +205,4 @@ function cambiarPagina(num) {
 }
 
 
-mostrarPagina(); 
+cargarResultados();
