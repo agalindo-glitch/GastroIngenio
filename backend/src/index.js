@@ -248,6 +248,31 @@ app.get("/recetas/:id", async (req, res) => {
   }
 });
 
+// GET /mis-recetas?id_usuario=1
+app.get("/mis-recetas", async (req, res) => {
+  try {
+    const id_usuario = req.query.id_usuario;
+
+    if (!id_usuario) {
+      return res.status(400).json({ error: "Falta id_usuario" });
+    }
+
+    const query = `
+      SELECT id, nombre, categoria, tiempo_preparacion
+      FROM recetas
+      WHERE id_usuario = $1
+    `;
+
+    const result = await pool.query(query, [id_usuario]);
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+
 // POST. /recetas (creo un receta)
 app.post("/recetas", async (req, res) => {
   try {
@@ -648,5 +673,76 @@ app.post("/bloqueados", async (req, res) => {
   );
 
   res.status(201).json({ message: "Usuario bloqueado" });
+});
+
+// GET /tags
+app.get("/tags", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM tags ORDER BY nombre ASC");
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// POST /recetas/:id/tags
+app.post("/recetas/:id/tags", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+    const { tags } = req.body;
+
+    if (!Array.isArray(tags) || tags.length === 0) {
+      return res.status(400).json({ error: "Debe enviar un array de tags" });
+    }
+
+    const insertQuery = `
+      INSERT INTO receta_tag (id_receta, id_tag)
+      VALUES ($1, $2)
+      ON CONFLICT DO NOTHING
+    `;
+
+    for (const tagId of tags) {
+      await pool.query(insertQuery, [id_receta, tagId]);
+    }
+
+    res.status(201).json({ message: "Tags asignados correctamente" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// GET /recetas/:id/tags
+app.get("/recetas/:id/tags", async (req, res) => {
+  try {
+    const id_receta = req.params.id;
+
+    const result = await pool.query(
+      `SELECT t.*
+       FROM tags t
+       JOIN receta_tag rt ON rt.id_tag = t.id
+       WHERE rt.id_receta = $1`,
+      [id_receta]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// DELETE /recetas/:id/tags/:tagId
+app.delete("/recetas/:id/tags/:tagId", async (req, res) => {
+  try {
+    const { id, tagId } = req.params;
+
+    await pool.query(
+      "DELETE FROM receta_tag WHERE id_receta = $1 AND id_tag = $2",
+      [id, tagId]
+    );
+
+    res.json({ message: "Tag removido de la receta" });
+  } catch (err) {
+    res.status(500).json({ error: "DB error" });
+  }
 });
 
