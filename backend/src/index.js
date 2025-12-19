@@ -11,6 +11,97 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend funcionando" });
 });
 
+
+
+app.post("/comentarios", async (req, res) => {
+  try {
+    const { id_usuario, id_receta, descripcion, puntaje } = req.body;
+    const likes = req.body.likes ?? 0;
+    const dislikes = req.body.dislikes ?? 0;
+
+    // 🔍 Debug: mostrar datos recibidos
+    console.log("💬 Datos recibidos en backend:", req.body);
+
+    // 1️⃣ Validaciones básicas
+    if (!id_usuario || !id_receta || !descripcion?.trim()) {
+      console.log("⚠️ Faltan campos obligatorios");
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
+    }
+
+    // 2️⃣ Validación de puntaje
+    const puntajeNum = Number(puntaje);
+    if (isNaN(puntajeNum) || puntajeNum < 0 || puntajeNum > 5) {
+      console.log("⚠️ Puntaje inválido:", puntaje);
+      return res.status(406).json({ error: "Puntaje inválido (0-5)" });
+    }
+
+    // 3️⃣ Validación de likes/dislikes
+    if (likes < 0 || dislikes < 0) {
+      console.log("⚠️ Likes o dislikes inválidos");
+      return res.status(406).json({ error: "Likes/Dislikes inválidos" });
+    }
+
+    // 🔍 Debug: mostrar datos a insertar
+    console.log("💾 Insertando comentario:", {
+      id_usuario,
+      id_receta,
+      descripcion: descripcion.trim(),
+      puntaje: puntajeNum,
+      likes,
+      dislikes
+    });
+
+    // 🔍 Debug: mostrar datos a insertar
+    console.log("💾 Insertando comentario:", {
+      id_usuario,
+      id_receta,
+      descripcion: descripcion.trim(),
+      puntaje: puntajeNum,
+      likes,
+      dislikes
+    });
+
+    // 🔍 Debug: mostrar valor que irá como $4
+    console.log("💡 Valor que se enviará como $4 (puntaje):", puntajeNum);
+
+    // Guardar comentario
+    const result = await pool.query(
+      `INSERT INTO comentarios (id_usuario, id_receta, descripcion, puntaje, likes, dislikes)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`,
+      [id_usuario, id_receta, descripcion.trim(), puntajeNum, likes, dislikes]
+    );
+
+    // 🔍 Debug: mostrar lo que realmente devuelve la DB
+    console.log("✅ Comentario insertado en DB:", result.rows[0]);
+
+    
+
+    const comment = result.rows[0];
+
+    // Traer el nombre de usuario y foto para el frontend
+    const userRes = await pool.query(
+      `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
+      [comment.id_usuario]
+    );
+
+    comment.usuario = userRes.rows[0]?.usuario ?? "";
+    comment.foto_perfil = userRes.rows[0]?.foto_perfil ?? null;
+
+    // 🔍 Debug: mostrar comentario final que se envía al frontend
+    console.log("✅ Comentario guardado y enviado al frontend:", comment);
+
+    res.status(201).json(comment);
+
+  } catch (error) {
+    console.error("❌ Error en POST /comentarios:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+
+
+
 // GET. /usuarios (busco todos los usuarios de la tabla)
 app.get("/usuarios", async (req, res) => {
   try {
@@ -254,7 +345,11 @@ app.get("/recetas/:id/completo", async (req, res) => {
 
     // 1️⃣ Datos principales de la receta y autor
     const recetaQuery = `
-      SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto
+      SELECT 
+        r.id, r.id_usuario, r.nombre, r.descripcion, r.tiempo_preparacion,
+        r.categoria, r.comensales, r.imagen_url, r.elegidos_comunidad,
+        r.review, r.fecha_creacion,
+        u.usuario AS autor, u.foto_perfil AS autor_foto
       FROM recetas r
       JOIN usuarios u ON u.id = r.id_usuario
       WHERE r.id = $1
@@ -287,14 +382,18 @@ app.get("/recetas/:id/completo", async (req, res) => {
 
     // 4️⃣ Comentarios
     const comentariosQuery = `
-      SELECT c.id, c.descripcion, c.likes, c.dislikes, u.id AS usuario_id, u.usuario AS autor
+      SELECT c.id, c.descripcion, c.puntaje, c.likes, c.dislikes,
+             u.id AS usuario_id, u.usuario AS autor
       FROM comentarios c
       JOIN usuarios u ON u.id = c.id_usuario
       WHERE c.id_receta = $1
       ORDER BY c.id ASC
     `;
+
     const comentariosResult = await pool.query(comentariosQuery, [id]);
     receta.comentarios = comentariosResult.rows;
+
+  
 
     res.json(receta);
   } catch (err) {
@@ -302,6 +401,7 @@ app.get("/recetas/:id/completo", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
+
 
 
 // GET /mis-recetas?id_usuario=1
@@ -516,11 +616,16 @@ app.get("/comentarios/:id", async (req, res) => {
   }
 });
 
-// GET /recetas/:id/comentarios/resumen (cantidad + top 3)
+// GET /recetas/:id/comentarios/resumen (cantidad + top 3 con puntaje)
 app.get("/recetas/:id/comentarios/resumen", async (req, res) => {
   try {
     const id_receta = Number(req.params.id);
 
+    if (isNaN(id_receta)) {
+      return res.status(400).json({ error: "ID de receta inválido" });
+    }
+
+    // 1️⃣ Total de comentarios
     const totalResult = await pool.query(
       `SELECT COUNT(*)::int AS total
        FROM comentarios
@@ -528,8 +633,16 @@ app.get("/recetas/:id/comentarios/resumen", async (req, res) => {
       [id_receta]
     );
 
+    // 2️⃣ Top 3 comentarios más recientes con puntaje y autor
     const top3Result = await pool.query(
-      `SELECT c.*, u.usuario
+      `SELECT 
+         c.id,
+         c.descripcion,
+         COALESCE(c.puntaje, 0) AS puntaje,
+         COALESCE(c.likes, 0) AS likes,
+         COALESCE(c.dislikes, 0) AS dislikes,
+         u.id AS usuario_id,
+         u.usuario AS autor
        FROM comentarios c
        JOIN usuarios u ON u.id = c.id_usuario
        WHERE c.id_receta = $1
@@ -539,8 +652,8 @@ app.get("/recetas/:id/comentarios/resumen", async (req, res) => {
     );
 
     res.json({
-      total: totalResult.rows[0].total,
-      top3: top3Result.rows
+      total: totalResult.rows[0]?.total || 0,
+      top3: top3Result.rows || []
     });
   } catch (err) {
     console.error(err);
@@ -550,38 +663,9 @@ app.get("/recetas/:id/comentarios/resumen", async (req, res) => {
 
 
 
-// POST /comentarios (crear)
-app.post("/comentarios", async (req, res) => {
-  try {
-    const { id_usuario, id_receta, descripcion } = req.body;
-    const likes = req.body.likes ?? 0;
-    const dislikes = req.body.dislikes ?? 0;
 
-    if (!id_usuario || !id_receta || !descripcion || !descripcion.trim()) {
-      return res.status(400).json({ error: "Faltan campos obligatorios" });
-    }
-    if (likes < 0 || dislikes < 0) {
-      return res.status(406).json({ error: "Likes/Dislikes inválidos" });
-    }
 
-    const result = await pool.query(
-      `INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
-      [id_usuario, id_receta, descripcion.trim(), likes, dislikes]
-    );
 
-    // devolvemos también el usuario (para render instantáneo)
-    const comment = result.rows[0];
-    const userRes = await pool.query(`SELECT usuario FROM usuarios WHERE id = $1`, [comment.id_usuario]);
-    comment.usuario = userRes.rows[0]?.usuario ?? "";
-
-    res.status(201).json(comment);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error en el servidor" });
-  }
-});
 
 // PUT /comentarios/:id (editar) solo dueño
 app.put("/comentarios/:id", async (req, res) => {
@@ -879,6 +963,36 @@ app.get("/receta_ingredientes", async (req, res) => {
       JOIN ingredientes i ON ri.id_ingrediente = i.id
     `);
     res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// PUT /comentarios/:id/like
+app.put("/comentarios/:id/like", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await pool.query(
+      `UPDATE comentarios SET likes = likes + 1 WHERE id = $1 RETURNING *`,
+      [id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// PUT /comentarios/:id/dislike
+app.put("/comentarios/:id/dislike", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await pool.query(
+      `UPDATE comentarios SET dislikes = dislikes + 1 WHERE id = $1 RETURNING *`,
+      [id]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "DB error" });

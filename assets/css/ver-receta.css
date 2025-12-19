@@ -284,3 +284,18 @@ h2 {
   transform: scale(1.05);
 }
 
+.stars {
+  display: flex;
+  gap: 5px;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.star {
+  color: #d1d5db; /* gris por defecto */
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #F28C43; /* color al seleccionar */
+}

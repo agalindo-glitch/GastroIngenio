@@ -68,21 +68,22 @@
                 <h3>Dejar una reseña</h3>
 
                 <form id="form-review">
-                    <label>
-                        Puntaje:
-                        <select name="puntaje" required>
-                            <option value="">Seleccionar</option>
-                            <option value="5">5</option>
-                            <option value="4">4</option>
-                            <option value="3">3</option>
-                            <option value="2">2</option>
-                            <option value="1">1</option>
-                        </select>
-                    </label>
+                    <label>Puntaje:</label>
+                    <div class="stars" id="star-rating">
+                    <span data-value="1" class="star">&#9733;</span>
+                    <span data-value="2" class="star">&#9733;</span>
+                    <span data-value="3" class="star">&#9733;</span>
+                    <span data-value="4" class="star">&#9733;</span>
+                    <span data-value="5" class="star">&#9733;</span>
+                    </div>
+
+
+                    <input type="hidden" name="puntaje" id="puntaje">
+
 
                     <label>
                         Comentario:
-                        <textarea name="comentario" placeholder="Escribí tu opinión..." required></textarea>
+                        <textarea id="comentario" name="comentario" placeholder="Escribí tu opinión..." required></textarea>
                     </label>
 
                     <button type="submit" class="btn-enviar">Enviar reseña</button>
@@ -96,11 +97,7 @@
     
     <script src="../assets/js/botones_login.js"></script>
     <script src="../assets/js/ver-receta.js"></script>
-    <script src="../assets/js/ver_comentarios.js"></script>
     <script src="../assets/js/busqueda.js"></script>
-    <script src="../assets/js/crear_comentario.js"></script>
-    <script src="../assets/js/editar_comentarios.js"></script>
-    <script src="../assets/js/eliminar_comentario.js"></script>
 </body>
 
 </html>

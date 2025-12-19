@@ -2,7 +2,9 @@ CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apell
 
 CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER REFERENCES usuarios(id), nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, comensales INTEGER, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, imagen_url TEXT);
 
-CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
+CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, puntaje INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
+
+CREATE TABLE respuestas (id SERIAL PRIMARY KEY, id_comentario INTEGER REFERENCES comentarios(id) ON DELETE CASCADE, id_usuario INTEGER REFERENCES usuarios(id) ON DELETE CASCADE, descripcion TEXT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE seguidores (id SERIAL PRIMARY KEY, seguidor_id INT NOT NULL, seguido_id INT NOT NULL, fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_seguido FOREIGN KEY (seguido_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_seguimiento UNIQUE (seguidor_id, seguido_id), CONSTRAINT no_auto_seguimiento CHECK (seguidor_id <> seguido_id));
 
