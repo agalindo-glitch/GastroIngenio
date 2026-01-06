@@ -99,9 +99,6 @@ app.post("/comentarios", async (req, res) => {
   }
 });
 
-
-
-
 // GET. /usuarios (busco todos los usuarios de la tabla)
 app.get("/usuarios", async (req, res) => {
   try {
@@ -117,10 +114,7 @@ app.get("/usuarios", async (req, res) => {
 app.get("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await pool.query(
-      "SELECT * FROM usuarios WHERE id = $1",
-      [id]
-    );
+    const result = await pool.query("SELECT * FROM usuarios WHERE id = $1", [id]);
 
     res.json(result.rows[0]);
   } catch (err) {
@@ -138,24 +132,24 @@ app.post("/usuarios", async (req, res) => {
     const edad = req.body.edad;
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
-    const foto_perfil = req.body.foto_perfil;
+    const foto_perfil = req.body.foto_perfil || null;
+
 
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-    if (foto_perfil && foto_perfil.length > 255) {
-      return res.status(400).json({ error: 'URL de foto demasiado larga' });
-    }
-
-
     if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
     }
 
-    if (edad <= 0) {
-      return res.status(406).json({ error: 'Numero de edad invalido' });
+    if (usuario.length < 5 || contrasena.length < 8) {
+      return res.status(400).json({ error: 'Un campo tiene pocos caracteres (Usuario o contrasena)' });
+    }
+
+    if (edad < 16 || edad > 100) {
+      return res.status(400).json({ error: 'edad invalido' });
     }
 
     const chequeoQuery = 'SELECT usuario FROM usuarios WHERE usuario = $1';
@@ -172,21 +166,12 @@ app.post("/usuarios", async (req, res) => {
     `;
 
 
-    await pool.query(query, [
-      nombre,
-      apellido,
-      edad,
-      usuario,
-      contrasena,
-      foto_perfil || null
-    ]);
-
+    await pool.query(query, [nombre, apellido, edad, usuario, contrasena, foto_perfil || null]);
 
     res.status(200).json({ message: 'Usuario creado correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }
-
 });
 
 // PUT. /usuarios/<id> (modifico un usuario por id)
@@ -201,43 +186,27 @@ app.put("/usuarios/:id", async (req, res) => {
     const contrasena = req.body.contrasena;
     const foto_perfil = req.body.foto_perfil;
 
-
     //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
     if (nombre.length > 30 || apellido.length > 30 || usuario.length > 30 || contrasena.length > 50) {
-      return res.status(400).json({ error: 'Un campo tiene muchps caracteres' });
+      return res.status(400).json({ error: 'Un campo tiene muchos caracteres' });
     }
 
-    if (edad <= 0) {
-      return res.status(406).json({ error: 'Numero de edad invalido' });
+    if (usuario.length < 5 || contrasena.length < 8) {
+      return res.status(400).json({ error: 'Un campo tiene pocos caracteres (Usuario o contrasena)' });
     }
 
-    const query = `
-    UPDATE usuarios
-    SET nombre = $1,
-        apellido = $2,
-        edad = $3,
-        usuario = $4,
-        contrasena = $5,
-        foto_perfil = $6
-    WHERE id = $7
-    `;
+    if (edad < 16 || edad > 100) {
+      return res.status(400).json({ error: 'edad invalido' });
+    }
 
+    const query = `UPDATE usuarios SET nombre = $1, apellido = $2, edad = $3, usuario = $4, contrasena = $5, foto_perfil = $6 WHERE id = $7`;
 
-    await pool.query(query, [
-      nombre,
-      apellido,
-      edad,
-      usuario,
-      contrasena,
-      foto_perfil || null,
-      id
-    ]);
+    await pool.query(query, [nombre, apellido, edad, usuario, contrasena, foto_perfil || null, id]);
 
-    
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
@@ -251,9 +220,18 @@ app.put("/usuarios/:id", async (req, res) => {
 app.delete("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
+
+    const queryEliminarComentarioRecetas = `DELETE FROM comentarios WHERE id_receta IN (SELECT id FROM recetas WHERE id_usuario = $1)`;
+    await pool.query(queryEliminarComentarioRecetas, [id]);
+
+    const queryEliminarComentario = `DELETE FROM comentarios WHERE id_usuario = $1`;
+    await pool.query(queryEliminarComentario, [id]);
+
+    const queryEliminarReceta = `DELETE FROM recetas WHERE id_usuario = $1`;
+    await pool.query(queryEliminarReceta, [id]);
+
     const query = `DELETE FROM usuarios WHERE id = $1`;
     await pool.query(query, [id]);
-
 
     res.status(200).json({ message: `Usuario con el id: ${id} fue eliminado` });
   } catch (error) {
@@ -261,21 +239,6 @@ app.delete("/usuarios/:id", async (req, res) => {
   }
 
 });
-
-app.get("/usuarios/:usuario", async (req, res) => {
-  try {
-    const { usuario } = req.params;
-    const result = await pool.query(
-      "SELECT * FROM usuarios WHERE usuario = $1",
-      [usuario]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
 
 // GET. /recetas (busco todos los recetas de la tabla)
 app.get("/recetas", async (req, res) => {

@@ -13,6 +13,7 @@ async function eliminarUsuario(id_usuario){
     if (!confirmacion) {
         return;
     }
+    
     try {
         const respuesta = await fetch(`http://localhost:3000/usuarios/${id_usuario}`, {
             method: "DELETE"
