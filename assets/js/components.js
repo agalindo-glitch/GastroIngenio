@@ -57,14 +57,14 @@ function initializeHeader () {
         const inputDesktop = document.querySelector(".navbar__search-input:not(#search-input)");
         const btnDesktop = document.querySelector(".navbar__search-control .navbar__search-button");
 
-        function ejecutarBusqueda(valor) {
+        function ejecutarBusqueda(busqueda) {
 
-            if (!valor.trim()) {
+            if (!busqueda.trim()) {
                 console.warn("⚠ No se puede buscar un texto vacío");
                 return;
             }
 
-            window.location.href = `/pages/resultados.html?query=${encodeURIComponent(valor)}`;
+            window.location.href = `/pages/resultados.html?query=${encodeURIComponent(busqueda)}`;
         }
 
         // -------- DESKTOP --------
