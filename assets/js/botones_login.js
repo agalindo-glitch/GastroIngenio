@@ -1,3 +1,5 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   const crearRecetaBtn = document.getElementById("crearReceta_boton");
   const perfilBtn = document.getElementById("perfil_boton");
