@@ -77,8 +77,7 @@ function initializeHeader () {
         }
 
         if (btnDesktop) {
-            btnDesktop.addEventListener("click", () => {
-                ejecutarBusqueda(inputDesktop.value);
+            btnDesktop.addEventListener("click", () => {   
             });
         }
     }

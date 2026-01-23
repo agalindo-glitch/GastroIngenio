@@ -245,7 +245,6 @@ app.get("/recetas", async (req, res) => {
   const { id_usuario } = req.query;
 
   let query = "SELECT * FROM recetas";
-  let params = [];
 
   if (id_usuario) {
     query = `
@@ -257,10 +256,9 @@ app.get("/recetas", async (req, res) => {
         AND b.bloqueado_id = r.id_usuario
       )
     `;
-    params = [id_usuario];
   }
 
-  const result = await pool.query(query, params);
+  const result = await pool.query(query);
   res.json(result.rows);
 });
 

@@ -1,27 +1,22 @@
-const API_URL = "http://localhost:3000/recetas";
+"use strict"
+
+const API_RECIPES = "http://localhost:3000/recetas";
 const API_USERS = "http://localhost:3000/usuarios";
 
-/* ===========================
-   FETCHERS
-=========================== */
-
-async function getRecipesFromBackend() {
+async function getFromBackend(API) {
     try {
-        const res = await fetch(API_URL);
+        const res = await fetch(API);
         if (!res.ok) throw new Error("Error obteniendo recetas");
         return await res.json();
     } catch (err) {
-        console.error("❌ getRecipesFromBackend:", err);
+        console.error("❌ getRecipesFromBackend: ", err);
         return null;
     }
 }
 
-/* ===========================
-   RENDER RECETA
-=========================== */
+function renderRecipe(htmlId, recipe, usuario) {
+    const card = document.querySelector(htmlId);
 
-function renderRecipe(recipe, usuario) {
-    const card = document.querySelector(".community-card");
     if (!card || !recipe) return;
 
     /* Imagen */
@@ -101,46 +96,31 @@ function renderRecipe(recipe, usuario) {
     }
 }
 
-/* ===========================
-   RECETA ALEATORIA
-=========================== */
 
-async function renderRandomRecipe() {
+async function chooseElegidosComunidad() {
     try {
-        // 1️⃣ Traer recetas
-        const recetas = await getRecipesFromBackend();
+        // Existen diferentes tipos de cards
+        const htmlId = "#community-card";
+
+        const recetas = await getFromBackend(API_RECIPES);
         if (!recetas?.length) return;
 
-        // 2️⃣ Filtrar elegidas por la comunidad
-        const recetasComunidad = recetas.filter(r => r.elegidos_comunidad === true);
+        const recetasComunidad = recetas.filter(receta => receta.elegidos_comunidad === true);
         if (!recetasComunidad.length) return;
 
-        // 3️⃣ Elegir una al azar
-        const random = recetasComunidad[Math.floor(Math.random() * recetasComunidad.length)];
+        // El usuario ve una receta random de todas las elegidas por la comunidad
+        const randomCommunityRecipe = recetasComunidad[Math.floor(Math.random() * recetasComunidad.length)];
 
-        // 4️⃣ Traer receta completa (con comentarios)
-        const res = await fetch(`${API_URL}/${random.id}/completo`);
-        if (!res.ok) throw new Error("Error obteniendo receta completa");
+        const users = await getFromBackend(API_USERS);
+        if (!users?.length) return;
 
-        const recetaCompleta = await res.json();
+        const user = users.find(user => user.id === randomCommunityRecipe.id_usuario);
 
-        // 5️⃣ Armar usuario
-        const usuario = {
-            id: recetaCompleta.id_usuario,
-            usuario: recetaCompleta.autor,
-            foto_perfil: recetaCompleta.autor_foto
-        };
-
-        // 6️⃣ Render
-        renderRecipe(recetaCompleta, usuario);
+        renderRecipe(htmlId, randomCommunityRecipe, user);
 
     } catch (err) {
-        console.error("❌ renderRandomRecipe:", err);
+        console.error("❌ chooseElegidosComunidad:", err);
     }
 }
 
-/* ===========================
-   INIT
-=========================== */
-
-document.addEventListener("DOMContentLoaded", renderRandomRecipe);
+document.addEventListener("DOMContentLoaded", chooseElegidosComunidad);
