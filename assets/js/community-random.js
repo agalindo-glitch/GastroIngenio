@@ -16,63 +16,50 @@ async function getFromBackend(API) {
 
 function renderRecipe(htmlId, recipe, usuario) {
     const card = document.querySelector(htmlId);
+    const imageEl = card.querySelector(".community-card__image");
+    const recetaLink = `./pages/ver-receta.html?id=${recipe.id}`;
+    const authorNameEl = card.querySelector(".community-card__author-name");
+    const authorAvatarEl = card.querySelector(".community-card__author-avatar");
+    const authorEl = card.querySelector(".community-card__author");
+    const authorLink = `/pages/usuario.html?userId=${usuario.id}`;
+    const durationEl = card.querySelector(".community-card__duration span");
+    const stars = card.querySelectorAll(".community-card__star");
+    const comentarios = recipe?.comentarios || [];
+    let promedio = 0;
+    let i = 0;
 
     if (!card || !recipe) return;
 
-    /* Imagen */
-    const imageEl = card.querySelector(".community-card__image");
     imageEl.src = recipe.imagen_url || "https://via.placeholder.com/400x250?text=Sin+Imagen";
     imageEl.alt = recipe.nombre;
 
-    /* Links */
-    const recetaLink = `./pages/ver-receta.html?id=${recipe.id}`;
+    // Se puede acceder a la receta desde la imágen y desde el título
     card.querySelector(".community-card__link").href = recetaLink;
     card.querySelector(".community-card__title-link").href = recetaLink;
+
     card.querySelector(".community-card__title-link").textContent = recipe.nombre;
 
-    /* Autor */
-    const authorNameEl = card.querySelector(".community-card__author-name");
-    const authorAvatarEl = card.querySelector(".community-card__author-avatar");
+    authorNameEl.textContent = usuario.usuario || "Usuario desconocido";
+    authorAvatarEl.src = usuario.foto_perfil || "/assets/img/default-user.png";
+    authorEl.href = authorLink;
 
-    authorNameEl.textContent = usuario?.usuario || "Autor desconocido";
-    authorAvatarEl.src =
-        usuario?.foto_perfil || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+    durationEl.textContent = `${recipe.tiempo_preparacion} min`;
 
-    const authorLink = `/pages/usuario.html?userId=${usuario?.id}`;
-    authorNameEl.onclick = () => (window.location.href = authorLink);
-    authorAvatarEl.onclick = () => (window.location.href = authorLink);
-
-    /* Duración */
-    card.querySelector(".community-card__duration span").textContent =
-        recipe.tiempo_preparacion ? `${recipe.tiempo_preparacion} min` : "—";
-
-    /* ===========================
-       ESTRELLAS (PROMEDIO ENTERO)
-    =========================== */
-
-    const stars = card.querySelectorAll(".community-card__star");
-    const comentarios = recipe.comentarios || [];
-
-    console.log("📌 Comentarios:", comentarios);
-
-    let promedio = 0;
+    // Promedio de 0 a 5 stars
     if (comentarios.length > 0) {
-        const total = comentarios.reduce((sum, c) => sum + (c.puntaje || 0), 0);
+        const total = comentarios.reduce((sum, comentario) => sum + (comentario.puntaje), 0);
         promedio = Math.round(total / comentarios.length);
     }
 
-    console.log("⭐ Promedio calculado:", promedio);
 
-    // Resetear estrellas
-    stars.forEach(star => star.classList.add("community-card__star--empty"));
-
-    // Activar según promedio
-    for (let i = 0; i < promedio && i < stars.length; i++) {
+    while (i < promedio && i < stars.length) {
         stars[i].classList.remove("community-card__star--empty");
+        i++;
     }
 
     card.querySelector(".community-card__score").textContent =
         `${promedio}/5 (${comentarios.length} reseñas)`;
+
 
     /* Compartir */
     const shareBtn = card.querySelector("[aria-label='Compartir']");
