@@ -25,6 +25,9 @@ function renderRecipe(htmlId, recipe, usuario) {
     const durationEl = card.querySelector(".community-card__duration span");
     const stars = card.querySelectorAll(".community-card__star");
     const comentarios = recipe?.comentarios || [];
+    const score= card.querySelector(".community-card__score")
+    const shareButton = card.querySelector("[aria-label='Compartir']");
+    const badgeEl = card.querySelector(".community-card__badge");
     let promedio = 0;
     let i = 0;
 
@@ -57,13 +60,9 @@ function renderRecipe(htmlId, recipe, usuario) {
         i++;
     }
 
-    card.querySelector(".community-card__score").textContent =
-        `${promedio}/5 (${comentarios.length} reseñas)`;
+    score.textContent =`${promedio}/5 (${comentarios.length} reseñas)`;
 
-
-    /* Compartir */
-    const shareBtn = card.querySelector("[aria-label='Compartir']");
-    shareBtn.onclick = async () => {
+    shareButton.onclick = async () => {
         const url = `${window.location.origin}/pages/ver-receta.html?id=${recipe.id}`;
         try {
             await navigator.clipboard.writeText(url);
@@ -73,8 +72,6 @@ function renderRecipe(htmlId, recipe, usuario) {
         }
     };
 
-    /* Badge */
-    const badgeEl = card.querySelector(".community-card__badge");
     if (recipe.elegidos_comunidad === true) {
         badgeEl.textContent = "⭐ Elegido por la comunidad";
         badgeEl.style.display = "inline-block";
@@ -82,7 +79,6 @@ function renderRecipe(htmlId, recipe, usuario) {
         badgeEl.style.display = "none";
     }
 }
-
 
 async function chooseElegidosComunidad() {
     try {
