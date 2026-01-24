@@ -68,6 +68,7 @@ label.label {
 input.input {
   background-color: #ddd;
   border-color: #bbb;
+  color: black;
 }
 
 input.input::placeholder {
