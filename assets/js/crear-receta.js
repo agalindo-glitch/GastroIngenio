@@ -1,79 +1,67 @@
 "use strict";
 
+async function loadLoggedUser() {
+  const id_usuario = localStorage.getItem("id_usuario");
+  const logueado = localStorage.getItem("logueado") === "true";
+
+  if (!logueado || !id_usuario) return;
+
+  const creatorInfoContainer = document.querySelector(".creator-info");
+
+  try {
+    const res = await fetch(`http://localhost:3000/usuarios/${id_usuario}`);
+    const user = await res.json();
+
+    const nombre_usuario = user.usuario || "usuario";
+    const foto_usuario = user.foto_perfil?.trim() || "/assets/img/default-user.png";
+
+    const avatarImg = creatorInfoContainer.querySelector("img");
+    const nombreSpan = creatorInfoContainer.querySelector(".creator-name");      
+
+    if (avatarImg) {
+      avatarImg.src = foto_usuario;
+      avatarImg.alt = nombre_usuario;
+      avatarImg.onerror = () => {
+        avatarImg.src = "/assets/img/default-user.png";
+      };
+    }
+
+    if (nombreSpan) {
+      nombreSpan.textContent = nombre_usuario;
+    }
+
+  } catch (error) {
+    console.error("Error al cargar la foto o nombre de usuario:", error);
+  }
+}
+
+async function previewImage(input) {
+  const url = input.value.trim();
+  let preview = input.nextElementSibling;
+
+  return new Promise((resolve) => {
+    if (!url) {
+      preview.src = "";
+      preview.style.display = "none";
+      resolve(true);
+      return;
+    }
+    const img = new Image();
+    img.onload = () => { preview.src = url; preview.style.display = "block"; resolve(true); };
+    img.onerror = () => { preview.src = ""; preview.style.display = "none"; alert("La URL ingresada no corresponde a una imagen válida."); resolve(false); };
+    img.src = url;
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  async function actualizarUsuarioMain() {
-    const id_usuario = localStorage.getItem("id_usuario");
-    const logueado = localStorage.getItem("logueado") === "true";
+  loadLoggedUser();
 
-    if (!logueado || !id_usuario) return;
-
-    const creatorInfoContainer = document.querySelector(".creator-info");
-    if (!creatorInfoContainer) return;
-
-    try {
-      const res = await fetch(`http://localhost:3000/usuarios/${id_usuario}`);
-      const user = await res.json();
-
-      const nombre_usuario = user.usuario || "usuario";
-      const foto_usuario = user.foto_perfil?.trim() || "https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg";
-
-      // Actualizar avatar y nombre
-      const avatarImg = creatorInfoContainer.querySelector("img");
-      const nombreSpan = creatorInfoContainer.querySelector(".creator-name");
-
-      if (avatarImg) {
-        avatarImg.src = foto_usuario;
-        avatarImg.alt = nombre_usuario;
-        avatarImg.onerror = () => {
-          avatarImg.src = "https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg";
-        };
-      }
-
-      if (nombreSpan) {
-        nombreSpan.textContent = nombre_usuario + " (creador)";
-      }
-
-    } catch (error) {
-      console.error("Error al cargar la foto o nombre de usuario:", error);
-    }
-  }
-
-  actualizarUsuarioMain();
-
-  // ------------------------------
-  // FORMULARIO DE RECETA
-  // ------------------------------
   const form = document.getElementById("recipe-form");
   const ingredientsContainer = document.getElementById("ingredients-container");
   const stepsContainer = document.getElementById("steps-container");
 
-  // Previsualizar imagen
-  async function previewImage(input) {
-    const url = input.value.trim();
-    let preview = input.nextElementSibling;
 
-    if (!preview || !preview.classList.contains("image-preview")) {
-      preview = document.createElement("img");
-      preview.className = "image-preview";
-      preview.style.maxWidth = "100%";
-      preview.style.marginTop = "5px";
-      input.insertAdjacentElement("afterend", preview);
-    }
-
-    return new Promise((resolve) => {
-      if (!url) {
-        preview.src = "";
-        preview.style.display = "none";
-        resolve(true);
-        return;
-      }
-      const img = new Image();
-      img.onload = () => { preview.src = url; preview.style.display = "block"; resolve(true); };
-      img.onerror = () => { preview.src = ""; preview.style.display = "none"; alert("La URL ingresada no corresponde a una imagen válida."); resolve(false); };
-      img.src = url;
-    });
-  }
 
   // Agregar ingrediente
   function addIngredient() {

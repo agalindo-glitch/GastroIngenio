@@ -22,7 +22,6 @@
 </head>
 
 <body>
-
   <header id="header"></header>
 
   <main class="section recipe-page">
@@ -44,6 +43,7 @@
               <label class="label">URL de la imagen principal</label>
               <div class="control">
                 <input class="input" type="url" name="imageUrl" placeholder="https://...">
+                <img class="imageUrl-preview">
               </div>
             </div>
           </div>
@@ -64,7 +64,7 @@
               </div>
 
               <div class="field mt-2">
-                <button type="button" id="add-ingredient" class="button is-link is-light is-fullwidth">
+                <button type="button" id="add-ingredient" class="button is-light is-fullwidth">
                   + Agregar ingrediente
                 </button>
               </div>
@@ -73,8 +73,8 @@
         </div>
 
         <div class="creator-info">
-          <figure class="image is-48x48 creator-avatar">
-            <img class="is-rounded" src="https://via.placeholder.com/96" alt="Usuario">
+          <figure>
+            <img  class="avatar" src="https://via.placeholder.com/96" alt="Usuario">
           </figure>
           <span class="creator-name">usuario (creador)</span>
         </div>
@@ -82,9 +82,9 @@
         <div class="box recipe-meta">
           <div class="columns is-mobile is-vcentered">
             <div class="column">
-              <label class="label is-small">Tiempo de cocinar</label>
+              <label class="label is-small">Tiempo de preparación (minutos)</label>
               <div class="control">
-                <input class="input" type="text" name="cookTime" placeholder="Ej: 45 min">
+                <input class="input" type="number" name="cookTime" placeholder="Ej: 45">
               </div>
             </div>
             <div class="column">
@@ -160,13 +160,8 @@
 
   <footer id="footer"></footer>
 
-  <script src="../assets/js/botones_login.js"></script>
   <script src="../assets/js/components.js"></script>
-  <script src="../assets/js/busqueda.js"></script>
   <script src="../assets/js/crear-receta.js" defer></script>
-  
-
-
 </body>
 
 </html>
