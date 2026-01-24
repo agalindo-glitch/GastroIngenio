@@ -1,7 +1,7 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // ------------------------------
-  // ACTUALIZAR DATOS DEL USUARIO EN EL MAIN
-  // ------------------------------
+
   async function actualizarUsuarioMain() {
     const id_usuario = localStorage.getItem("id_usuario");
     const logueado = localStorage.getItem("logueado") === "true";

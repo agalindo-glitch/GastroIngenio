@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const API_RECIPES = "http://localhost:3000/recetas";
 const API_USERS = "http://localhost:3000/usuarios";
