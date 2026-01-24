@@ -32,13 +32,13 @@ header {
     grid-template-columns: 1fr 0.5fr;
     gap: 60px;
     max-width: 1200px;
-    margin: 80px 50px 0 50px;
+    margin: 80px auto 0 auto;
+    padding: 0 50px;
     padding-top: 120px;
-    justify-self: center;
+
 }
 
 /* Elegidos por la Comunidad */
-
 .community-card__media {
     position: relative;
 }
