@@ -1,11 +1,10 @@
+"use strict";
+
 const API_RECETAS = "http://localhost:3000/recetas";
 const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
 const contenedorTendencias = document.querySelector(".trends__list");
 
-/* =========================
-   HELPERS
-========================= */
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);
@@ -29,9 +28,6 @@ function calcularPromedio(comentarios = []) {
   };
 }
 
-/* =========================
-   CARGAR TENDENCIAS
-========================= */
 async function cargarTendencias() {
   if (!contenedorTendencias) return;
 
@@ -40,7 +36,6 @@ async function cargarTendencias() {
 
   const recetasConRating = [];
 
-  // 🔄 traer receta completa una por una
   for (const r of recetas) {
     const completa = await fetchJSON(`${API_RECETAS}/${r.id}/completo`);
     if (!completa) continue;
@@ -60,18 +55,13 @@ async function cargarTendencias() {
     });
   }
 
-  // 🔥 ordenar por promedio DESC
   recetasConRating.sort((a, b) => b.promedio - a.promedio);
 
-  // 🎯 tomar máximo 4
   const top4 = recetasConRating.slice(0, 4);
 
   renderTendencias(top4);
 }
 
-/* =========================
-   RENDER
-========================= */
 function renderTendencias(recetas) {
   contenedorTendencias.innerHTML = "";
 
@@ -128,7 +118,4 @@ function renderTendencias(recetas) {
   });
 }
 
-/* =========================
-   INIT
-========================= */
 document.addEventListener("DOMContentLoaded", cargarTendencias);

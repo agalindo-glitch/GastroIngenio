@@ -1,11 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const eliminar_boton = document.getElementById("eliminar_boton");
-    const id_usuario = localStorage.getItem("id_usuario");
-
-    eliminar_boton.addEventListener("click", () => {
-        eliminarUsuario(id_usuario);
-    });
-});
+"use strict";
 
 async function eliminarUsuario(id_usuario){
     const confirmacion = window.confirm("Seguro que quieres eliminar el usuario?");
@@ -32,3 +25,12 @@ async function eliminarUsuario(id_usuario){
         console.error(error);
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const eliminar_boton = document.getElementById("eliminar_boton");
+    const id_usuario = localStorage.getItem("id_usuario");
+
+    eliminar_boton.addEventListener("click", () => {
+        eliminarUsuario(id_usuario);
+    });
+});

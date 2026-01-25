@@ -1,5 +1,5 @@
+"use strict";
 
-// funcion para iniciar sesion
 async function login(){
   try {
     const usuario = document.getElementById("usuario");
@@ -31,7 +31,6 @@ async function login(){
   }
 }
 
-// funcionalidad al formulario
 document.addEventListener("DOMContentLoaded", () =>{
   const form = document.getElementById("formularioLogin");
 

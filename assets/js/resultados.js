@@ -1,11 +1,10 @@
+"use strict";
+
 const API_RECETAS = "http://localhost:3000/recetas";
 const API_USUARIOS = "http://localhost:3000/usuarios";
 const API_INGREDIENTES = "http://localhost:3000/receta_ingredientes";
 const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
-/* =========================
-   NAVEGACIÓN
-========================= */
 document.addEventListener("click", e => {
   const card = e.target.closest(".recipe-card__main-link");
   if (!card) return;
@@ -13,9 +12,6 @@ document.addEventListener("click", e => {
   window.location.href = card.dataset.link;
 });
 
-/* =========================
-   QUERY URL
-========================= */
 const params = new URLSearchParams(window.location.search);
 const query = (params.get("query") || "").trim().toLowerCase();
 
@@ -24,9 +20,6 @@ titleResultados.textContent = query
   ? `Resultados para "${query}"`
   : "Resultados";
 
-/* =========================
-   FETCHERS
-========================= */
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);
@@ -38,9 +31,6 @@ async function fetchJSON(url) {
   }
 }
 
-/* =========================
-   DATOS
-========================= */
 let resultados = [];
 const porPagina = 15;
 let paginaActual = 1;
@@ -48,9 +38,6 @@ let paginaActual = 1;
 const contenedorResultados = document.getElementById("resultados-recetas");
 const contenedorPaginas = document.getElementById("paginacion");
 
-/* =========================
-   CARGAR RESULTADOS
-========================= */
 async function cargarResultados() {
   const [recetas, usuarios, ingredientes] = await Promise.all([
     fetchJSON(API_RECETAS),
@@ -89,9 +76,6 @@ async function cargarResultados() {
   mostrarPagina();
 }
 
-/* =========================
-   PROMEDIO ESTRELLAS
-========================= */
 function calcularPromedio(comentarios = []) {
   if (!comentarios.length) return { promedio: 0, total: 0 };
 
@@ -102,9 +86,6 @@ function calcularPromedio(comentarios = []) {
   };
 }
 
-/* =========================
-   RENDER PÁGINA
-========================= */
 async function mostrarPagina() {
   const inicio = (paginaActual - 1) * porPagina;
   const fin = inicio + porPagina;
@@ -172,9 +153,6 @@ async function mostrarPagina() {
   generarPaginacion();
 }
 
-/* =========================
-   PAGINACIÓN
-========================= */
 function generarPaginacion() {
   const totalPaginas = Math.ceil(resultados.length / porPagina);
   contenedorPaginas.innerHTML = "";
@@ -193,7 +171,4 @@ function generarPaginacion() {
   }
 }
 
-/* =========================
-   INIT
-========================= */
 cargarResultados();

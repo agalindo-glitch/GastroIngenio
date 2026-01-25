@@ -1,9 +1,8 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 Script unificado de ver receta y comentarios cargado");
 
-  // =========================
-  // Obtener recetaId desde URL
-  // =========================
   const params = new URLSearchParams(window.location.search);
   const recetaId = params.get("id");
   if (!recetaId) {
@@ -15,9 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const reviewsContainer = document.getElementById("lista-reviews");
   const contadorComentarios = document.getElementById("comentarios-count");
 
-  // =========================
-  // 1️⃣ Cargar receta completa
-  // =========================
   async function cargarReceta() {
     try {
       const res = await fetch(`http://localhost:3000/recetas/${recetaId}/completo`);
@@ -33,9 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cargarReceta();
 
-  // =========================
-  // 2️⃣ Manejo de estrellas
-  // =========================
   const stars = document.querySelectorAll("#star-rating .star");
   const puntajeInput = document.getElementById("puntaje");
   console.log("Valor de puntajeInput", puntajeInput);
@@ -55,9 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================
-  // 3️⃣ Enviar reseña
-  // =========================
   const form = document.getElementById("form-review");
   if (form) {
     form.addEventListener("submit", async e => {
@@ -74,13 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
         id_usuario,
         id_receta: Number(window.recetaId),
         descripcion: comentario,
-        puntaje: puntaje, // ✅ usar el puntaje que seleccionó el usuario
+        puntaje: puntaje, 
         likes: 0,
         dislikes: 0
       };
-
-
-      console.log("💬 Data enviada al backend:", data);
 
       try {
         const res = await fetch("http://localhost:3000/comentarios", {
@@ -105,9 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =========================
-  // 4️⃣ Cargar comentarios resumidos (top3)
-  // =========================
   async function cargarComentarios() {
     if (!reviewsContainer) return;
     try {
@@ -141,9 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cargarComentarios();
 
-  // =========================
-  // Funciones de render
-  // =========================
   function renderReceta(receta) {
     const setText = (id, value) => {
       const el = document.getElementById(id);
@@ -186,7 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
       } else pasosContainer.innerHTML = "<p>(Pasos pendientes)</p>";
     }
 
-    // Render comentarios iniciales
     if (Array.isArray(receta.comentarios) && receta.comentarios.length) {
       receta.comentarios.forEach(c => agregarReview(c));
       if (contadorComentarios) contadorComentarios.textContent = receta.comentarios.length;
@@ -197,10 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!reviewsContainer) return;
 
     const usuarioLogueado = Number(localStorage.getItem("id_usuario"));
-
-    // Aquí logueamos el puntaje
-    console.log("💬 Comentario recibido:", c);
-    console.log("💬 Puntaje usado para estrellas:", c.puntaje ?? c.rating ?? 0);
 
     const starsHTML = renderStars(c.puntaje);
 
@@ -240,14 +216,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return starsHTML;
   }
 
-
   function iniciarEdicionComentario(c, articleEl) {
     const nuevaDesc = prompt("Editar comentario:", c.descripcion);
     if (nuevaDesc && nuevaDesc.trim() !== "") {
       c.descripcion = nuevaDesc.trim();
       articleEl.querySelector("p").textContent = c.descripcion;
       console.log("💬 Comentario editado localmente:", c);
-      // PUT al backend si se desea
     }
   }
 
@@ -256,6 +230,5 @@ document.addEventListener("DOMContentLoaded", () => {
     const reviewEl = reviewsContainer.querySelector(`.btn-eliminar[data-id='${id}']`)?.closest("article");
     if (reviewEl) reviewsContainer.removeChild(reviewEl);
     console.log("💬 Comentario eliminado localmente:", id);
-    // DELETE al backend si se desea
   }
 });
