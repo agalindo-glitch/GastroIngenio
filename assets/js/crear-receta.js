@@ -164,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!allStepImagesValid) { alert("Corrige las imágenes de los pasos antes de guardar la receta."); return; }
 
     const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos};
-    console.log("qqqqq: ", body);
 
     try {
       const res = await fetch("http://localhost:3000/recetas", {

@@ -304,13 +304,13 @@ app.get("/recetas/:id", async (req, res) => {
 app.get("/mis-recetas", async (req, res) => {
   try {
     const id_usuario = req.query.id_usuario;
-
+    
     if (!id_usuario) {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
     const query = `
-      SELECT id, nombre, categoria, tiempo_preparacion
+      SELECT id, nombre, tiempo_preparacion
       FROM recetas
       WHERE id_usuario = $1
     `;
@@ -326,76 +326,77 @@ app.get("/mis-recetas", async (req, res) => {
 
 
 // POST. /recetas (creo un receta)
-app.post("/recetas", async (req, res) => {
-  const client = await pool.connect();
+  app.post("/recetas", async (req, res) => {
+    const client = await pool.connect();
 
-  try {
-    const { id_usuario, nombre, descripcion, tiempo_preparacion, categoria, comensales, imagen_url, ingredientes, pasos, tags } = req.body;
+    try {
+      const { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos} = req.body;
+      console.log(req.body);       
 
-    if (!id_usuario || !nombre?.trim() || !descripcion?.trim()) {
-      return res.status(400).json({ error: "Faltan campos obligatorios" });
-    }
-
-    const tiempoInt = parseInt(tiempo_preparacion);
-    if (isNaN(tiempoInt) || tiempoInt <= 0) {
-      return res.status(400).json({ error: "Tiempo de preparación inválido" });
-    }
-
-    await client.query("BEGIN");
-
-    // 1️⃣ Insertar receta
-    const recetaResult = await client.query(
-      `INSERT INTO recetas
-        (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, comensales, imagen_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7)
-       RETURNING id`,
-      [id_usuario, nombre, descripcion, tiempoInt, categoria, comensales, imagen_url || null]
-    );
-
-    const recetaId = recetaResult.rows[0].id;
-
-    // 2️⃣ Insertar ingredientes
-    if (Array.isArray(ingredientes)) {
-      for (const ing of ingredientes) {
-        const ingResult = await client.query(
-          `INSERT INTO ingredientes (nombre)
-           VALUES ($1)
-           ON CONFLICT (nombre) DO UPDATE SET nombre = EXCLUDED.nombre
-           RETURNING id`,
-          [ing.nombre]
-        );
-        const id_ingrediente = ingResult.rows[0].id;
-
-        await client.query(
-          `INSERT INTO receta_ingredientes (id_receta, id_ingrediente, cantidad, unidad)
-           VALUES ($1,$2,$3,$4)`,
-          [recetaId, id_ingrediente, ing.cantidad || null, ing.unidad || null]
-        );
+      if (!id_usuario || !nombre?.trim() || !descripcion?.trim()) {
+        return res.status(400).json({ error: "Faltan campos obligatorios" });
       }
-    }
 
-    // 3️⃣ Insertar pasos
-    if (Array.isArray(pasos)) {
-      for (const paso of pasos) {
-        await client.query(
-          `INSERT INTO pasos_receta (id_receta, numero, descripcion, foto_url)
-           VALUES ($1,$2,$3,$4)`,
-          [recetaId, paso.numero, paso.descripcion, paso.imagen || null]
-        );
+      const tiempoInt = parseInt(tiempo_preparacion);
+      if (isNaN(tiempoInt) || tiempoInt <= 0) {
+        return res.status(400).json({ error: "Tiempo de preparación inválido" });
       }
+
+      await client.query("BEGIN");
+
+      // 1️⃣ Insertar receta
+      const recetaResult = await client.query(
+        `INSERT INTO recetas
+          (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url)
+        VALUES ($1,$2,$3,$4,$5,$6)
+        RETURNING id`,
+        [id_usuario, nombre, descripcion, tiempoInt, comensales, imagen_url || null]
+      );
+
+      const recetaId = recetaResult.rows[0].id;
+
+      // 2️⃣ Insertar ingredientes
+      // if (Array.isArray(ingredientes)) {
+      //   for (const ing of ingredientes) {
+      //     const ingResult = await client.query(
+      //       `INSERT INTO ingredientes (nombre)
+      //       VALUES ($1)
+      //       ON CONFLICT (nombre) DO UPDATE SET nombre = EXCLUDED.nombre
+      //       RETURNING id`,
+      //       [ing.nombre]
+      //     );
+      //     const id_ingrediente = ingResult.rows[0].id;
+
+      //     await client.query(
+      //       `INSERT INTO receta_ingredientes (id_receta, id_ingrediente, cantidad, unidad)
+      //       VALUES ($1,$2,$3,$4)`,
+      //       [recetaId, id_ingrediente, ing.cantidad || null, ing.unidad || null]
+      //     );
+      //   }
+      // }
+
+      // 3️⃣ Insertar pasos
+      // if (Array.isArray(pasos)) {
+      //   for (const paso of pasos) {
+      //     await client.query(
+      //       `INSERT INTO pasos_receta (id_receta, numero, descripcion, foto_url)
+      //       VALUES ($1,$2,$3,$4)`,
+      //       [recetaId, paso.numero, paso.descripcion, paso.imagen || null]
+      //     );
+      //   }
+      // }
+
+      await client.query("COMMIT");
+
+      res.status(201).json({ message: "Receta creada correctamente", id: recetaId });
+    } catch (err) {
+      await client.query("ROLLBACK");
+      console.error(err);
+      res.status(500).json({ error: "Error en el servidor" });
+    } finally {
+      client.release();
     }
-
-    await client.query("COMMIT");
-
-    res.status(201).json({ message: "Receta creada correctamente", id: recetaId });
-  } catch (err) {
-    await client.query("ROLLBACK");
-    console.error(err);
-    res.status(500).json({ error: "Error en el servidor" });
-  } finally {
-    client.release();
-  }
-});
+  });
 
 
 // PUT. /recetas/<id> (modifico una receta por id)
@@ -407,16 +408,15 @@ app.put("/recetas/:id", async (req, res) => {
     const nombre = req.body.nombre;
     const descripcion = req.body.descripcion;
     const tiempo_preparacion = req.body.tiempo_preparacion;
-    const categoria = req.body.categoria;
     const elegidos_comunidad = req.body.elegidos_comunidad;
     const review = req.body.review;
 
     //trim() sirve para que no te permita dejar espacios en blanco
-    if (!id_usuario || !nombre.trim() || !descripcion.trim() || !tiempo_preparacion || !categoria.trim()) {
+    if (!id_usuario || !nombre.trim() || !descripcion.trim() || !tiempo_preparacion) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
 
-    if (nombre.length > 50 || categoria.length > 50) {
+    if (nombre.length > 50) {
       return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
     }
 
@@ -430,7 +430,6 @@ app.put("/recetas/:id", async (req, res) => {
         nombre = $2,
         descripcion = $3,
         tiempo_preparacion = $4,
-        categoria = $5,
         elegidos_comunidad = $6,
         review = $7
     WHERE id = $8
@@ -441,7 +440,6 @@ app.put("/recetas/:id", async (req, res) => {
       nombre,
       descripcion,
       tiempo_preparacion,
-      categoria,
       elegidos_comunidad,
       review,
       id
