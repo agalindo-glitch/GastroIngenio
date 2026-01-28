@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const ingredientes = [];
     document.querySelectorAll("#ingredients-container .ingredient-item").forEach(item => {
       const nombreIng = item.querySelector('input[name="ingredients[]"]').value.trim();
-      if (nombreIng) ingredientes.push({ nombre: nombreIng, cantidad: null, unidad: null });
+      if (nombreIng) ingredientes.push(nombreIng);
     });
 
     const pasos = [];
@@ -154,11 +154,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const imagenPaso = imagenPasoInput.value.trim();
 
       const valid = await previewImage(imagenPasoInput);
+
+      let pasoTexto = descripcionPaso;
+      if (imagenPaso) {
+        pasoTexto += ` (imagen: ${imagenPaso})`;
+      }
       if (!valid) allStepImagesValid = false;
 
       if (!descripcionPaso) { alert(`El paso ${i + 1} debe tener una descripción.`); return; }
 
-      pasos.push({ numero: i + 1, descripcion: descripcionPaso, imagen: imagenPaso || null });
+      pasos.push(pasoTexto);
     }
 
     if (!allStepImagesValid) { alert("Corrige las imágenes de los pasos antes de guardar la receta."); return; }
