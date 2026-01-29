@@ -39,16 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         clone.querySelector(".btn-eliminar").addEventListener("click", () => {
           if (!confirm("¿Seguro que querés eliminar esta receta?")) return;
-
-          fetch("http://localhost:3000/recetas", {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: receta.id
+            fetch("http://localhost:3000/recetas", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                id: receta.id
+              })
             })
-          })
             .then(res => {
               if (!res.ok) throw new Error("Error al eliminar");
               alert("Receta eliminada");
@@ -58,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
               console.error(err);
               alert("No se pudo eliminar la receta");
             });
+
         });
 
         contenedor.appendChild(clone);

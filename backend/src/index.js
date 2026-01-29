@@ -240,7 +240,7 @@ app.delete("/usuarios/:id", async (req, res) => {
 
 });
 
-// GET /recetas → listar todas las recetas
+// GET /recetas (muestra todas las recetas)
 app.get("/recetas", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM recetas");
@@ -253,6 +253,19 @@ app.get("/recetas", async (req, res) => {
     res.status(500).json({ error: "Error al obtener las recetas" });
   }
 });
+
+// GET /recetas (muestra una receta por el id, con su respectivo usuario)
+app.get("/recetas/:id", async(req, res) => {
+  try{
+    const id = req.params.id;
+    const result = await pool.query(`SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto FROM recetas r LEFT JOIN usuarios u ON r.id_usuario = u.id WHERE r.id = $1`, [id]);
+
+    res.status(200).json(result.rows[0]);
+
+  }catch (error){
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+})
 
 
 
@@ -292,26 +305,22 @@ app.post("/recetas", async (req, res) => {
 app.put("/recetas/:id", async (req, res) => {
   try {
     //guarda los valores
-    const id = req.params.id;
     const id_usuario = req.body.id_usuario;
     const nombre = req.body.nombre;
+    const ingredientes = req.body.ingredientes;
+    const pasos = req.body.pasos;
     const descripcion = req.body.descripcion;
     const tiempo_preparacion = req.body.tiempo_preparacion;
-    const categoria = req.body.categoria;
-    const elegidos_comunidad = req.body.elegidos_comunidad;
-    const review = req.body.review;
+    const comensales = req.body.comensales;
+    const imagen_url = req.body.imagen_url;
 
     //trim() sirve para que no te permita dejar espacios en blanco
-    if (!id_usuario || !nombre.trim() || !descripcion.trim() || !tiempo_preparacion || !categoria.trim()) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
+    if (!id_usuario || !nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    if (nombre.length > 50 || categoria.length > 50) {
-      return res.status(400).json({ error: 'Un campo tiene más de 15 caracteres' });
-    }
-
-    if (tiempo_preparacion <= 0 || review < 0) {
-      return res.status(406).json({ error: 'Numero de alguno de los campos es invalido' });
+    if (tiempo_preparacion <= 0) {
+      return res.status(400).json({ error: "Tiempo de preparación inválido" });
     }
 
     const query = `
@@ -347,10 +356,10 @@ app.put("/recetas/:id", async (req, res) => {
 
 // DELETE. /recetas (elimino una receta por su id, pero no como parametro)
 app.delete("/recetas", async (req, res) => {
-
   try {
     const id = req.body.id;
-    const queryComentario = `DELETE FROM comentarios WHERE id_receta = $1`;
+
+    const queryComentario = 'DELETE FROM comentarios WHERE id_receta = $1';
     const query = `DELETE FROM recetas WHERE id = $1`;
 
     await pool.query(queryComentario, [id]);
@@ -358,10 +367,35 @@ app.delete("/recetas", async (req, res) => {
 
     res.status(204).json();
   } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error("Error en DELETE /recetas:", error);
+    res.status(500).json({ error: "Error en el servidor", details: error.message });
   }
-
 });
+
+
+
+
+
+// GET /mis-recetas (muestra las recetas hechas por el usuario)
+app.get("/mis-recetas", async (req, res) => {
+  try {
+    const id_usuario = req.query.id_usuario;
+
+    if (!id_usuario) {
+      return res.status(400).json({ error: "Falta id_usuario" });
+    }
+
+    const query = `SELECT id, nombre, tiempo_preparacion FROM recetas WHERE id_usuario = $1`;
+
+    const result = await pool.query(query, [id_usuario]);
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 
 // GET /comentarios (todos)
 app.get("/comentarios", async (req, res) => {

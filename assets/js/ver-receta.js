@@ -1,12 +1,10 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🔥 Script unificado de ver receta y comentarios cargado");
-
   const params = new URLSearchParams(window.location.search);
   const recetaId = params.get("id");
   if (!recetaId) {
-    alert("❌ No se encontró el ID de la receta");
+    alert("No se encontró el ID de la receta");
     return;
   }
   window.recetaId = recetaId;
@@ -16,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function cargarReceta() {
     try {
-      const res = await fetch(`http://localhost:3000/recetas/${recetaId}/completo`);
+      const res = await fetch(`http://localhost:3000/recetas/${recetaId}`);
       if (!res.ok) throw new Error(`Error al cargar receta: ${res.status}`);
       const receta = await res.json();
       renderReceta(receta);
@@ -148,22 +146,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (imgEl && receta.imagen_url) imgEl.src = receta.imagen_url;
 
     const ingList = document.getElementById("lista-ingredientes");
+
     if (ingList) {
-      if (Array.isArray(receta.ingredientes) && receta.ingredientes.length) {
-        ingList.innerHTML = receta.ingredientes.map(ing => `<li>${ing.nombre}${ing.cantidad ? `: ${ing.cantidad}${ing.unidad ? ' ' + ing.unidad : ''}` : ''}</li>`).join("");
+      if (Array.isArray(receta.ingredientes)) {
+        ingList.innerHTML = receta.ingredientes.map(ing => `<li>${ing}</li>`).join("");
       } else ingList.innerHTML = "<li>(Ingredientes pendientes)</li>";
     }
 
     const pasosContainer = document.getElementById("lista-pasos");
     if (pasosContainer) {
-      if (Array.isArray(receta.pasos) && receta.pasos.length) {
-        pasosContainer.innerHTML = receta.pasos.map(p => `
-          <div class="paso">
-            <h3>Paso ${p.numero}</h3>
-            <p>${p.descripcion}</p>
-            ${p.foto_url ? `<img src="${p.foto_url}" alt="Paso ${p.numero}">` : ""}
-          </div>
-        `).join("");
+      if (Array.isArray(receta.pasos)) {
+        pasosContainer.innerHTML = receta.pasos.map((paso, index) => `<div class="paso"><h3>Paso ${index + 1}</h3><p>${paso}</p></div>`).join("");
       } else pasosContainer.innerHTML = "<p>(Pasos pendientes)</p>";
     }
 
