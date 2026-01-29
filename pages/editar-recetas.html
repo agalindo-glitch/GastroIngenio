@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>GastroIngenio - Editar Receta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="../assets/css/header.css">
+  <link rel="stylesheet" href="../assets/css/footer.css">
+  <link rel="stylesheet" href="../assets/css/recetas.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+    rel="stylesheet" />
+
+  <link rel="icon" type="image/jpg" href="/assets/img/icono.jpg" />
+</head>
+
+<body>
+  <header id="header"></header>
+
+  <main class="section recipe-page">
+    <div class="container">
+
+      <form id="recipe-form" class="recipe-wrapper box">
+
+        <h1 class="title is-3 has-text-centered mb-5">Editar receta</h1>
+
+        <div class="field">
+          <label class="label has-text-centered">Título de la receta</label>
+          <div class="control">
+            <input class="input has-text-centered" type="text" name="title" placeholder="Ej: Pizza casera" required>
+          </div>
+        </div>
+
+        <div class="columns is-variable is-6 recipe-hero">
+
+          <div class="column is-two-thirds">
+            <div class="field">
+              <label class="label">URL de la imagen principal</label>
+              <div class="control">
+                <input class="input" type="url" name="imageUrl" placeholder="https://...">
+                <img class="imageUrl-preview" style="display:none;">
+              </div>
+            </div>
+          </div>
+
+          <aside class="column is-one-third">
+            <div class="box ingredients-box">
+              <h2 class="title is-5 has-text-centered">Ingredientes</h2>
+
+              <div id="ingredients-container">
+                
+              </div>
+
+              <div class="field mt-2">
+                <button type="button" id="add-ingredient" class="button is-light is-fullwidth">
+                  + Agregar ingrediente
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="creator-info">
+          <figure>
+            <img class="avatar" src="https://via.placeholder.com/96" alt="Usuario">
+          </figure>
+          <span class="creator-name">usuario (creador)</span>
+        </div>
+
+        <div class="box recipe-meta">
+          <div class="columns is-mobile is-vcentered">
+            <div class="column">
+              <label class="label is-small">Tiempo de preparación (minutos)</label>
+              <div class="control">
+                <input class="input" type="number" name="cookTime" placeholder="Ej: 45">
+              </div>
+            </div>
+            <div class="column">
+              <label class="label is-small">Cantidad de comensales</label>
+              <div class="control">
+                <input class="input" type="number" name="servings" min="1" placeholder="4">
+              </div>
+            </div>
+          </div>
+
+          <div class="field mt-2">
+            <label class="label">Breve descripción</label>
+            <div class="control">
+              <textarea class="textarea" name="shortDescription" rows="2"
+                placeholder="Describi brevemente la receta..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <section class="box recipe-steps">
+          <h2 class="title is-5">Pasos 1 a 1 de cómo se hace (con imágenes)</h2>
+
+          <div id="steps-container">
+            
+          </div>
+
+          <button type="button" id="add-step" class="button is-link is-light mt-3">
+            + Agregar paso
+          </button>
+        </section>
+
+        <section class="box preview-section">
+          <h2 class="title is-5">Resumen de la receta</h2>
+          <p>Antes de guardar, revisá que todo esté correcto. Vas a poder ver el título, los ingredientes y los pasos
+            actualizados.</p>
+        </section>
+
+        <div class="field is-flex is-justify-content-space-between mt-5">
+          <a href="mis-recetas.html" class="button is-light">Cancelar</a>
+
+          <button id="btn-guardar-receta" type="submit" class="button is-primary">
+            Guardar cambios
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/editar-receta.js" defer></script>
+</body>
+
+</html>
