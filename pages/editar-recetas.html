@@ -55,7 +55,14 @@
               <h2 class="title is-5 has-text-centered">Ingredientes</h2>
 
               <div id="ingredients-container">
-                
+                <div class="field is-grouped ingredient-item">
+                  <div class="control is-expanded">
+                    <input class="input" type="text" name="ingredients[]" placeholder="Ingrediente" required>
+                  </div>
+                  <div class="control">
+                    <button type="button" class="button is-danger is-light remove-ingredient">X</button>
+                  </div>
+                </div>
               </div>
 
               <div class="field mt-2">
@@ -102,8 +109,27 @@
         <section class="box recipe-steps">
           <h2 class="title is-5">Pasos 1 a 1 de cómo se hace (con imágenes)</h2>
 
+
           <div id="steps-container">
-            
+            <div class="box step-item">
+              <div class="field is-grouped is-align-items-center">
+                <label class="label mr-2">Paso</label>
+                <div class="control">
+                  <input class="input step-number-input" type="number" min="1" value="1" readonly>
+                </div>
+                <div class="control ml-auto">
+                  <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label is-small">Descripción del paso</label>
+                <div class="control">
+                  <textarea class="textarea" name="steps[][text]" rows="2"
+                    placeholder="Explicá qué hay que hacer en este paso" required></textarea>
+                </div>
+              </div>
+            </div>
           </div>
 
           <button type="button" id="add-step" class="button is-link is-light mt-3">
@@ -133,7 +159,7 @@
   <footer id="footer"></footer>
 
   <script src="../assets/js/components.js"></script>
-  <script src="../assets/js/editar-receta.js" defer></script>
+  <script src="../assets/js/editar-recetas.js" defer></script>
 </body>
 
 </html>

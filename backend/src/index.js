@@ -305,7 +305,7 @@ app.post("/recetas", async (req, res) => {
 app.put("/recetas/:id", async (req, res) => {
   try {
     //guarda los valores
-    const id_usuario = req.body.id_usuario;
+    const id = req.params.id;
     const nombre = req.body.nombre;
     const ingredientes = req.body.ingredientes;
     const pasos = req.body.pasos;
@@ -315,7 +315,7 @@ app.put("/recetas/:id", async (req, res) => {
     const imagen_url = req.body.imagen_url;
 
     //trim() sirve para que no te permita dejar espacios en blanco
-    if (!id_usuario || !nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
+    if (!nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
@@ -323,31 +323,12 @@ app.put("/recetas/:id", async (req, res) => {
       return res.status(400).json({ error: "Tiempo de preparación inválido" });
     }
 
-    const query = `
-    UPDATE recetas
-    SET id_usuario = $1,
-        nombre = $2,
-        descripcion = $3,
-        tiempo_preparacion = $4,
-        categoria = $5,
-        elegidos_comunidad = $6,
-        review = $7
-    WHERE id = $8
-    `;
+    const query = `UPDATE recetas SET nombre = $1, descripcion = $2, tiempo_preparacion = $3, comensales = $4, imagen_url = $5, ingredientes = $6, pasos = $7 WHERE id = $8`;
 
-    await pool.query(query, [
-      id_usuario,
-      nombre,
-      descripcion,
-      tiempo_preparacion,
-      categoria,
-      elegidos_comunidad,
-      review,
-      id
-    ]);
-
+    await pool.query(query, [ nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
     
-    res.status(204).send();
+    res.status(200).json({ message: "Receta actualizada correctamente" });
+
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }

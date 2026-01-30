@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         clone.querySelector(".btn-editar").addEventListener("click", () => {
-          window.location.href = `editar-receta.html?id=${receta.id}`;
+          window.location.href = `editar-recetas.html?id=${receta.id}`;
         });
 
         clone.querySelector(".btn-eliminar").addEventListener("click", () => {
