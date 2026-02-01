@@ -7,7 +7,7 @@ CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta I
 
 -insertar clientes de prueba-
 
-INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ('ricardo', 'rodrigues', 23, 'tini', 'nose', '');
+INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ('ricardo', 'rodrigues', 23, 'ricadoR', 'contrasena123', '');
 INSERT INTO recetas (id_usuario, nombre, ingredientes, pasos, descripcion, tiempo_preparacion, comensales, review, imagen_url) VALUES (0,'Tarta de manzana', ARRAY['3 manzanas','200g de harina','100g de azúcar','2 huevos','100g de manteca'], ARRAY['Pelar y cortar las manzanas','Mezclar los ingredientes secos','Agregar huevos y manteca','Incorporar las manzanas','Hornear a 180°C por 40 minutos'],'Una tarta de manzana clásica, ideal para la merienda.', 60 , 6, 5, 'https://ejemplo.com/tarta-manzana.jpg');
 INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes) VALUES (1 , 1, 'muy buena la receta', 5, 8);
 

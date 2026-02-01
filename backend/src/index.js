@@ -11,98 +11,11 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend funcionando" });
 });
 
-
-
-app.post("/comentarios", async (req, res) => {
-  try {
-    const { id_usuario, id_receta, descripcion, puntaje } = req.body;
-    const likes = req.body.likes ?? 0;
-    const dislikes = req.body.dislikes ?? 0;
-
-    // 🔍 Debug: mostrar datos recibidos
-    console.log("💬 Datos recibidos en backend:", req.body);
-
-    // 1️⃣ Validaciones básicas
-    if (!id_usuario || !id_receta || !descripcion?.trim()) {
-      console.log("⚠️ Faltan campos obligatorios");
-      return res.status(400).json({ error: "Faltan campos obligatorios" });
-    }
-
-    // 2️⃣ Validación de puntaje
-    const puntajeNum = Number(puntaje);
-    if (isNaN(puntajeNum) || puntajeNum < 0 || puntajeNum > 5) {
-      console.log("⚠️ Puntaje inválido:", puntaje);
-      return res.status(406).json({ error: "Puntaje inválido (0-5)" });
-    }
-
-    // 3️⃣ Validación de likes/dislikes
-    if (likes < 0 || dislikes < 0) {
-      console.log("⚠️ Likes o dislikes inválidos");
-      return res.status(406).json({ error: "Likes/Dislikes inválidos" });
-    }
-
-    // 🔍 Debug: mostrar datos a insertar
-    console.log("💾 Insertando comentario:", {
-      id_usuario,
-      id_receta,
-      descripcion: descripcion.trim(),
-      puntaje: puntajeNum,
-      likes,
-      dislikes
-    });
-
-    // 🔍 Debug: mostrar datos a insertar
-    console.log("💾 Insertando comentario:", {
-      id_usuario,
-      id_receta,
-      descripcion: descripcion.trim(),
-      puntaje: puntajeNum,
-      likes,
-      dislikes
-    });
-
-    // 🔍 Debug: mostrar valor que irá como $4
-    console.log("💡 Valor que se enviará como $4 (puntaje):", puntajeNum);
-
-    // Guardar comentario
-    const result = await pool.query(
-      `INSERT INTO comentarios (id_usuario, id_receta, descripcion, puntaje, likes, dislikes)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *`,
-      [id_usuario, id_receta, descripcion.trim(), puntajeNum, likes, dislikes]
-    );
-
-    // 🔍 Debug: mostrar lo que realmente devuelve la DB
-    console.log("✅ Comentario insertado en DB:", result.rows[0]);
-
-    
-
-    const comment = result.rows[0];
-
-    // Traer el nombre de usuario y foto para el frontend
-    const userRes = await pool.query(
-      `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
-      [comment.id_usuario]
-    );
-
-    comment.usuario = userRes.rows[0]?.usuario ?? "";
-    comment.foto_perfil = userRes.rows[0]?.foto_perfil ?? null;
-
-    // 🔍 Debug: mostrar comentario final que se envía al frontend
-    console.log("✅ Comentario guardado y enviado al frontend:", comment);
-
-    res.status(201).json(comment);
-
-  } catch (error) {
-    console.error("❌ Error en POST /comentarios:", error);
-    res.status(500).json({ error: "Error en el servidor" });
-  }
-});
-
-// GET. /usuarios (busco todos los usuarios de la tabla)
+// GET. /usuarios (busco todos los usuarios de la tabla) //ELIMINAR CUANDO SE FINALICE EL PROYECTO
 app.get("/usuarios", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM usuarios");
+
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -114,6 +27,7 @@ app.get("/usuarios", async (req, res) => {
 app.get("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
+
     const result = await pool.query("SELECT * FROM usuarios WHERE id = $1", [id]);
 
     res.json(result.rows[0]);
@@ -126,7 +40,6 @@ app.get("/usuarios/:id", async (req, res) => {
 // POST. /usuarios (creo un usuario)
 app.post("/usuarios", async (req, res) => {
   try {
-    //guarda los valores
     const nombre = req.body.nombre;
     const apellido = req.body.apellido;
     const edad = req.body.edad;
@@ -134,8 +47,6 @@ app.post("/usuarios", async (req, res) => {
     const contrasena = req.body.contrasena;
     const foto_perfil = req.body.foto_perfil || null;
 
-
-    //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
@@ -159,12 +70,7 @@ app.post("/usuarios", async (req, res) => {
       return res.status(400).json({ error: 'El nombre de usuario ya está registrado' });
     }
 
-
-    const query = `
-    INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    `;
-
+    const query = `INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ($1, $2, $3, $4, $5, $6)`;
 
     await pool.query(query, [nombre, apellido, edad, usuario, contrasena, foto_perfil || null]);
 
@@ -177,7 +83,6 @@ app.post("/usuarios", async (req, res) => {
 // PUT. /usuarios/<id> (modifico un usuario por id)
 app.put("/usuarios/:id", async (req, res) => {
   try {
-    //guarda los valores
     const id = req.params.id;
     const nombre = req.body.nombre;
     const apellido = req.body.apellido;
@@ -186,7 +91,6 @@ app.put("/usuarios/:id", async (req, res) => {
     const contrasena = req.body.contrasena;
     const foto_perfil = req.body.foto_perfil;
 
-    //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !apellido.trim() || !edad || !usuario.trim() || !contrasena.trim()) {
       return res.status(400).json({ error: 'Faltan campos obligatorios o están vacíos' });
     }
@@ -231,6 +135,7 @@ app.delete("/usuarios/:id", async (req, res) => {
     await pool.query(queryEliminarReceta, [id]);
 
     const query = `DELETE FROM usuarios WHERE id = $1`;
+    
     await pool.query(query, [id]);
 
     res.status(200).json({ message: `Usuario con el id: ${id} fue eliminado` });
@@ -240,7 +145,7 @@ app.delete("/usuarios/:id", async (req, res) => {
 
 });
 
-// GET /recetas (muestra todas las recetas)
+// GET. /recetas (muestra todas las recetas) //ELIMINAR CUANDO SE FINALICE EL PROYECTO
 app.get("/recetas", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM recetas");
@@ -254,7 +159,7 @@ app.get("/recetas", async (req, res) => {
   }
 });
 
-// GET /recetas (muestra una receta por el id, con su respectivo usuario)
+// GET. /recetas (muestra una receta por el id, con su respectivo usuario)
 app.get("/recetas/:id", async(req, res) => {
   try{
     const id = req.params.id;
@@ -304,7 +209,6 @@ app.post("/recetas", async (req, res) => {
 // PUT. /recetas/<id> (modifico una receta por id)
 app.put("/recetas/:id", async (req, res) => {
   try {
-    //guarda los valores
     const id = req.params.id;
     const nombre = req.body.nombre;
     const ingredientes = req.body.ingredientes;
@@ -314,7 +218,6 @@ app.put("/recetas/:id", async (req, res) => {
     const comensales = req.body.comensales;
     const imagen_url = req.body.imagen_url;
 
-    //trim() sirve para que no te permita dejar espacios en blanco
     if (!nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
@@ -353,11 +256,7 @@ app.delete("/recetas", async (req, res) => {
   }
 });
 
-
-
-
-
-// GET /mis-recetas (muestra las recetas hechas por el usuario)
+// GET. /mis-recetas (muestra las recetas hechas por el usuario)
 app.get("/mis-recetas", async (req, res) => {
   try {
     const id_usuario = req.query.id_usuario;
@@ -376,7 +275,6 @@ app.get("/mis-recetas", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // =====================
 // COMENTARIOS - CRUD
@@ -662,7 +560,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// GET. /usuariosElegidosComunidad/<id> (busca el numero de elegidos por la comunidad de un usuario)
+// GET. /usuariosElegidosComunidad/<id> (busca el numero de elegidos por la comunidad de un usuario) \\ELIMINAR CUANDO SE LO SAQUE DEL PERFIL DE USUARIOS
 app.get("/usuariosElegidosComunidad/:id", async (req, res) => {
   try {
     const id = req.params.id;
