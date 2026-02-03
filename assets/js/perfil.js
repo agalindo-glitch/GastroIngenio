@@ -68,13 +68,8 @@ async function cargarEstadisticas(id_usuario) {
 
         const recetasUsuario = recetas.filter(r => r.id_usuario == id_usuario);
         document.getElementById("numPosts").textContent = recetasUsuario.length;
-
-        const elegidos = recetasUsuario.filter(r => r.elegidos_comunidad === true);
-        document.getElementById("numElegidos").textContent = elegidos.length;
-
     } catch (error) {
         console.error("Error cargando estadísticas", error);
         document.getElementById("numPosts").textContent = "0";
-        document.getElementById("numElegidos").textContent = "0";
     }
 }

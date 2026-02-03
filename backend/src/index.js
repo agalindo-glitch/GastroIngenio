@@ -11,6 +11,11 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend funcionando" });
 });
 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Servidor corriendo en http://localhost:" + PORT);
+});
+
 // GET. /usuarios (busco todos los usuarios de la tabla) //ELIMINAR CUANDO SE FINALICE EL PROYECTO
 app.get("/usuarios", async (req, res) => {
   try {
@@ -276,10 +281,6 @@ app.get("/mis-recetas", async (req, res) => {
   }
 });
 
-// =====================
-// COMENTARIOS - CRUD
-// =====================
-
 // POST /comentarios (crear)
 app.post("/comentarios", async (req, res) => {
   try {
@@ -288,7 +289,6 @@ app.post("/comentarios", async (req, res) => {
     const likes = req.body.likes ?? 0;
     const dislikes = req.body.dislikes ?? 0;
 
-    // Validaciones básicas
     if (!id_usuario || !id_receta || !descripcion || !descripcion.trim()) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
@@ -302,19 +302,16 @@ app.post("/comentarios", async (req, res) => {
       return res.status(406).json({ error: "Likes/Dislikes inválidos" });
     }
 
-    // Validar que exista el usuario
     const userExists = await pool.query("SELECT id FROM usuarios WHERE id = $1", [id_usuario]);
     if (userExists.rows.length === 0) {
       return res.status(404).json({ error: "Usuario no existe" });
     }
 
-    // Validar que exista la receta
     const recetaExists = await pool.query("SELECT id FROM recetas WHERE id = $1", [id_receta]);
     if (recetaExists.rows.length === 0) {
       return res.status(404).json({ error: "Receta no existe" });
     }
 
-    // Insertar comentario
     const result = await pool.query(
       `INSERT INTO comentarios (id_usuario, id_receta, descripcion, puntaje, likes, dislikes)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -324,7 +321,6 @@ app.post("/comentarios", async (req, res) => {
 
     const comment = result.rows[0];
 
-    // Agregar usuario + foto_perfil al response
     const userRes = await pool.query(
       `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
       [comment.id_usuario]
@@ -440,7 +436,6 @@ app.put("/comentarios/:id", async (req, res) => {
       return res.status(403).json({ error: "No podés editar este comentario" });
     }
 
-    // devolver con usuario y foto también
     const userRes = await pool.query(
       `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
       [id_usuario]
@@ -528,13 +523,6 @@ app.put("/comentarios/:id/dislike", async (req, res) => {
   }
 });
 
-
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Servidor corriendo en http://localhost:" + PORT);
-});
-
 //POST. /login (un usuario se logea)
 app.post("/login", async (req, res) => {
   try{
@@ -557,27 +545,6 @@ app.post("/login", async (req, res) => {
     res.json(resultados.rows[0]);
   }catch(error){
     res.status(500).json({ error: 'Error en el servidor' });
-  }
-});
-
-// GET. /usuariosElegidosComunidad/<id> (busca el numero de elegidos por la comunidad de un usuario) \\ELIMINAR CUANDO SE LO SAQUE DEL PERFIL DE USUARIOS
-app.get("/usuariosElegidosComunidad/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const result = await pool.query(`SELECT u.id AS usuario_id, COUNT(r.id) AS elegidos
-    FROM usuarios u
-    LEFT JOIN recetas r ON u.id = r.id_usuario AND r.elegidos_comunidad = TRUE
-    WHERE u.id = ${id}
-    GROUP BY u.id;`);
-
-    if (result.rows.length === 0 || result.rows[0].elegidos === 0) {
-      return res.json({ usuario_id: id, elegidos: 0 });
-    }
-
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
   }
 });
 

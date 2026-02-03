@@ -90,13 +90,6 @@ function addStep() {
           <textarea class="textarea" name="steps[][text]" rows="2" placeholder="Explicá qué hay que hacer en este paso" required></textarea>
         </div>
       </div>
-      <div class="field">
-        <label class="label is-small">URL de imagen (opcional)</label>
-        <div class="control">
-          <input class="input" type="url" name="steps[][image]" placeholder="https://...">
-          <img class="imageUrl-preview">
-        </div>
-      </div>
     </div>
   `);
 }
@@ -145,28 +138,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pasos = [];
-    let allStepImagesValid = true;
     const stepItems = document.querySelectorAll("#steps-container .step-item");
     for (let i = 0; i < stepItems.length; i++) {
       const item = stepItems[i];
       const descripcionPaso = item.querySelector('textarea[name="steps[][text]"]').value.trim();
       const imagenPasoInput = item.querySelector('input[name="steps[][image]"]');
-      const imagenPaso = imagenPasoInput.value.trim();
-
-      const valid = await previewImage(imagenPasoInput);
 
       let pasoTexto = descripcionPaso;
-      if (imagenPaso) {
-        pasoTexto += ` (imagen: ${imagenPaso})`;
-      }
-      if (!valid) allStepImagesValid = false;
 
       if (!descripcionPaso) { alert(`El paso ${i + 1} debe tener una descripción.`); return; }
 
       pasos.push(pasoTexto);
     }
-
-    if (!allStepImagesValid) { alert("Corrige las imágenes de los pasos antes de guardar la receta."); return; }
 
     const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos};
 
