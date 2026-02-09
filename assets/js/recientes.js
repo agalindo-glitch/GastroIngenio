@@ -1,8 +1,8 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded", loadRecientes);
+document.addEventListener("DOMContentLoaded", cargarRecientes);
 
-async function loadRecientes() {
+async function cargarRecientes() {
   const lista = document.querySelector(".recent__list");
 
   if (!lista) return;

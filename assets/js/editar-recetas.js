@@ -16,7 +16,6 @@ async function cargarReceta() {
     document.querySelector('input[name="servings"]').value = receta.comensales;
     document.querySelector('input[name="imageUrl"]').value = receta.imagen_url || "";
 
-    // Ingredientes
     const ingredienteContainer = document.getElementById("ingredients-container");
     ingredienteContainer.innerHTML = "";
     receta.ingredientes.forEach(ing => {
@@ -60,13 +59,13 @@ async function cargarReceta() {
 }
 
 
-async function loadLoggedUser() {
+async function cargarUsuario() {
   const id_usuario = localStorage.getItem("id_usuario");
   const logueado = localStorage.getItem("logueado") === "true";
 
   if (!logueado || !id_usuario) return;
 
-  const creatorInfoContainer = document.querySelector(".creator-info");
+  const creardorInfo = document.querySelector(".creator-info");
 
   try {
     const res = await fetch(`http://localhost:3000/usuarios/${id_usuario}`);
@@ -75,8 +74,8 @@ async function loadLoggedUser() {
     const nombre_usuario = user.usuario || "usuario";
     const foto_usuario = user.foto_perfil?.trim() || "/assets/img/default-user.png";
 
-    const avatarImg = creatorInfoContainer.querySelector("img");
-    const nombreSpan = creatorInfoContainer.querySelector(".creator-name");      
+    const avatarImg = creardorInfo.querySelector("img");
+    const nombreSpan = creardorInfo.querySelector(".creator-name");      
 
     if (avatarImg) {
       avatarImg.src = foto_usuario;
@@ -95,7 +94,7 @@ async function loadLoggedUser() {
   }
 }
 
-async function previewImage(input) {
+async function imagenReceta(input) {
   const url = input.value.trim();
   const preview = input.nextElementSibling;
 
@@ -113,10 +112,10 @@ async function previewImage(input) {
   });
 }
 
-function addIngredient() {
-  const ingredientsContainer = document.getElementById("ingredients-container");
+function agregarIngrediente() {
+  const ingredientesContainer = document.getElementById("ingredients-container");
   
-  ingredientsContainer.insertAdjacentHTML("beforeend", `
+  ingredientesContainer.insertAdjacentHTML("beforeend", `
     <div class="field is-grouped ingredient-item">
       <div class="control is-expanded">
         <input class="input" type="text" name="ingredients[]" placeholder="Ingrediente" required>
@@ -128,17 +127,17 @@ function addIngredient() {
   `);
 }
 
-function addStep() {
-  const stepsContainer = document.getElementById("steps-container");
+function agregarPaso() {
+  const pasosContainer = document.getElementById("steps-container");
 
-  const stepNumber = stepsContainer.children.length + 1;
+  const pasosNumero = pasosContainer.children.length + 1;
   
-  stepsContainer.insertAdjacentHTML("beforeend", `
+  pasosContainer.insertAdjacentHTML("beforeend", `
     <div class="box step-item">
       <div class="field is-grouped is-align-items-center">
         <label class="label mr-2">Paso</label>
         <div class="control">
-          <input class="input step-number-input" type="number" min="1" value="${stepNumber}" readonly>
+          <input class="input step-number-input" type="number" min="1" value="${pasosNumero}" readonly>
         </div>
         <div class="control ml-auto">
           <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
@@ -150,18 +149,12 @@ function addStep() {
           <textarea class="textarea" name="steps[][text]" rows="2" placeholder="Explicá qué hay que hacer en este paso" required></textarea>
         </div>
       </div>
-      <div class="field">
-        <label class="label is-small">URL de imagen (opcional)</label>
-        <div class="control">
-          <input class="input" type="url" name="steps[][image]" placeholder="https://...">
-          <img class="imageUrl-preview">
-        </div>
-      </div>
     </div>
   `);
 }
 
-function renumberSteps() {
+
+function renumerarPasos() {
   document.querySelectorAll("#steps-container .step-number-input").forEach((input, idx) => {
     input.value = idx + 1;
   });
@@ -169,19 +162,19 @@ function renumberSteps() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const id_usuario = localStorage.getItem("id_usuario");
-  loadLoggedUser();
 
+  cargarUsuario();
 
   const form = document.getElementById("recipe-form");
 
-  document.getElementById("add-ingredient").addEventListener("click", addIngredient);
-  document.getElementById("add-step").addEventListener("click", addStep);
+  document.getElementById("add-ingredient").addEventListener("click", agregarIngrediente);
+  document.getElementById("add-step").addEventListener("click", agregarPaso);
 
   cargarReceta();
 
   document.body.addEventListener("click", (e) => {
     if (e.target.classList.contains("remove-ingredient")) e.target.closest(".ingredient-item").remove();
-    if (e.target.classList.contains("remove-step")) { e.target.closest(".step-item").remove(); renumberSteps(); }
+    if (e.target.classList.contains("remove-step")) { e.target.closest(".step-item").remove(); renumerarPasos(); }
   });
 
   document.body.addEventListener("blur", (e) => {
@@ -198,8 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const comensales = parseInt(formData.get("servings")) || null;
     const imagen_url = formData.get("imageUrl")?.trim();
 
-    const mainImageValid = await previewImage(form.querySelector('input[name="imageUrl"]'));
-    if (!mainImageValid) return;
+    const imagenPrincipalValida = await imagenReceta(form.querySelector('input[name="imageUrl"]'));
+    if (!imagenPrincipalValida) return;
 
     const ingredientes = [];
     document.querySelectorAll("#ingredients-container .ingredient-item").forEach(item => {
@@ -208,10 +201,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pasos = [];
-    const stepItems = document.querySelectorAll("#steps-container .step-item");
+    const items = document.querySelectorAll("#steps-container .step-item");
 
-    for (let i = 0; i < stepItems.length; i++) {
-        const item = stepItems[i];
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
         const descripcionPaso = item
             .querySelector('textarea[name="steps[][text]"]')
             .value

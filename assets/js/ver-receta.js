@@ -83,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         agregarReview(respuesta);
 
-        // subo contador
         if (contadorComentarios) {
           const actual = Number(contadorComentarios.textContent) || 0;
           contadorComentarios.textContent = actual + 1;
@@ -148,7 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // comentarios (los trae GET /recetas/:id)
     if (reviewsContainer) {
       reviewsContainer.innerHTML = "";
       if (Array.isArray(receta.comentarios) && receta.comentarios.length) {
@@ -205,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return starsHTML;
   }
 
-  // ✅ ARREGLADO: ahora edita en DB (PUT real)
   async function iniciarEdicionComentario(c, articleEl) {
     const nuevaDesc = prompt("Editar comentario:", c.descripcion);
     if (!nuevaDesc || !nuevaDesc.trim()) return;
@@ -233,14 +230,13 @@ document.addEventListener("DOMContentLoaded", () => {
       c.descripcion = data.descripcion;
       articleEl.querySelector("p").textContent = c.descripcion;
 
-      alert("Comentario editado ✅");
+      alert("Comentario editado");
     } catch (err) {
       console.error(err);
       alert("Error de red o servidor");
     }
   }
 
-  // ✅ ARREGLADO: ahora borra en DB (DELETE real)
   async function eliminarComentario(id) {
     if (!confirm("¿Seguro que querés eliminar este comentario?")) return;
 
@@ -267,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (reviewEl) reviewEl.remove();
 
       bajarContadorComentarios();
-      alert("Comentario eliminado ✅");
+      alert("Comentario eliminado");
     } catch (err) {
       console.error(err);
       alert("Error de red o servidor");

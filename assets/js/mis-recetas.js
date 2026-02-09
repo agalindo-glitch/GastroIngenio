@@ -24,20 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       recetas.forEach(receta => {
-        const clone = template.content.cloneNode(true);
+        const clon = template.content.cloneNode(true);
 
-        clone.querySelector(".receta-nombre").textContent = receta.nombre;
-        clone.querySelector(".receta-tiempo").textContent = `${receta.tiempo_preparacion} min`;
+        clon.querySelector(".receta-nombre").textContent = receta.nombre;
+        clon.querySelector(".receta-tiempo").textContent = `${receta.tiempo_preparacion} min`;
 
-        clone.querySelector(".btn-ver").addEventListener("click", () => {
+        clon.querySelector(".btn-ver").addEventListener("click", () => {
           window.location.href = `ver-receta.html?id=${receta.id}`;
         });
 
-        clone.querySelector(".btn-editar").addEventListener("click", () => {
+        clon.querySelector(".btn-editar").addEventListener("click", () => {
           window.location.href = `editar-recetas.html?id=${receta.id}`;
         });
 
-        clone.querySelector(".btn-eliminar").addEventListener("click", () => {
+        clon.querySelector(".btn-eliminar").addEventListener("click", () => {
           if (!confirm("¿Seguro que querés eliminar esta receta?")) return;
             fetch("http://localhost:3000/recetas", {
               method: "DELETE",
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
 
-        contenedor.appendChild(clone);
+        contenedor.appendChild(clon);
       });
     })
     .catch(err => {

@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             await validarImagen(url);
             limpiarErrorFoto(fotoInput);
-            fotoPreview.src = url; // ✅ solo si es válida
+            fotoPreview.src = url;
         } catch {
             marcarErrorFoto(fotoInput, "La URL no corresponde a una imagen válida");
         }
