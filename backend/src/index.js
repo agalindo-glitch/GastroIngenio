@@ -123,8 +123,6 @@ app.put("/usuarios/:id", async (req, res) => {
 
 });
 
-
-
 // DELETE. /usuarios (elimino un usuario por su id, pero no como parametro)
 app.delete("/usuarios/:id", async (req, res) => {
   try {
@@ -177,8 +175,6 @@ app.get("/recetas/:id", async(req, res) => {
   }
 })
 
-
-
 // POST. /recetas (creo un receta)
 app.post("/recetas", async (req, res) => {
   try {
@@ -209,7 +205,6 @@ app.post("/recetas", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
-
 
 // PUT. /recetas/<id> (modifico una receta por id)
 app.put("/recetas/:id", async (req, res) => {
@@ -336,7 +331,6 @@ app.post("/comentarios", async (req, res) => {
   }
 });
 
-
 // GET /comentarios (todos)  + trae usuario y foto
 app.get("/comentarios", async (req, res) => {
   try {
@@ -352,7 +346,6 @@ app.get("/comentarios", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // GET /comentarios/:id (uno por id) + trae usuario y foto
 app.get("/comentarios/:id", async (req, res) => {
@@ -376,7 +369,6 @@ app.get("/comentarios/:id", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // GET /recetas/:id/comentarios (todos los comentarios de una receta)
 app.get("/recetas/:id/comentarios", async (req, res) => {
@@ -403,7 +395,6 @@ app.get("/recetas/:id/comentarios", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // PUT /comentarios/:id (editar) solo dueño
 app.put("/comentarios/:id", async (req, res) => {
@@ -452,7 +443,6 @@ app.put("/comentarios/:id", async (req, res) => {
   }
 });
 
-
 // DELETE /comentarios/:id (borrar) solo dueño
 app.delete("/comentarios/:id", async (req, res) => {
   try {
@@ -481,7 +471,6 @@ app.delete("/comentarios/:id", async (req, res) => {
   }
 });
 
-
 // PUT /comentarios/:id/like
 app.put("/comentarios/:id/like", async (req, res) => {
   try {
@@ -501,7 +490,6 @@ app.put("/comentarios/:id/like", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // PUT /comentarios/:id/dislike
 app.put("/comentarios/:id/dislike", async (req, res) => {
@@ -565,7 +553,6 @@ app.get("/usuariosPosts/:id", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
-
 
 // PUT /comentarios/:id/like
 app.put("/comentarios/:id/like", async (req, res) => {
