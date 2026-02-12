@@ -26,21 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   cargarReceta();
+  cargarComentarios();
 
-  const stars = document.querySelectorAll("#star-rating .star");
+  const estrellas = document.querySelectorAll("#star-rating .star");
   const puntajeInput = document.getElementById("puntaje");
-  let ratingValue = 0;
+  let valorEstrella = 0;
 
-  stars.forEach(star => {
+  estrellas.forEach(star => {
     star.addEventListener("click", () => {
-      ratingValue = Number(star.dataset.value);
-      puntajeInput.value = ratingValue;
-      updateStars(ratingValue);
+      valorEstrella = Number(star.dataset.value);
+      puntajeInput.value = valorEstrella;
+      subirEstrella(valorEstrella);
     });
   });
 
-  function updateStars(value) {
-    stars.forEach(star => {
+  function subirEstrella(value) {
+    estrellas.forEach(star => {
       star.classList.toggle("filled", Number(star.dataset.value) <= value);
     });
   }
@@ -90,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         form.reset();
         puntajeInput.value = 0;
-        updateStars(0);
+        subirEstrella(0);
         alert("Reseña enviada correctamente");
       } catch (err) {
         console.error(err);
@@ -100,14 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderReceta(receta) {
-    const setText = (id, value) => {
+    const ponerTexto = (id, value) => {
       const el = document.getElementById(id);
       if (el) el.textContent = value;
     };
 
-    setText("receta-titulo", receta.nombre);
-    setText("receta-tiempo", `${receta.tiempo_preparacion || "-"} min`);
-    setText("receta-comensales", receta.comensales || "-");
+    ponerTexto("receta-titulo", receta.nombre);
+    ponerTexto("receta-tiempo", `${receta.tiempo_preparacion || "-"} min`);
+    ponerTexto("receta-comensales", receta.comensales || "-");
 
     const autorEl = document.getElementById("receta-autor");
     if (autorEl) {
@@ -118,15 +119,15 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    const imgEl = document.getElementById("receta-imagen");
-    if (imgEl) imgEl.src = receta.imagen_url || "https://via.placeholder.com/800x400?text=Sin+Imagen";
+    const img = document.getElementById("receta-imagen");
+    if (img) img.src = receta.imagen_url || "https://via.placeholder.com/800x400?text=Sin+Imagen";
 
-    const ingList = document.getElementById("lista-ingredientes");
-    if (ingList) {
+    const ingredientes = document.getElementById("lista-ingredientes");
+    if (ingredientes) {
       if (Array.isArray(receta.ingredientes)) {
-        ingList.innerHTML = receta.ingredientes.map(ing => `<li>${ing}</li>`).join("");
+        ingredientes.innerHTML = receta.ingredientes.map(ing => `<li>${ing}</li>`).join("");
       } else {
-        ingList.innerHTML = "<li>(Ingredientes pendientes)</li>";
+        ingredientes.innerHTML = "<li>(Ingredientes pendientes)</li>";
       }
     }
 
@@ -146,17 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
         pasosContainer.innerHTML = "<p>(Pasos pendientes)</p>";
       }
     }
-
-    if (reviewsContainer) {
-      reviewsContainer.innerHTML = "";
-      if (Array.isArray(receta.comentarios) && receta.comentarios.length) {
-        receta.comentarios.forEach(c => agregarReview(c));
-        if (contadorComentarios) contadorComentarios.textContent = receta.comentarios.length;
-      } else {
-        if (contadorComentarios) contadorComentarios.textContent = 0;
-        reviewsContainer.innerHTML = "<p>No hay comentarios todavía</p>";
-      }
-    }
   }
 
   function agregarReview(c) {
@@ -164,19 +154,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const usuarioLogueado = Number(localStorage.getItem("id_usuario"));
 
-    const starsHTML = renderStars(Number(c.puntaje) || 0);
+    const starsHTML = renderizarEstrellas(Number(c.puntaje) || 0);
 
-    const article = document.createElement("article");
-    article.className = "review";
+    const articulo = document.createElement("article");
+    articulo.className = "review";
 
-    article.innerHTML = `
+    articulo.innerHTML = `
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
         ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.usuario}" style="width:40px;height:40px;border-radius:50%;">` : ""}
         <strong>@${c.usuario || "usuario"}</strong> - ${starsHTML}
       </div>
       <p>${c.descripcion}</p>
-      <small>👍 ${c.likes || 0} | 👎 ${c.dislikes || 0}</small>
+      <div class="comentario-votos">
+        <button class="btn-like" data-id="${c.id}">
+          👍 <span class="like-count">${c.likes || 0}</span>
+        </button>
+        <button class="btn-dislike" data-id="${c.id}">
+          👎 <span class="dislike-count">${c.dislikes || 0}</span>
+        </button>
+      </div>
     `;
+
+    const botonLike = articulo.querySelector(".btn-like");
+    const botonDislike = articulo.querySelector(".btn-dislike");
+
+    botonLike.addEventListener("click", () => votarComentario(c.id, "like", articulo));
+    botonDislike.addEventListener("click", () => votarComentario(c.id, "dislike", articulo));
+
 
     if (usuarioLogueado === Number(c.id_usuario)) {
       const botones = document.createElement("div");
@@ -186,21 +190,45 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="btn-eliminar" data-id="${c.id}">Eliminar</button>
       `;
 
-      botones.querySelector(".btn-editar").addEventListener("click", () => iniciarEdicionComentario(c, article));
+      botones.querySelector(".btn-editar").addEventListener("click", () => iniciarEdicionComentario(c, articulo));
       botones.querySelector(".btn-eliminar").addEventListener("click", () => eliminarComentario(c.id));
 
-      article.appendChild(botones);
+      articulo.appendChild(botones);
     }
 
-    reviewsContainer.appendChild(article);
+    reviewsContainer.appendChild(articulo);
   }
 
-  function renderStars(puntaje) {
-    let starsHTML = "";
-    for (let i = 1; i <= 5; i++) {
-      starsHTML += `<span class="star ${i <= puntaje ? "filled" : ""}">&#9733;</span>`;
+  async function votarComentario(id, tipo, articulo) {
+    try {
+      const respuesta = await fetch(`http://localhost:3000/comentarios/${id}/vote`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tipo })
+      });
+
+      const resultado = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(resultado.error || "No se pudo votar");
+        return;
+      }
+
+      articulo.querySelector(".like-count").textContent = resultado.likes;
+      articulo.querySelector(".dislike-count").textContent = resultado.dislikes;
+
+    } catch (err) {
+      console.error(err);
+      alert("Error de red");
     }
-    return starsHTML;
+  }
+
+  function renderizarEstrellas(puntaje) {
+    let estrellasHTML = "";
+    for (let i = 1; i <= 5; i++) {
+      estrellasHTML += `<span class="star ${i <= puntaje ? "filled" : ""}">&#9733;</span>`;
+    }
+    return estrellasHTML;
   }
 
   async function iniciarEdicionComentario(c, articleEl) {
@@ -211,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!id_usuario) return alert("Tenés que iniciar sesión");
 
     try {
-      const res = await fetch(`http://localhost:3000/comentarios/${c.id}`, {
+      const respuesta = await fetch(`http://localhost:3000/comentarios/${c.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -220,14 +248,14 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       });
 
-      const data = await res.json();
+      const resultado = await respuesta.json();
 
-      if (!res.ok) {
-        alert(data.error || "No se pudo editar el comentario");
+      if (!respuesta.ok) {
+        alert(resultado.error || "No se pudo editar el comentario");
         return;
       }
 
-      c.descripcion = data.descripcion;
+      c.descripcion = resultado.descripcion;
       articleEl.querySelector("p").textContent = c.descripcion;
 
       alert("Comentario editado");
@@ -244,23 +272,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!id_usuario) return alert("Tenés que iniciar sesión");
 
     try {
-      const res = await fetch(`http://localhost:3000/comentarios/${id}`, {
+      const respuesta = await fetch(`http://localhost:3000/comentarios/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id_usuario })
       });
 
-      if (!res.ok) {
-        const data = await res.json();
+      if (!respuesta.ok) {
+        const data = await respuesta.json();
         alert(data.error || "No se pudo borrar el comentario");
         return;
       }
 
-      const reviewEl = reviewsContainer
+      const review = reviewsContainer
         .querySelector(`.btn-eliminar[data-id='${id}']`)
         ?.closest("article");
 
-      if (reviewEl) reviewEl.remove();
+      if (review) review.remove();
 
       bajarContadorComentarios();
       alert("Comentario eliminado");
@@ -275,4 +303,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const actual = Number(contadorComentarios.textContent) || 0;
     contadorComentarios.textContent = Math.max(0, actual - 1);
   }
+
+  async function cargarComentarios() {
+  try {
+    const respuesta = await fetch(`http://localhost:3000/recetas/${recetaId}/comentarios`);
+    if (!respuesta.ok) throw new Error("Error al cargar comentarios");
+
+    const comentarios = await respuesta.json();
+
+    reviewsContainer.innerHTML = "";
+
+    if (comentarios.length === 0) {
+      reviewsContainer.innerHTML = "<p>No hay comentarios todavía</p>";
+      contadorComentarios.textContent = 0;
+      return;
+    }
+
+    comentarios.forEach(c => agregarReview(c));
+    contadorComentarios.textContent = comentarios.length;
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 });

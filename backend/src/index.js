@@ -265,7 +265,7 @@ app.get("/mis-recetas", async (req, res) => {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
-    const query = `SELECT id, nombre, tiempo_preparacion FROM recetas WHERE id_usuario = $1`;
+    const query = `SELECT id, nombre, tiempo_preparacion, imagen_url FROM recetas WHERE id_usuario = $1`;
 
     const result = await pool.query(query, [id_usuario]);
     res.json(result.rows);
@@ -276,71 +276,39 @@ app.get("/mis-recetas", async (req, res) => {
   }
 });
 
-// POST /comentarios (crear)
+// POST /comentarios (crear comentario)
 app.post("/comentarios", async (req, res) => {
   try {
-    const { id_usuario, id_receta, descripcion, puntaje } = req.body;
+    const id_usuario = req.body.id_usuario;
+    const id_receta = req.body.id_receta;
+    const descripcion = req.body.descripcion;
+    const puntaje = req.body.puntaje;
 
-    const likes = req.body.likes ?? 0;
-    const dislikes = req.body.dislikes ?? 0;
-
-    if (!id_usuario || !id_receta || !descripcion || !descripcion.trim()) {
+    if (!id_usuario || !id_receta || descripcion.length <= 0) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    const puntajeNum = Number(puntaje ?? 0);
-    if (isNaN(puntajeNum) || puntajeNum < 0 || puntajeNum > 5) {
-      return res.status(406).json({ error: "Puntaje inválido (0-5)" });
-    }
+    const insert = await pool.query(`INSERT INTO comentarios (id_usuario, id_receta, descripcion, puntaje) VALUES ($1,$2,$3,$4) RETURNING id`, [id_usuario, id_receta, descripcion.trim(), puntaje]);
 
-    if (likes < 0 || dislikes < 0) {
-      return res.status(406).json({ error: "Likes/Dislikes inválidos" });
-    }
+    const idNuevo = insert.rows[0].id;
 
-    const userExists = await pool.query("SELECT id FROM usuarios WHERE id = $1", [id_usuario]);
-    if (userExists.rows.length === 0) {
-      return res.status(404).json({ error: "Usuario no existe" });
-    }
+    const result = await pool.query(`SELECT c.*, u.usuario, u.foto_perfil FROM comentarios c JOIN usuarios u ON u.id = c.id_usuario WHERE c.id = $1`, [idNuevo]);
 
-    const recetaExists = await pool.query("SELECT id FROM recetas WHERE id = $1", [id_receta]);
-    if (recetaExists.rows.length === 0) {
-      return res.status(404).json({ error: "Receta no existe" });
-    }
+    res.status(201).json(result.rows[0]);
 
-    const result = await pool.query(
-      `INSERT INTO comentarios (id_usuario, id_receta, descripcion, puntaje, likes, dislikes)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING *`,
-      [id_usuario, id_receta, descripcion.trim(), puntajeNum, likes, dislikes]
-    );
-
-    const comment = result.rows[0];
-
-    const userRes = await pool.query(
-      `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
-      [comment.id_usuario]
-    );
-
-    comment.usuario = userRes.rows[0]?.usuario ?? "";
-    comment.foto_perfil = userRes.rows[0]?.foto_perfil ?? null;
-
-    res.status(201).json(comment);
   } catch (error) {
-    console.error("❌ Error en POST /comentarios:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
-// GET /comentarios (todos)  + trae usuario y foto
+// GET /comentarios (todos)
 app.get("/comentarios", async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT c.*, u.usuario, u.foto_perfil
-      FROM comentarios c
-      JOIN usuarios u ON u.id = c.id_usuario
-      ORDER BY c.id DESC
-    `);
+
+    const result = await pool.query(`SELECT c.*, u.usuario, u.foto_perfil FROM comentarios c JOIN usuarios u ON u.id = c.id_usuario ORDER BY c.id DESC`);
+
     res.json(result.rows);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "DB error" });
@@ -351,13 +319,8 @@ app.get("/comentarios", async (req, res) => {
 app.get("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const result = await pool.query(
-      `SELECT c.*, u.usuario, u.foto_perfil
-       FROM comentarios c
-       JOIN usuarios u ON u.id = c.id_usuario
-       WHERE c.id = $1`,
-      [id]
-    );
+
+    const result = await pool.query(`SELECT c.*, u.usuario, u.foto_perfil FROM comentarios c JOIN usuarios u ON u.id = c.id_usuario WHERE c.id = $1`, [id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Comentario no encontrado" });
@@ -375,21 +338,10 @@ app.get("/recetas/:id/comentarios", async (req, res) => {
   try {
     const id_receta = Number(req.params.id);
 
-    const recetaExists = await pool.query("SELECT id FROM recetas WHERE id = $1", [id_receta]);
-    if (recetaExists.rows.length === 0) {
-      return res.status(404).json({ error: "Receta no existe" });
-    }
-
-    const result = await pool.query(
-      `SELECT c.*, u.usuario, u.foto_perfil
-       FROM comentarios c
-       JOIN usuarios u ON u.id = c.id_usuario
-       WHERE c.id_receta = $1
-       ORDER BY c.id DESC`,
-      [id_receta]
-    );
+    const result = await pool.query(`SELECT c.*, u.usuario, u.foto_perfil FROM comentarios c JOIN usuarios u ON u.id = c.id_usuario WHERE c.id_receta = $1 ORDER BY c.id DESC`, [id_receta]);
 
     res.json(result.rows);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "DB error" });
@@ -400,13 +352,16 @@ app.get("/recetas/:id/comentarios", async (req, res) => {
 app.put("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { id_usuario, descripcion, puntaje } = req.body;
+    const id_usuario = req.body.id_usuario;
+    const descripcion = req.body.descripcion;
+    const puntaje = req.body.puntaje;
 
     if (!id_usuario || !descripcion || !descripcion.trim()) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
     let puntajeNum = null;
+
     if (puntaje !== undefined) {
       puntajeNum = Number(puntaje);
       if (isNaN(puntajeNum) || puntajeNum < 0 || puntajeNum > 5) {
@@ -414,29 +369,15 @@ app.put("/comentarios/:id", async (req, res) => {
       }
     }
 
-    const result = await pool.query(
-      `UPDATE comentarios
-       SET descripcion = $1,
-           puntaje = COALESCE($2, puntaje)
-       WHERE id = $3 AND id_usuario = $4
-       RETURNING *`,
-      [descripcion.trim(), puntajeNum, id, id_usuario]
-    );
+    const cambio = await pool.query(`UPDATE comentarios SET descripcion = $1, puntaje = COALESCE($2, puntaje) WHERE id = $3 AND id_usuario = $4 RETURNING *`, [descripcion.trim(), puntajeNum, id, id_usuario]);
 
-    if (result.rows.length === 0) {
+    if (cambio.rows.length === 0) {
       return res.status(403).json({ error: "No podés editar este comentario" });
     }
 
-    const userRes = await pool.query(
-      `SELECT usuario, foto_perfil FROM usuarios WHERE id = $1`,
-      [id_usuario]
-    );
+    const resultado = await pool.query(`SELECT c.*, u.usuario, u.foto_perfil FROM comentarios c JOIN usuarios u ON u.id = c.id_usuario WHERE c.id = $1`, [id]);
 
-    const updated = result.rows[0];
-    updated.usuario = userRes.rows[0]?.usuario ?? "";
-    updated.foto_perfil = userRes.rows[0]?.foto_perfil ?? null;
-
-    res.json(updated);
+    res.json(resultado.rows[0]);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en el servidor" });
@@ -447,60 +388,38 @@ app.put("/comentarios/:id", async (req, res) => {
 app.delete("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { id_usuario } = req.body;
+    const id_usuario = req.body.id_usuario;
 
     if (!id_usuario) {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
-    const result = await pool.query(
-      `DELETE FROM comentarios
-       WHERE id = $1 AND id_usuario = $2
-       RETURNING *`,
-      [id, id_usuario]
-    );
+    const result = await pool.query(`DELETE FROM comentarios WHERE id = $1 AND id_usuario = $2 RETURNING *`, [id, id_usuario]);
 
     if (result.rows.length === 0) {
       return res.status(403).json({ error: "No podés borrar este comentario" });
     }
 
     res.status(204).send();
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
-// PUT /comentarios/:id/like
-app.put("/comentarios/:id/like", async (req, res) => {
+// PUT /comentarios/:id/vote (likes o dislikes)
+app.put("/comentarios/:id/vote", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const result = await pool.query(
-      `UPDATE comentarios SET likes = likes + 1 WHERE id = $1 RETURNING *`,
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Comentario no encontrado" });
+    const tipo = req.body.tipo;
+    if (!["like", "dislike"].includes(tipo)) {
+      return res.status(400).json({ error: "Tipo inválido" });
     }
+    const field = tipo === "like" ? "likes" : "dislikes";
+    const result = await pool.query(`UPDATE comentarios SET ${field} = ${field} + 1 WHERE id = $1 RETURNING *`, [id]);
 
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// PUT /comentarios/:id/dislike
-app.put("/comentarios/:id/dislike", async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const result = await pool.query(
-      `UPDATE comentarios SET dislikes = dislikes + 1 WHERE id = $1 RETURNING *`,
-      [id]
-    );
-
-    if (result.rows.length === 0) {
+    if (!result.rows.length) {
       return res.status(404).json({ error: "Comentario no encontrado" });
     }
 
@@ -547,36 +466,6 @@ app.get("/usuariosPosts/:id", async (req, res) => {
     if (result.rows.length === 0 || result.rows[0].posts === 0) {
       return res.json({ usuario_id: id, posts: 0 });
     }
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// PUT /comentarios/:id/like
-app.put("/comentarios/:id/like", async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const result = await pool.query(
-      `UPDATE comentarios SET likes = likes + 1 WHERE id = $1 RETURNING *`,
-      [id]
-    );
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// PUT /comentarios/:id/dislike
-app.put("/comentarios/:id/dislike", async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const result = await pool.query(
-      `UPDATE comentarios SET dislikes = dislikes + 1 WHERE id = $1 RETURNING *`,
-      [id]
-    );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);

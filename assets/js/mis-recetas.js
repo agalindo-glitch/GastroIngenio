@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         clon.querySelector(".receta-nombre").textContent = receta.nombre;
         clon.querySelector(".receta-tiempo").textContent = `${receta.tiempo_preparacion} min`;
+        clon.querySelector(".receta-imagen").src = receta.imagen_url;
 
         clon.querySelector(".btn-ver").addEventListener("click", () => {
           window.location.href = `ver-receta.html?id=${receta.id}`;
