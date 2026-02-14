@@ -1,6 +1,6 @@
 CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL, foto_perfil TEXT);
 
-CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, nombre VARCHAR(50) NOT NULL, ingredientes TEXT[] NOT NULL, pasos TEXT[] NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER CHECK (tiempo_preparacion >= 0), imagen_url TEXT, elegida_comunidad BOOLEAN DEFAULT FALSE, fecha_creacion TIMESTAMPTZ DEFAULT NOW());
+CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, nombre VARCHAR(50) NOT NULL, ingredientes TEXT[] NOT NULL, pasos TEXT[] NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER CHECK (tiempo_preparacion >= 0), comensales INTEGER CHECK (comensales > 0), imagen_url TEXT, elegida_comunidad BOOLEAN DEFAULT FALSE, fecha_creacion TIMESTAMPTZ DEFAULT NOW());
 
 CREATE TABLE pasos (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id), numero_paso INTEGER NOT NULL, descripcion TEXT NOT NULL, imagen_url TEXT);
 

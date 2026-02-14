@@ -192,28 +192,20 @@ app.post("/recetas", async (req, res) => {
       !id_usuario ||
       !nombre?.trim() ||
       !descripcion?.trim() ||
+      !comensales || comensales <= 0 ||
       !Array.isArray(ingredientes) || ingredientes.length === 0 ||
       !Array.isArray(pasos) || pasos.length === 0
     ) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    // 1️⃣ Insertar receta
     const recetaInsert = await pool.query(`
-      INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes)
-      VALUES ($1,$2,$3,$4,$5,$6,$7)
+      INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
       RETURNING id
-    `, [id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes]);
+    `, [id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos]);
 
     const id_receta = recetaInsert.rows[0].id;
-
-    // 2️⃣ Insertar pasos
-    for (const paso of pasos) {
-      await pool.query(`
-        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
-        VALUES ($1,$2,$3,$4)
-      `, [id_receta, paso.numero_paso, paso.descripcion, paso.imagen_url]);
-    }
 
     res.status(201).json({ message: "Receta creada correctamente", id: id_receta });
 
@@ -222,6 +214,7 @@ app.post("/recetas", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
+
 
 app.get("/recetas/:id", async (req, res) => {
   try {
@@ -277,7 +270,13 @@ app.put("/recetas/:id", async (req, res) => {
       imagen_url
     } = req.body;
 
-    if (!nombre?.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion?.trim() || !Array.isArray(pasos) || pasos.length === 0) {
+    if (
+      !nombre?.trim() ||
+      !descripcion?.trim() ||
+      !comensales || comensales <= 0 ||
+      !Array.isArray(ingredientes) || ingredientes.length === 0 ||
+      !Array.isArray(pasos) || pasos.length === 0
+    ) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
@@ -288,25 +287,18 @@ app.put("/recetas/:id", async (req, res) => {
           tiempo_preparacion = $3,
           comensales = $4,
           imagen_url = $5,
-          ingredientes = $6
-      WHERE id = $7
-    `, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, id]);
-
-    await pool.query(`DELETE FROM pasos WHERE id_receta = $1`, [id]);
-
-    for (const paso of pasos) {
-      await pool.query(`
-        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
-        VALUES ($1,$2,$3,$4)
-      `, [id, paso.numero_paso, paso.descripcion, paso.imagen_url]);
-    }
+          ingredientes = $6,
+          pasos = $7
+      WHERE id = $8
+    `, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
 
     res.json({ message: "Receta actualizada correctamente" });
 
   } catch (error) {
-    res.status(500).json({ error: 'Error en el servidor' });
+    res.status(500).json({ error: "Error en el servidor" });
   }
 });
+
 
 // DELETE. /recetas (elimino una receta por su id, pero no como parametro)
 app.delete("/recetas", async (req, res) => {
@@ -387,6 +379,7 @@ app.get("/mis-recetas", async (req, res) => {
         r.id,
         r.nombre,
         r.tiempo_preparacion,
+        r.comensales,
         r.imagen_url,
         r.elegida_comunidad,
         COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
