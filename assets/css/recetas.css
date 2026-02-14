@@ -1,6 +1,14 @@
+:root {
+  --font-main: "Funnel Sans", sans-serif;
+}
+
 body {
-  background-color: #fafafa;
+  background-color: #fafafa !important;
   color: #333333;
+    font-family: var(--font-main);
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
 }
 
 .recipe-page {
@@ -372,4 +380,92 @@ body{
 
 .button.is-light:hover {
     background-color: #fff5d6;
+}
+
+.receta-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.receta-rating .star {
+  color: gold;
+  font-size: 18px;
+}
+
+.receta-rating .star.empty {
+  color: #bbb;
+}
+
+.receta-rating .reviews {
+  font-size: 13px;
+  color: #666;
+  margin-left: 6px;
+}
+
+.receta-img-wrapper {
+  position: relative;
+}
+
+.receta-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: rgba(255, 166, 0, 0.95);
+  color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.mis-recetas__title {
+  font-size: 2.3rem;
+  font-weight: 750;
+  color: #111;
+  margin: 40px auto 25px;
+  position: relative;
+  display: table;
+  z-index: 1;
+}
+
+.mis-recetas__title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 8px;
+  width: 105%;
+  height: 10px;
+  background-color: rgba(213, 162, 68, 0.818);
+  z-index: -1;
+}
+
+.paginacion {
+  display: flex;
+  gap: 8px;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+.page-btn {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.page-btn.active {
+  background: #ff6f00;
+  color: white;
+  border-color: #ff6f00;
+  font-weight: bold;
+}
+
+.page-btn:hover {
+  background: #ffe0b3;
 }

@@ -382,9 +382,24 @@ app.get("/mis-recetas", async (req, res) => {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
-    const query = `SELECT id, nombre, tiempo_preparacion, imagen_url FROM recetas WHERE id_usuario = $1`;
+    const query = `
+      SELECT 
+        r.id,
+        r.nombre,
+        r.tiempo_preparacion,
+        r.imagen_url,
+        r.elegida_comunidad,
+        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
+        COUNT(c.id) AS total_reseñas
+      FROM recetas r
+      LEFT JOIN comentarios c ON c.id_receta = r.id
+      WHERE r.id_usuario = $1
+      GROUP BY r.id
+      ORDER BY r.id DESC
+    `;
 
     const result = await pool.query(query, [id_usuario]);
+
     res.json(result.rows);
 
   } catch (error) {

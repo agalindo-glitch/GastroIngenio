@@ -26,20 +26,20 @@
 
   <section class="section">
     <div class="container">
-      <h1 class="title is-2 has-text-centered mb-6">
-        Mis recetas
-      </h1>
+      <h1 class="mis-recetas__title">Mis recetas</h1>
+
       <div
         id="recetas-container"
         class="columns is-multiline is-variable is-5"
       ></div>
 
+      <div id="paginacion" class="paginacion"></div>
  
       <template id="receta-template">
         <div class="column is-4">
           <div class="card receta-card">
 
-            <div class="card-image">
+            <div class="card-image receta-img-wrapper">
               <figure class="image is-4by3">
                 <img
                   class="receta-imagen"
@@ -47,15 +47,28 @@
                   alt="Imagen de la receta"
                 />
               </figure>
+            
+              <span class="receta-badge"></span>
             </div>
-
+            
             <div class="card-content">
               <h2 class="title is-5 receta-nombre"></h2>
 
               <p class="receta-categoria has-text-grey"></p>
 
               <p class="receta-tiempo mt-2"></p>
-
+              
+              <div class="receta-rating mt-2">
+                <span class="star empty">★</span>
+                <span class="star empty">★</span>
+                <span class="star empty">★</span>
+                <span class="star empty">★</span>
+                <span class="star empty">★</span>
+                <span class="reviews">0 reseñas</span>
+              </div>
+              
+              <span class="receta-badge"></span>
+              
               <div class="buttons is-right mt-4">
                 <button class="button is-info is-small btn-ver">
                   Ver

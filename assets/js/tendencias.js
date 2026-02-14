@@ -71,7 +71,7 @@ function renderTendencias(recetas) {
   recetas.forEach(r => {
     contenedorTendencias.innerHTML += `
       <article class="trends-card">
-        <a href="ver-receta.html?id=${r.id}" class="trends-card__main-link">
+        <a href="./pages/ver-receta.html?id=${r.id}" class="trends-card__main-link">
 
           <figure class="trends-card__media">
             <img class="trends-card__image"
