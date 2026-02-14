@@ -317,6 +317,35 @@ app.delete("/recetas", async (req, res) => {
   }
 });
 
+// GET. /recetaRandomComunidad
+app.get("/recetaRandomComunidad", async (req, res) => {
+  try {
+
+    const result = await pool.query(`
+      SELECT 
+        r.*,
+        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
+        COUNT(c.id) AS total_reseñas
+      FROM recetas r
+      LEFT JOIN comentarios c ON c.id_receta = r.id
+      WHERE r.elegida_comunidad = TRUE
+      GROUP BY r.id
+      ORDER BY RANDOM()
+      LIMIT 1
+    `);
+
+    if (result.rows.length === 0) {
+      return res.json(null);
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 // GET. /mis-recetas (muestra las recetas hechas por el usuario)
 app.get("/mis-recetas", async (req, res) => {
   try {
