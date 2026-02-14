@@ -60,7 +60,7 @@ async function cargarResultados() {
     if (!query) return true;
 
     if (query === "elegidos_por-la_comunidad") {
-      return r.elegidos_comunidad === true;
+      return r.elegida_comunidad === true;
     }
 
     const usuario = usuariosPorId[r.id_usuario];
@@ -100,8 +100,9 @@ async function mostrarPagina() {
   contenedorResultados.innerHTML = "";
 
   for (const r of paginaItems) {
-    const recetaCompleta = await fetchJSON(`${API_RECETAS}/${r.id}/completo`);
-    const { promedio, total } = calcularPromedio(recetaCompleta.comentarios);
+    const recetaCompleta = await fetchJSON(`${API_RECETAS}/${r.id}`);
+    const promedio = Number(recetaCompleta.promedio) || 0;
+    const total = Number(recetaCompleta.total_reseñas) || 0;
 
     const usuario = recetaCompleta.autor
       ? {

@@ -223,15 +223,22 @@ app.post("/recetas", async (req, res) => {
   }
 });
 
-app.get("/recetas/:id", async(req, res) => {
-  try{
+app.get("/recetas/:id", async (req, res) => {
+  try {
     const id = req.params.id;
 
     const receta = await pool.query(`
-      SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto
+      SELECT 
+        r.*,
+        u.usuario AS autor,
+        u.foto_perfil AS autor_foto,
+        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
+        COUNT(c.id) AS total_reseñas
       FROM recetas r
       LEFT JOIN usuarios u ON r.id_usuario = u.id
+      LEFT JOIN comentarios c ON c.id_receta = r.id
       WHERE r.id = $1
+      GROUP BY r.id, u.usuario, u.foto_perfil
     `, [id]);
 
     const pasos = await pool.query(`
@@ -241,16 +248,20 @@ app.get("/recetas/:id", async(req, res) => {
       ORDER BY numero_paso ASC
     `, [id]);
 
+    if (receta.rows.length === 0) {
+      return res.status(404).json({ error: "Receta no encontrada" });
+    }
+
     const recetaData = receta.rows[0];
     recetaData.pasos = pasos.rows;
 
     res.json(recetaData);
 
-  } catch (error){
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
-
 
 // PUT. /recetas/<id> (modifico una receta por id)
 app.put("/recetas/:id", async (req, res) => {
