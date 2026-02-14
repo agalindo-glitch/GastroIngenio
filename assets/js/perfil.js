@@ -63,13 +63,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function cargarEstadisticas(id_usuario) {
     try {
-        const res = await fetch("http://localhost:3000/recetas");
-        const recetas = await res.json();
 
-        const recetasUsuario = recetas.filter(r => r.id_usuario == id_usuario);
-        document.getElementById("numPosts").textContent = recetasUsuario.length;
+        // POSTS
+        const resPosts = await fetch(`http://localhost:3000/usuariosPosts/${id_usuario}`);
+        const postsData = await resPosts.json();
+        document.getElementById("numPosts").textContent = postsData.posts || 0;
+
+        // ELEGIDAS
+        const resElegidas = await fetch(`http://localhost:3000/usuariosElegidas/${id_usuario}`);
+        const elegidasData = await resElegidas.json();
+        document.getElementById("numElegidas").textContent = elegidasData.elegidas || 0;
+
     } catch (error) {
         console.error("Error cargando estadísticas", error);
         document.getElementById("numPosts").textContent = "0";
+        document.getElementById("numElegidas").textContent = "0";
     }
 }

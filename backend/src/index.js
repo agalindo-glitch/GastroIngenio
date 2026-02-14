@@ -533,3 +533,22 @@ app.get("/usuariosPosts/:id", async (req, res) => {
     res.status(500).json({ error: "DB error" });
   }
 });
+
+// GET. /usuariosElegidas/:id (cantidad de recetas elegidas por la comunidad)
+app.get("/usuariosElegidas/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const result = await pool.query(`
+      SELECT COUNT(*) AS elegidas
+      FROM recetas
+      WHERE id_usuario = $1 AND elegida_comunidad = TRUE
+    `, [id]);
+
+    res.json({ elegidas: Number(result.rows[0].elegidas) });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
