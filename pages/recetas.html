@@ -122,9 +122,18 @@
               <div class="field">
                 <label class="label is-small">Descripción del paso</label>
                 <div class="control">
-                  <textarea class="textarea" name="steps[][text]" rows="2"
+                  <textarea class="textarea step-text" rows="2"
                     placeholder="Explicá qué hay que hacer en este paso" required></textarea>
                 </div>
+              </div>
+
+              <!-- 🔥 NUEVO: Imagen del paso -->
+              <div class="field">
+                <label class="label is-small">Imagen del paso (URL)</label>
+                <div class="control">
+                  <input class="input step-image" type="url" name="steps[][image]" placeholder="https://...">
+                </div>
+                <img class="step-preview mt-2" style="max-width:200px; display:none;" />
               </div>
             </div>
           </div>

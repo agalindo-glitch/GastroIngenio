@@ -128,24 +128,36 @@ app.delete("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const queryEliminarComentarioRecetas = `DELETE FROM comentarios WHERE id_receta IN (SELECT id FROM recetas WHERE id_usuario = $1)`;
+    const queryEliminarComentarioRecetas = `
+      DELETE FROM comentarios 
+      WHERE id_receta IN (
+        SELECT id FROM recetas WHERE id_usuario = $1
+      )`;
     await pool.query(queryEliminarComentarioRecetas, [id]);
 
-    const queryEliminarComentario = `DELETE FROM comentarios WHERE id_usuario = $1`;
+    const queryEliminarComentario = `
+      DELETE FROM comentarios WHERE id_usuario = $1`;
     await pool.query(queryEliminarComentario, [id]);
 
-    const queryEliminarReceta = `DELETE FROM recetas WHERE id_usuario = $1`;
+    // 🔥 AGREGAR ESTO
+    const queryEliminarPasos = `
+      DELETE FROM pasos 
+      WHERE id_receta IN (
+        SELECT id FROM recetas WHERE id_usuario = $1
+      )`;
+    await pool.query(queryEliminarPasos, [id]);
+
+    const queryEliminarReceta = `
+      DELETE FROM recetas WHERE id_usuario = $1`;
     await pool.query(queryEliminarReceta, [id]);
 
     const query = `DELETE FROM usuarios WHERE id = $1`;
-    
     await pool.query(query, [id]);
 
     res.status(200).json({ message: `Usuario con el id: ${id} fue eliminado` });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }
-
 });
 
 // GET. /recetas (muestra todas las recetas) //ELIMINAR CUANDO SE FINALICE EL PROYECTO
@@ -162,80 +174,127 @@ app.get("/recetas", async (req, res) => {
   }
 });
 
-// GET. /recetas (muestra una receta por el id, con su respectivo usuario)
-app.get("/recetas/:id", async(req, res) => {
-  try{
-    const id = req.params.id;
-    const result = await pool.query(`SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto FROM recetas r LEFT JOIN usuarios u ON r.id_usuario = u.id WHERE r.id = $1`, [id]);
-
-    res.status(200).json(result.rows[0]);
-
-  }catch (error){
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
-})
-
-// POST. /recetas (creo un receta)
+// POST. /recetas (crear receta)
 app.post("/recetas", async (req, res) => {
   try {
-    const id_usuario = req.body.id_usuario;
-    const nombre = req.body.nombre;
-    const ingredientes = req.body.ingredientes;
-    const pasos = req.body.pasos;
-    const descripcion = req.body.descripcion;
-    const tiempo_preparacion = req.body.tiempo_preparacion;
-    const comensales = req.body.comensales;
-    const imagen_url = req.body.imagen_url;
+    const {
+      id_usuario,
+      nombre,
+      descripcion,
+      tiempo_preparacion,
+      comensales,
+      imagen_url,
+      ingredientes,
+      pasos
+    } = req.body;
 
-    if (!id_usuario || !nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
+    if (
+      !id_usuario ||
+      !nombre?.trim() ||
+      !descripcion?.trim() ||
+      !Array.isArray(ingredientes) || ingredientes.length === 0 ||
+      !Array.isArray(pasos) || pasos.length === 0
+    ) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    if (tiempo_preparacion <= 0) {
-      return res.status(400).json({ error: "Tiempo de preparación inválido" });
+    // 1️⃣ Insertar receta
+    const recetaInsert = await pool.query(`
+      INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes)
+      VALUES ($1,$2,$3,$4,$5,$6,$7)
+      RETURNING id
+    `, [id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes]);
+
+    const id_receta = recetaInsert.rows[0].id;
+
+    // 2️⃣ Insertar pasos
+    for (const paso of pasos) {
+      await pool.query(`
+        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
+        VALUES ($1,$2,$3,$4)
+      `, [id_receta, paso.numero_paso, paso.descripcion, paso.imagen_url]);
     }
 
-    const query = `INSERT INTO recetas (id_usuario, nombre, ingredientes, pasos, descripcion, tiempo_preparacion, comensales, imagen_url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`;
+    res.status(201).json({ message: "Receta creada correctamente", id: id_receta });
 
-    await pool.query(query, [id_usuario, nombre, ingredientes, pasos, descripcion, tiempo_preparacion, comensales, imagen_url]);
-
-    res.status(201).json({ message: "Receta creada correctamente"});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
+app.get("/recetas/:id", async(req, res) => {
+  try{
+    const id = req.params.id;
+
+    const receta = await pool.query(`
+      SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto
+      FROM recetas r
+      LEFT JOIN usuarios u ON r.id_usuario = u.id
+      WHERE r.id = $1
+    `, [id]);
+
+    const pasos = await pool.query(`
+      SELECT numero_paso, descripcion, imagen_url
+      FROM pasos
+      WHERE id_receta = $1
+      ORDER BY numero_paso ASC
+    `, [id]);
+
+    const recetaData = receta.rows[0];
+    recetaData.pasos = pasos.rows;
+
+    res.json(recetaData);
+
+  } catch (error){
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
+
 // PUT. /recetas/<id> (modifico una receta por id)
 app.put("/recetas/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const nombre = req.body.nombre;
-    const ingredientes = req.body.ingredientes;
-    const pasos = req.body.pasos;
-    const descripcion = req.body.descripcion;
-    const tiempo_preparacion = req.body.tiempo_preparacion;
-    const comensales = req.body.comensales;
-    const imagen_url = req.body.imagen_url;
+    const {
+      nombre,
+      ingredientes,
+      pasos,
+      descripcion,
+      tiempo_preparacion,
+      comensales,
+      imagen_url
+    } = req.body;
 
-    if (!nombre.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion.trim() || !Array.isArray(pasos) || pasos.length === 0 || !tiempo_preparacion || !comensales || !imagen_url.trim()) {
+    if (!nombre?.trim() || !Array.isArray(ingredientes) || ingredientes.length === 0 || !descripcion?.trim() || !Array.isArray(pasos) || pasos.length === 0) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    if (tiempo_preparacion <= 0) {
-      return res.status(400).json({ error: "Tiempo de preparación inválido" });
+    await pool.query(`
+      UPDATE recetas
+      SET nombre = $1,
+          descripcion = $2,
+          tiempo_preparacion = $3,
+          comensales = $4,
+          imagen_url = $5,
+          ingredientes = $6
+      WHERE id = $7
+    `, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, id]);
+
+    await pool.query(`DELETE FROM pasos WHERE id_receta = $1`, [id]);
+
+    for (const paso of pasos) {
+      await pool.query(`
+        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
+        VALUES ($1,$2,$3,$4)
+      `, [id, paso.numero_paso, paso.descripcion, paso.imagen_url]);
     }
 
-    const query = `UPDATE recetas SET nombre = $1, descripcion = $2, tiempo_preparacion = $3, comensales = $4, imagen_url = $5, ingredientes = $6, pasos = $7 WHERE id = $8`;
-
-    await pool.query(query, [ nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
-    
-    res.status(200).json({ message: "Receta actualizada correctamente" });
+    res.json({ message: "Receta actualizada correctamente" });
 
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
   }
-
 });
 
 // DELETE. /recetas (elimino una receta por su id, pero no como parametro)
@@ -243,11 +302,13 @@ app.delete("/recetas", async (req, res) => {
   try {
     const id = req.body.id;
 
-    const queryComentario = 'DELETE FROM comentarios WHERE id_receta = $1';
-    const query = `DELETE FROM recetas WHERE id = $1`;
+    const deletePasos = 'DELETE FROM pasos WHERE id_receta = $1';
+    const deleteComentarios = 'DELETE FROM comentarios WHERE id_receta = $1';
+    const deleteReceta = 'DELETE FROM recetas WHERE id = $1';
 
-    await pool.query(queryComentario, [id]);
-    await pool.query(query, [id]);
+    await pool.query(deletePasos, [id]);
+    await pool.query(deleteComentarios, [id]);
+    await pool.query(deleteReceta, [id]);
 
     res.status(204).json();
   } catch (error) {

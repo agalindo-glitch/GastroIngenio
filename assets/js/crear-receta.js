@@ -37,7 +37,7 @@ async function cargarUsuario() {
 
 async function imagenReceta(input) {
   const url = input.value.trim();
-  const preview = input.nextElementSibling;
+  const preview = input.closest(".field").querySelector(".step-preview, .imageUrl-preview");
 
   return new Promise((resolve) => {
     if (!url) {
@@ -46,9 +46,22 @@ async function imagenReceta(input) {
       resolve(true);
       return;
     }
+
     const img = new Image();
-    img.onload = () => { preview.src = url; preview.style.display = "block"; resolve(true); };
-    img.onerror = () => { preview.src = ""; preview.style.display = "none"; alert("La URL ingresada no corresponde a una imagen válida."); resolve(false); };
+
+    img.onload = () => {
+      preview.src = url;
+      preview.style.display = "block";
+      resolve(true);
+    };
+
+    img.onerror = () => {
+      preview.src = "";
+      preview.style.display = "none";
+      alert("La URL ingresada no corresponde a una imagen válida.");
+      resolve(false);
+    };
+
     img.src = url;
   });
 }
@@ -70,9 +83,8 @@ function agregarIngrediente() {
 
 function agregarPaso() {
   const pasosContainer = document.getElementById("steps-container");
-
   const pasosNumero = pasosContainer.children.length + 1;
-  
+
   pasosContainer.insertAdjacentHTML("beforeend", `
     <div class="box step-item">
       <div class="field is-grouped is-align-items-center">
@@ -84,11 +96,20 @@ function agregarPaso() {
           <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
         </div>
       </div>
+
       <div class="field">
-        <label class="label is-small">Descripción del paso</label>
+        <label class="label is-small">Descripción</label>
         <div class="control">
-          <textarea class="textarea" name="steps[][text]" rows="2" placeholder="Explicá qué hay que hacer en este paso" required></textarea>
+          <textarea class="textarea step-text" rows="2" required></textarea>
         </div>
+      </div>
+
+      <div class="field">
+        <label class="label is-small">Imagen del paso (URL)</label>
+        <div class="control">
+          <input class="input step-image" type="text" placeholder="https://...">
+        </div>
+        <img class="step-preview mt-2" style="max-width:200px; display:none;" />
       </div>
     </div>
   `);
@@ -116,9 +137,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.body.addEventListener("blur", (e) => {
-    if (e.target.matches('input[name="imageUrl"], input[name="steps[][image]"]')) imagenReceta(e.target);
+    if (
+      e.target.matches('input[name="imageUrl"]') ||
+      e.target.classList.contains("step-image")
+    ) {
+      imagenReceta(e.target);
+    }
   }, true);
-  
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -140,17 +166,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pasos = [];
     const items = document.querySelectorAll("#steps-container .step-item");
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const descripcionPaso = item.querySelector('textarea[name="steps[][text]"]').value.trim();
 
-      let pasoTexto = descripcionPaso;
+      const descripcionPaso = item.querySelector(".step-text").value.trim();
+      const imagenPaso = item.querySelector(".step-image").value.trim() || null;
 
-      if (!descripcionPaso) { alert(`El paso ${i + 1} debe tener una descripción.`); return; }
+      if (!descripcionPaso) {
+        alert(`El paso ${i + 1} debe tener una descripción.`);
+        return;
+      }
 
-      pasos.push(pasoTexto);
+      pasos.push({
+        numero_paso: i + 1,
+        descripcion: descripcionPaso,
+        imagen_url: imagenPaso
+      });
     }
-
+    
     const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos};
 
     try {
