@@ -178,6 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonLike = articulo.querySelector(".btn-like");
     const botonDislike = articulo.querySelector(".btn-dislike");
 
+    const votoPrevio = votoYaRealizado(c.id);
+    botonLike.classList.toggle("votado", votoPrevio === "like");
+    botonDislike.classList.toggle("votado", votoPrevio === "dislike");
+
     botonLike.addEventListener("click", () => votarComentario(c.id, "like", articulo));
     botonDislike.addEventListener("click", () => votarComentario(c.id, "dislike", articulo));
 
@@ -200,28 +204,68 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function votarComentario(id, tipo, articulo) {
+    const id_usuario = Number(localStorage.getItem("id_usuario"));
+    if (!id_usuario) return alert("Tenés que iniciar sesión para votar");
+
     try {
-      const respuesta = await fetch(`http://localhost:3000/comentarios/${id}/vote`, {
+      const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tipo })
+        body: JSON.stringify({ id_usuario, tipo })
       });
 
-      const resultado = await respuesta.json();
+      const data = await res.json();
 
-      if (!respuesta.ok) {
-        alert(resultado.error || "No se pudo votar");
+      if (!res.ok) {
+        alert(data.error || "Error al votar");
         return;
       }
 
-      articulo.querySelector(".like-count").textContent = resultado.likes;
-      articulo.querySelector(".dislike-count").textContent = resultado.dislikes;
+      // Actualizamos los contadores en el HTML
+      articulo.querySelector(".like-count").textContent = data.likes;
+      articulo.querySelector(".dislike-count").textContent = data.dislikes;
+
+      // Guardamos el voto en localStorage
+      if (data.usuarioVoto) {
+        guardarVotoLocal(id, data.usuarioVoto);
+      } else {
+        // Si el voto se quitó (usuario clickeó la misma opción otra vez)
+        guardarVotoLocal(id, null);
+      }
+
+      // Cambiamos color de botones según voto
+      const botonLike = articulo.querySelector(".btn-like");
+      const botonDislike = articulo.querySelector(".btn-dislike");
+
+      const votoActual = votoYaRealizado(id);
+      botonLike.classList.toggle("votado", votoActual === "like");
+      botonDislike.classList.toggle("votado", votoActual === "dislike");
 
     } catch (err) {
       console.error(err);
-      alert("Error de red");
+      alert("Error al votar");
     }
   }
+
+  function obtenerVotosLocales() {
+  return JSON.parse(localStorage.getItem("votos_comentarios") || "{}");
+}
+
+function guardarVotoLocal(idComentario, tipo) {
+  const votos = obtenerVotosLocales();
+  if (tipo) {
+    votos[idComentario] = tipo; // like o dislike
+  } else {
+    delete votos[idComentario]; // quitar voto
+  }
+  localStorage.setItem("votos_comentarios", JSON.stringify(votos));
+}
+
+function votoYaRealizado(idComentario) {
+  const votos = obtenerVotosLocales();
+  return votos[idComentario]; // devuelve "like", "dislike" o undefined
+}
+
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";
@@ -325,6 +369,20 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch (err) {
     console.error(err);
   }
-}
+  }
 
+  function obtenerVotosLocales() {
+    return JSON.parse(localStorage.getItem("votos_comentarios") || "{}");
+  }
+
+  function guardarVotoLocal(idComentario, tipo) {
+    const votos = obtenerVotosLocales();
+    votos[idComentario] = tipo; // tipo = "like" o "dislike"
+    localStorage.setItem("votos_comentarios", JSON.stringify(votos));
+  }
+
+  function votoYaRealizado(idComentario) {
+    const votos = obtenerVotosLocales();
+    return votos[idComentario]; // devuelve "like", "dislike" o undefined
+  }
 });

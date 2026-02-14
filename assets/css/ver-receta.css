@@ -299,3 +299,45 @@ h2 {
 .star.filled {
   color: #F28C43; /* color al seleccionar */
 }
+
+.btn-like, .btn-dislike {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-like {
+  background-color: #e0f2ff;
+  color: #2563eb;
+}
+
+.btn-dislike {
+  background-color: #ffe4e6;
+  color: #dc2626;
+}
+
+.btn-like.votado {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn-dislike.votado {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-like:hover {
+  background-color: #c7ddff;
+}
+
+.btn-dislike:hover {
+  background-color: #fecdd3;
+}

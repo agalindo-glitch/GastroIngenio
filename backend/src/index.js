@@ -555,6 +555,83 @@ app.put("/comentarios/:id/vote", async (req, res) => {
   }
 });
 
+// PUT /comentarios/votar/:id
+app.put("/comentarios/votar/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { id_usuario, tipo } = req.body; // tipo = "like" o "dislike"
+
+    if (!id_usuario || !["like", "dislike"].includes(tipo)) {
+      return res.status(400).json({ error: "Datos inválidos" });
+    }
+
+    // Obtener el comentario
+    const comentarioRes = await pool.query("SELECT likes, dislikes FROM comentarios WHERE id=$1", [id]);
+    if (comentarioRes.rows.length === 0) return res.status(404).json({ error: "Comentario no encontrado" });
+
+    let { likes, dislikes } = comentarioRes.rows[0];
+
+    // Para manejar el cambio de voto, necesitamos guardar en una tabla adicional de votos por usuario
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS votos_comentarios (
+        id SERIAL PRIMARY KEY,
+        id_comentario INTEGER REFERENCES comentarios(id) ON DELETE CASCADE,
+        id_usuario INTEGER REFERENCES usuarios(id) ON DELETE CASCADE,
+        tipo VARCHAR(10) CHECK (tipo IN ('like','dislike')),
+        UNIQUE(id_comentario, id_usuario)
+      )
+    `);
+
+    // Ver si el usuario ya votó
+    const votoExistenteRes = await pool.query(
+      "SELECT tipo FROM votos_comentarios WHERE id_comentario=$1 AND id_usuario=$2",
+      [id, id_usuario]
+    );
+    let nuevoTipo = tipo;
+
+    if (votoExistenteRes.rows.length > 0) {
+      const votoExistente = votoExistenteRes.rows[0].tipo;
+      if (votoExistente === tipo) {
+        // Si votó lo mismo, lo quitamos
+        await pool.query("DELETE FROM votos_comentarios WHERE id_comentario=$1 AND id_usuario=$2", [id, id_usuario]);
+        nuevoTipo = null;
+      } else {
+        // Si votó diferente, actualizamos
+        await pool.query(
+          "UPDATE votos_comentarios SET tipo=$1 WHERE id_comentario=$2 AND id_usuario=$3",
+          [tipo, id, id_usuario]
+        );
+      }
+    } else {
+      // Si no votó antes, insertamos
+      await pool.query(
+        "INSERT INTO votos_comentarios (id_comentario, id_usuario, tipo) VALUES ($1,$2,$3)",
+        [id, id_usuario, tipo]
+      );
+    }
+
+    // Recalcular likes/dislikes
+    const votosTotales = await pool.query(
+      `SELECT
+         COUNT(*) FILTER (WHERE tipo='like') AS likes,
+         COUNT(*) FILTER (WHERE tipo='dislike') AS dislikes
+       FROM votos_comentarios
+       WHERE id_comentario=$1`,
+      [id]
+    );
+
+    const { likes: newLikes, dislikes: newDislikes } = votosTotales.rows[0];
+
+    // Actualizar comentario
+    await pool.query("UPDATE comentarios SET likes=$1, dislikes=$2 WHERE id=$3", [newLikes, newDislikes, id]);
+
+    res.json({ likes: newLikes, dislikes: newDislikes, usuarioVoto: nuevoTipo });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error actualizando voto" });
+  }
+});
+
 //POST. /login (un usuario se logea)
 app.post("/login", async (req, res) => {
   try{
