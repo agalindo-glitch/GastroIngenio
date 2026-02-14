@@ -346,6 +346,22 @@ app.get("/recetaRandomComunidad", async (req, res) => {
   }
 });
 
+app.get("/recetas-recientes", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, nombre, imagen_url, fecha_creacion
+      FROM recetas
+      ORDER BY fecha_creacion DESC
+      LIMIT 5
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error obteniendo recetas recientes" });
+  }
+});
+
 // GET. /mis-recetas (muestra las recetas hechas por el usuario)
 app.get("/mis-recetas", async (req, res) => {
   try {

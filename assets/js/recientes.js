@@ -4,20 +4,15 @@ document.addEventListener("DOMContentLoaded", cargarRecientes);
 
 async function cargarRecientes() {
   const lista = document.querySelector(".recent__list");
-
   if (!lista) return;
 
   try {
-    const res = await fetch("http://127.0.0.1:3000/recetas");
-    if (!res.ok) throw new Error("Error obteniendo recetas");
+    const res = await fetch("http://127.0.0.1:3000/recetas-recientes");
+    if (!res.ok) throw new Error("Error obteniendo recetas recientes");
 
     const recetas = await res.json();
 
-    recetas.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
-
-    const recientes = recetas.slice(0, 5);
-
-    const html = recientes.map(receta => crearCardReciente(receta)).join("");
+    lista.innerHTML = recetas.map(receta => crearCardReciente(receta)).join("");
 
   } catch (error) {
     console.error("Error cargando recientes:", error);
@@ -58,7 +53,7 @@ function crearCardReciente(receta) {
 
       <div class="recent__content">
         <div class="recent__meta">
-          <p class="recent__category">${receta.categoria.toUpperCase()}</p>
+          <p class="recent__category">COMIDA</p>
           <p class="recent__time">${tiempo}</p>
         </div>
 

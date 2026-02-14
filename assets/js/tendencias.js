@@ -37,10 +37,13 @@ async function cargarTendencias() {
   const recetasConRating = [];
 
   for (const r of recetas) {
-    const completa = await fetchJSON(`${API_RECETAS}/${r.id}/completo`);
-    if (!completa) continue;
 
-    const { promedio, total } = calcularPromedio(completa.comentarios);
+    const comentarios = await fetchJSON(`${API_RECETAS}/${r.id}/comentarios`);
+
+    const { promedio, total } = calcularPromedio(comentarios || []);
+
+    const completa = await fetchJSON(`${API_RECETAS}/${r.id}`);
+    if (!completa) continue;
 
     recetasConRating.push({
       id: r.id,

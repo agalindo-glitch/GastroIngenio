@@ -45,7 +45,26 @@ function renderRecipe(htmlId, recipe, usuario) {
     authorEl.href = authorLink;
 
     // Duración
-    durationEl.textContent = `${recipe.tiempo_preparacion} min`;
+    const totalMin = Number(recipe.tiempo_preparacion) || 0;
+
+    const horas = Math.floor(totalMin / 60);
+    const minutos = totalMin % 60;
+
+    let textoDuracion = "";
+
+    if (horas > 0) {
+        textoDuracion += `${horas} h`;
+    }
+
+    if (minutos > 0) {
+        textoDuracion += (horas > 0 ? " " : "") + `${minutos} min`;
+    }
+
+    if (horas === 0 && minutos === 0) {
+        textoDuracion = "0 min";
+    }
+
+    durationEl.textContent = textoDuracion;
 
     // ⭐ PROMEDIO DESDE BACKEND
     const promedio = Number(recipe.promedio) || 0;
@@ -78,12 +97,15 @@ function renderRecipe(htmlId, recipe, usuario) {
     };
 
     // Badge comunidad
-    if (recipe.elegida_comunidad === true) {
-        badgeEl.textContent = "⭐ Elegido por la comunidad";
-        badgeEl.style.display = "inline-block";
-    } else {
-        badgeEl.style.display = "none";
+    if (badgeEl) {
+        if (recipe.elegida_comunidad === true) {
+            badgeEl.textContent = "⭐ Elegido por la comunidad";
+            badgeEl.style.display = "inline-block";
+        } else {
+            badgeEl.style.display = "none";
+        }
     }
+
 }
 
 async function chooseElegidosComunidad() {
