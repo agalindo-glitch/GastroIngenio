@@ -136,10 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Array.isArray(receta.pasos)) {
         pasosContainer.innerHTML = `
           <h2>Pasos</h2>
-          ${receta.pasos.map((paso, index) => `
+          ${receta.pasos.map(paso => `
             <div class="paso">
-              <h3>Paso ${index + 1}</h3>
-              <p>${paso}</p>
+              <h3>Paso ${paso.numero_paso}</h3>
+              <p>${paso.descripcion}</p>
+              ${paso.imagen_url ? `<img src="${paso.imagen_url}" class="paso-img">` : ""}
             </div>
           `).join("")}
         `;
