@@ -1,5 +1,51 @@
 "use strict";
 
+function previewImage(input) {
+  const url = input.value.trim();
+  const preview = document.querySelector(".imageUrl-preview");
+
+  if (!preview) return;
+
+  if (!url) {
+    preview.style.display = "none";
+    preview.src = "";
+    return;
+  }
+
+  preview.src = url;
+  preview.style.display = "block";
+
+  preview.onerror = () => {
+    preview.style.display = "none";
+    preview.src = "";
+  };
+}
+
+document.body.addEventListener("input", (e) => {
+  if (e.target.classList.contains("step-image-input")) {
+
+    const url = e.target.value.trim();
+    const preview = e.target.nextElementSibling;
+
+    if (!preview) return;
+
+    if (!url) {
+      preview.style.display = "none";
+      preview.src = "";
+      return;
+    }
+
+    preview.onerror = () => {
+      preview.style.display = "none";
+      preview.src = "";
+    };
+
+    preview.src = url;
+    preview.style.display = "block";
+  }
+});
+
+
 async function cargarReceta() {
   const parametro = new URLSearchParams(window.location.search);
   const recetaId = parametro.get("id");
@@ -40,24 +86,53 @@ async function cargarReceta() {
           <div class="field is-grouped is-align-items-center">
             <label class="label mr-2">Paso</label>
             <div class="control">
-              <input class="input step-number-input" type="number" value="${index + 1}" readonly>
+              <input class="input step-number-input" type="number" value="${paso.numero_paso}" readonly>
             </div>
             <div class="control ml-auto">
               <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
             </div>
           </div>
+
           <div class="field">
-            <textarea class="textarea" name="steps[][text]" required>${paso}</textarea>
+            <textarea class="textarea" name="steps[][text]" required>${paso.descripcion}</textarea>
+          </div>
+
+          <div class="field">
+            <label class="label is-small">Imagen del paso (URL)</label>
+            <div class="control">
+              <input class="input step-image-input" 
+                    type="url" 
+                    name="steps[][image]" 
+                    value="${paso.imagen_url || ""}"
+                    placeholder="https://...">
+              <img class="step-preview" style="display:${paso.imagen_url ? "block" : "none"};" src="${paso.imagen_url || ""}">
+            </div>
           </div>
         </div>
       `);
     });
 
+    document.querySelectorAll(".step-preview").forEach(img => {
+
+      if (!img.src) {
+        img.style.display = "none";
+        return;
+      }
+
+      img.onerror = () => {
+        img.style.display = "none";
+        img.src = "";
+      };
+
+    });
+
+    const imageInput = document.querySelector('input[name="imageUrl"]');
+    previewImage(imageInput);
+
   } catch (err) {
     alert("Error al cargar la receta");
   }
 }
-
 
 async function cargarUsuario() {
   const id_usuario = localStorage.getItem("id_usuario");
@@ -153,7 +228,6 @@ function agregarPaso() {
   `);
 }
 
-
 function renumerarPasos() {
   document.querySelectorAll("#steps-container .step-number-input").forEach((input, idx) => {
     input.value = idx + 1;
@@ -201,22 +275,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pasos = [];
+
     const items = document.querySelectorAll("#steps-container .step-item");
 
-    for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        const descripcionPaso = item
-            .querySelector('textarea[name="steps[][text]"]')
-            .value
-            .trim();
+    items.forEach((item, i) => {
+      const descripcionPaso = item.querySelector('textarea[name="steps[][text]"]').value.trim();
+      const imagenPaso = item.querySelector('input[name="steps[][image]"]').value.trim() || null;
 
-        if (!descripcionPaso) {
-            alert(`El paso ${i + 1} debe tener una descripción.`);
-            return;
-        }
+      if (!descripcionPaso) {
+        alert(`El paso ${i + 1} debe tener descripción.`);
+        return;
+      }
 
-        pasos.push(descripcionPaso);
-    }
+      pasos.push({
+        numero_paso: i + 1,
+        descripcion: descripcionPaso,
+        imagen_url: imagenPaso
+      });
+    });
 
     const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos};
 

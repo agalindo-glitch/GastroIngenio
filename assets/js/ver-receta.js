@@ -140,7 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="paso">
               <h3>Paso ${paso.numero_paso}</h3>
               <p>${paso.descripcion}</p>
-              ${paso.imagen_url ? `<img src="${paso.imagen_url}" class="paso-img">` : ""}
+              ${paso.imagen_url ? `
+                <img 
+                  src="${paso.imagen_url}" 
+                  class="paso-img"
+                  onerror="this.style.display='none'"
+                >
+              ` : ""}
             </div>
           `).join("")}
         `;
@@ -162,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     articulo.innerHTML = `
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-        ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.usuario}" style="width:40px;height:40px;border-radius:50%;">` : ""}
+        ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.usuario}" class="user-avatar">` : ""}
         <strong>@${c.usuario || "usuario"}</strong> - ${starsHTML}
       </div>
       <p>${c.descripcion}</p>
@@ -266,7 +272,6 @@ function votoYaRealizado(idComentario) {
   const votos = obtenerVotosLocales();
   return votos[idComentario]; // devuelve "like", "dislike" o undefined
 }
-
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";

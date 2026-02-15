@@ -49,8 +49,8 @@ body {
 .imageUrl-preview {
   display:none;
   margin-top: 20px;
-  height: 200px;
-  width: 300px;
+  height: 300px;
+  width: 600px;
   object-fit: cover;
   border-radius: 20px;
 }
@@ -131,8 +131,9 @@ body {
   border-top: 1px solid #eeeeee;
 }
 
-.creator-avatar {
+.avatar {
   border-radius: 50%;
+  object-fit: cover;
   overflow: hidden;
 }
 
@@ -173,6 +174,14 @@ body {
 
 .step-item .label {
   font-size: 0.8rem;
+}
+
+.step-preview {
+  object-fit: cover;
+  margin-top: 20px;
+  height: 200px;
+  border-radius: 20px;
+  width: 300px;
 }
 
 .step-number-input {
@@ -289,10 +298,9 @@ body{
     gap: 50px;
     display: flex;
 }
-.imagen-receta img{
-    width: 100%;      
+.imagen-receta img{    
     max-width: 500px; 
-    height: auto;    
+    height: 100px;    
     margin-bottom: 10px;
     border-radius: 20px;
     overflow: hidden;
