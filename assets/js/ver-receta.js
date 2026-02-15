@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (autorEl) {
       const foto = receta.autor_foto || "https://via.placeholder.com/40";
       autorEl.innerHTML = `
-        <img src="${foto}" alt="${receta.autor}" style="width:40px;height:40px;border-radius:50%;margin-right:10px;vertical-align:middle;">
+        <img src="${foto}" alt="${receta.autor}" style="object-fit:cover;width:40px;height:40px;border-radius:50%;margin-right:10px;vertical-align:middle;">
         Creada por: @${receta.autor || "desconocido"}
       `;
     }
