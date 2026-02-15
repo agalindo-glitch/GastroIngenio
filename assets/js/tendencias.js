@@ -76,7 +76,8 @@ function renderTendencias(recetas) {
           <figure class="trends-card__media">
             <img class="trends-card__image"
               src="${r.imagen || "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg"}"
-              alt="imagen de la receta" />
+              alt="imagen de la receta"
+              onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Sin+Imagen';" />
 
             <div class="trends-card__actions">
               <button class="trends-card__action-btn" aria-label="Guardar">
