@@ -81,6 +81,7 @@
 
 .recipe-card__image {
     height: 100%;
+    width: 100%;
     object-fit: cover;
     display: block;
     border-radius: 10px 0 0 10px;
@@ -168,6 +169,7 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .recipe-card__author-name {

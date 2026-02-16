@@ -45,6 +45,7 @@ footer {
   width: 110px;
   height: 110px;
   border-radius: 100%;
+  object-fit: cover;
   border: 2px solid rgba(213, 162, 68, 0.83);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2),
               0 6px 20px rgba(0, 0, 0, 0.19);
@@ -149,10 +150,16 @@ footer {
     max-width: 95%;
     padding: 20px;
   }
-
+  
   .perfil-img img {
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;     
+    object-position: center;    
+    border: 2px solid rgba(213, 162, 68, 0.83);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2),
+                0 6px 20px rgba(0, 0, 0, 0.19);
   }
 
   .perfil-stats-post-likes {

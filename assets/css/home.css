@@ -236,7 +236,7 @@ header {
     align-items: flex-start;
 }
 
-.recent__card:not(:nth-last-child(-n+2)) {
+.recent__card:not(:nth-last-child(-n+1)) {
     border-bottom: 1px solid #cac0c0;
     padding-bottom: 12px;
     margin-bottom: 14px;
@@ -244,6 +244,7 @@ header {
 
 .recent__image {
     width: 100px;
+    height: 70px;
     object-fit: cover;
     border-radius: 4px;
     transition: transform 0.3s ease;
@@ -358,6 +359,7 @@ header {
     transition: transform .2s ease, box-shadow .2s ease;
     width: 100%;
     margin-bottom: 50px;
+    height: 225px;
 }
 
 .trends-card:hover {
@@ -376,6 +378,7 @@ header {
 
 .trends-card__image {
     height: 100%;
+    width: 100%;
     object-fit: cover;
     display: block;
     border-radius: 10px 0 0 10px;
@@ -474,6 +477,7 @@ header {
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .trends-card__duration {

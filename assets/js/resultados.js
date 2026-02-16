@@ -118,7 +118,8 @@ async function mostrarPagina() {
           <figure class="recipe-card__media">
             <img class="recipe-card__image"
               src="${r.imagen_url || "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg"}"
-              alt="imagen receta" />
+              alt="imagen receta"
+              onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Sin+Imagen';" />
           </figure>
 
           <div class="recipe-card__content">
@@ -127,7 +128,8 @@ async function mostrarPagina() {
             <div class="recipe-card__meta">
               <a class="recipe-card__author" href="usuario.html?userId=${usuario?.id}">
                 <img class="recipe-card__author-avatar"
-                  src="${usuario?.foto_perfil || AVATAR_DEFAULT}" />
+                  src="${usuario?.foto_perfil || AVATAR_DEFAULT}"
+                  onerror="this.onerror=null;this.src='/assets/img/default-user.png';" />
                 <span class="recipe-card__author-name">
                   ${usuario?.usuario || "Usuario desconocido"}
                 </span>

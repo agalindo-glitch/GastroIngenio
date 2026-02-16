@@ -41,7 +41,12 @@ function renderRecipe(htmlId, recipe, usuario) {
 
     // Autor
     authorNameEl.textContent = usuario.usuario || "Usuario desconocido";
-    authorAvatarEl.src = usuario.foto_perfil || "/assets/img/default-user.png";
+    authorAvatarEl.src = usuario.foto_perfil || "../img/default-user.png";
+
+    authorAvatarEl.onerror = () => {
+        authorAvatarEl.src = "./assets/img/default-user.png";
+    };
+
     authorEl.href = authorLink;
 
     // Duración

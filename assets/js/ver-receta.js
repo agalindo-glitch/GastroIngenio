@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (autorEl) {
       const foto = receta.autor_foto || "https://via.placeholder.com/40";
       autorEl.innerHTML = `
-        <img src="${foto}" alt="${receta.autor}" style="width:40px;height:40px;border-radius:50%;margin-right:10px;vertical-align:middle;">
+        <img src="${foto}" alt="${receta.autor}" style="object-fit:cover;width:40px;height:40px;border-radius:50%;margin-right:10px;vertical-align:middle;">
         Creada por: @${receta.autor || "desconocido"}
       `;
     }
@@ -136,10 +136,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Array.isArray(receta.pasos)) {
         pasosContainer.innerHTML = `
           <h2>Pasos</h2>
-          ${receta.pasos.map((paso, index) => `
+          ${receta.pasos.map(paso => `
             <div class="paso">
-              <h3>Paso ${index + 1}</h3>
-              <p>${paso}</p>
+              <h3>Paso ${paso.numero_paso}</h3>
+              <p>${paso.descripcion}</p>
+              ${paso.imagen_url ? `
+                <img 
+                  src="${paso.imagen_url}" 
+                  class="paso-img"
+                  onerror="this.style.display='none'"
+                >
+              ` : ""}
             </div>
           `).join("")}
         `;
@@ -161,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     articulo.innerHTML = `
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-        ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.usuario}" style="width:40px;height:40px;border-radius:50%;">` : ""}
+        ${c.foto_perfil ? `<img src="${c.foto_perfil}" alt="${c.usuario}" class="user-avatar">` : ""}
         <strong>@${c.usuario || "usuario"}</strong> - ${starsHTML}
       </div>
       <p>${c.descripcion}</p>
@@ -265,7 +272,6 @@ function votoYaRealizado(idComentario) {
   const votos = obtenerVotosLocales();
   return votos[idComentario]; // devuelve "like", "dislike" o undefined
 }
-
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";
