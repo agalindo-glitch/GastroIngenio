@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let recetas = [];
-  const porPagina = 6; // 🔥 cantidad de recetas por página
+  const porPagina = 6;
   let paginaActual = 1;
 
   fetch(`http://localhost:3000/mis-recetas?id_usuario=${idUsuario}`)
@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
     recetasPagina.forEach(receta => {
       const clon = template.content.cloneNode(true);
 
-      // Datos básicos
       clon.querySelector(".receta-nombre").textContent = receta.nombre;
       clon.querySelector(".receta-tiempo").textContent =
         `🕐 ${receta.tiempo_preparacion} min`;
@@ -55,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
       clon.querySelector(".receta-imagen").src =
         receta.imagen_url || "https://via.placeholder.com/400x300";
 
-      // ⭐ Promedio estrellas
       const promedio = Number(receta.promedio) || 0;
       const totalReseñas = Number(receta.total_reseñas) || 0;
 
@@ -73,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         reviewsEl.textContent = `${promedio}/5 (${totalReseñas} reseñas)`;
       }
 
-      // 🏅 Badge comunidad
       if (badgeEl) {
         if (receta.elegida_comunidad === true) {
           badgeEl.textContent = "⭐ Elegido por la comunidad";
@@ -83,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // 🔘 Botones
       clon.querySelector(".btn-ver").onclick = () => {
         window.location.href = `ver-receta.html?id=${receta.id}`;
       };

@@ -185,10 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonLike = articulo.querySelector(".btn-like");
     const botonDislike = articulo.querySelector(".btn-dislike");
 
-    const votoPrevio = votoYaRealizado(c.id);
-    botonLike.classList.toggle("votado", votoPrevio === "like");
-    botonDislike.classList.toggle("votado", votoPrevio === "dislike");
-
     botonLike.addEventListener("click", () => votarComentario(c.id, "like", articulo));
     botonDislike.addEventListener("click", () => votarComentario(c.id, "dislike", articulo));
 
@@ -211,14 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function votarComentario(id, tipo, articulo) {
-    const id_usuario = Number(localStorage.getItem("id_usuario"));
-    if (!id_usuario) return alert("Tenés que iniciar sesión para votar");
-
     try {
       const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_usuario, tipo })
+        body: JSON.stringify({ tipo })
       });
 
       const data = await res.json();
@@ -228,25 +221,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Actualizamos los contadores en el HTML
       articulo.querySelector(".like-count").textContent = data.likes;
       articulo.querySelector(".dislike-count").textContent = data.dislikes;
-
-      // Guardamos el voto en localStorage
-      if (data.usuarioVoto) {
-        guardarVotoLocal(id, data.usuarioVoto);
-      } else {
-        // Si el voto se quitó (usuario clickeó la misma opción otra vez)
-        guardarVotoLocal(id, null);
-      }
-
-      // Cambiamos color de botones según voto
-      const botonLike = articulo.querySelector(".btn-like");
-      const botonDislike = articulo.querySelector(".btn-dislike");
-
-      const votoActual = votoYaRealizado(id);
-      botonLike.classList.toggle("votado", votoActual === "like");
-      botonDislike.classList.toggle("votado", votoActual === "dislike");
 
     } catch (err) {
       console.error(err);
@@ -254,24 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function obtenerVotosLocales() {
-  return JSON.parse(localStorage.getItem("votos_comentarios") || "{}");
-}
-
-function guardarVotoLocal(idComentario, tipo) {
-  const votos = obtenerVotosLocales();
-  if (tipo) {
-    votos[idComentario] = tipo; // like o dislike
-  } else {
-    delete votos[idComentario]; // quitar voto
-  }
-  localStorage.setItem("votos_comentarios", JSON.stringify(votos));
-}
-
-function votoYaRealizado(idComentario) {
-  const votos = obtenerVotosLocales();
-  return votos[idComentario]; // devuelve "like", "dislike" o undefined
-}
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";
@@ -355,40 +313,25 @@ function votoYaRealizado(idComentario) {
   }
 
   async function cargarComentarios() {
-  try {
-    const respuesta = await fetch(`http://localhost:3000/recetas/${recetaId}/comentarios`);
-    if (!respuesta.ok) throw new Error("Error al cargar comentarios");
+    try {
+      const respuesta = await fetch(`http://localhost:3000/recetas/${recetaId}/comentarios`);
+      if (!respuesta.ok) throw new Error("Error al cargar comentarios");
 
-    const comentarios = await respuesta.json();
+      const comentarios = await respuesta.json();
 
-    reviewsContainer.innerHTML = "";
+      reviewsContainer.innerHTML = "";
 
-    if (comentarios.length === 0) {
-      reviewsContainer.innerHTML = "<p>No hay comentarios todavía</p>";
-      contadorComentarios.textContent = 0;
-      return;
+      if (comentarios.length === 0) {
+        reviewsContainer.innerHTML = "<p>No hay comentarios todavía</p>";
+        contadorComentarios.textContent = 0;
+        return;
+      }
+
+      comentarios.forEach(c => agregarReview(c));
+      contadorComentarios.textContent = comentarios.length;
+
+    } catch (err) {
+      console.error(err);
     }
-
-    comentarios.forEach(c => agregarReview(c));
-    contadorComentarios.textContent = comentarios.length;
-
-  } catch (err) {
-    console.error(err);
-  }
-  }
-
-  function obtenerVotosLocales() {
-    return JSON.parse(localStorage.getItem("votos_comentarios") || "{}");
-  }
-
-  function guardarVotoLocal(idComentario, tipo) {
-    const votos = obtenerVotosLocales();
-    votos[idComentario] = tipo; // tipo = "like" o "dislike"
-    localStorage.setItem("votos_comentarios", JSON.stringify(votos));
-  }
-
-  function votoYaRealizado(idComentario) {
-    const votos = obtenerVotosLocales();
-    return votos[idComentario]; // devuelve "like", "dislike" o undefined
   }
 });

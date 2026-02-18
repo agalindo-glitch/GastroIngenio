@@ -6,27 +6,12 @@ const idLogueado = localStorage.getItem("id_usuario");
 
 let userVisitado; 
 
-const btnSeguir = document.getElementById("btnSeguir");
-const btnMensaje = document.getElementById("btnMensaje");
-const btnBloquear = document.getElementById("btnBloquear");
-
 document.addEventListener("DOMContentLoaded", async () => {
 
     try {
-        if (idVisitado) {
-            const res = await fetch(`http://localhost:3000/usuarios/${idVisitado}`);
-            const text = await res.text();
-            userVisitado = text ? JSON.parse(text) : null;
-        } else {
-            const res = await fetch(`http://localhost:3000/usuarios/${idLogueado}`);
-            const text = await res.text();
-            userVisitado = text ? JSON.parse(text) : null;
-        }
-
-        if (!userVisitado) {
-            console.error("Usuario no encontrado");
-            return;
-        }
+        const res = await fetch(`http://localhost:3000/usuarios/${idLogueado}`);
+        const text = await res.text();
+        userVisitado = text ? JSON.parse(text) : null;
 
         document.getElementById("nombrePerfil").textContent = userVisitado.nombre;
         document.getElementById("usuarioPerfil").textContent = `@${userVisitado.usuario}`;
@@ -37,16 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         cargarEstadisticas(Number(userVisitado.id));
 
-        const botonesPropios = document.getElementById("botones-propios");
-        const botonesAjenos = document.getElementById("botones-ajenos");
-
-        if (userVisitado.id.toString() !== idLogueado.toString()) {
-            botonesPropios.style.display = "none";
-            botonesAjenos.style.display = "flex";
-        } else {
-            botonesPropios.style.display = "flex";
-            botonesAjenos.style.display = "none";
-        }
 
     } catch (error) {
         console.error("Error cargando perfil:", error);
@@ -64,12 +39,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function cargarEstadisticas(id_usuario) {
     try {
 
-        // POSTS
         const resPosts = await fetch(`http://localhost:3000/usuariosPosts/${id_usuario}`);
         const postsData = await resPosts.json();
         document.getElementById("numPosts").textContent = postsData.posts || 0;
 
-        // ELEGIDAS
         const resElegidas = await fetch(`http://localhost:3000/usuariosElegidas/${id_usuario}`);
         const elegidasData = await resElegidas.json();
         document.getElementById("numElegidas").textContent = elegidasData.elegidas || 0;

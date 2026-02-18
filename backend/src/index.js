@@ -76,7 +76,6 @@ app.post("/usuarios", async (req, res) => {
     }
 
     const query = `INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ($1, $2, $3, $4, $5, $6)`;
-
     await pool.query(query, [nombre, apellido, edad, usuario, contrasena, foto_perfil || null]);
 
     res.status(200).json({ message: 'Usuario creado correctamente' });
@@ -113,7 +112,6 @@ app.put("/usuarios/:id", async (req, res) => {
     }
 
     const query = `UPDATE usuarios SET nombre = $1, apellido = $2, edad = $3, usuario = $4, contrasena = $5, foto_perfil = $6 WHERE id = $7`;
-
     await pool.query(query, [nombre, apellido, edad, usuario, contrasena, foto_perfil || null, id]);
 
     res.status(204).send();
@@ -128,27 +126,16 @@ app.delete("/usuarios/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const queryEliminarComentarioRecetas = `
-      DELETE FROM comentarios 
-      WHERE id_receta IN (
-        SELECT id FROM recetas WHERE id_usuario = $1
-      )`;
+    const queryEliminarComentarioRecetas = `DELETE FROM comentarios WHERE id_receta IN (SELECT id FROM recetas WHERE id_usuario = $1)`;
     await pool.query(queryEliminarComentarioRecetas, [id]);
 
-    const queryEliminarComentario = `
-      DELETE FROM comentarios WHERE id_usuario = $1`;
+    const queryEliminarComentario = `DELETE FROM comentarios WHERE id_usuario = $1`;
     await pool.query(queryEliminarComentario, [id]);
 
-    // 🔥 AGREGAR ESTO
-    const queryEliminarPasos = `
-      DELETE FROM pasos 
-      WHERE id_receta IN (
-        SELECT id FROM recetas WHERE id_usuario = $1
-      )`;
+    const queryEliminarPasos = `DELETE FROM pasos WHERE id_receta IN (SELECT id FROM recetas WHERE id_usuario = $1)`;
     await pool.query(queryEliminarPasos, [id]);
 
-    const queryEliminarReceta = `
-      DELETE FROM recetas WHERE id_usuario = $1`;
+    const queryEliminarReceta = `DELETE FROM recetas WHERE id_usuario = $1`;
     await pool.query(queryEliminarReceta, [id]);
 
     const query = `DELETE FROM usuarios WHERE id = $1`;
@@ -177,35 +164,19 @@ app.get("/recetas", async (req, res) => {
 // POST. /recetas (crear receta)
 app.post("/recetas", async (req, res) => {
   try {
-    const {
-      id_usuario,
-      nombre,
-      descripcion,
-      tiempo_preparacion,
-      comensales,
-      imagen_url,
-      ingredientes,
-      pasos
-    } = req.body;
+    const {id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos} = req.body;
 
-    if (
-      !id_usuario ||
-      !nombre?.trim() ||
-      !descripcion?.trim() ||
-      !comensales || comensales <= 0 ||
-      !Array.isArray(ingredientes) || ingredientes.length === 0 ||
-      !Array.isArray(pasos) || pasos.length === 0
-    ) {
+    if (!id_usuario || !nombre?.trim() || !descripcion?.trim() || !comensales || comensales <= 0 || !Array.isArray(ingredientes) || ingredientes.length === 0 || !Array.isArray(pasos) || pasos.length === 0) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    const recetaInsert = await pool.query(`
-      INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-      RETURNING id
-    `, [id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos]);
+    const recetaInsert = await pool.query(`INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`, [id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes]);
 
     const id_receta = recetaInsert.rows[0].id;
+
+    for (let i = 0; i < pasos.length; i++) {
+      await client.query(`INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES ($1,$2,$3,$4)`, [id_receta, i + 1, pasos[i].descripcion, pasos[i].imagen_url || null]);
+    }
 
     res.status(201).json({ message: "Receta creada correctamente", id: id_receta });
 
@@ -324,18 +295,7 @@ app.delete("/recetas", async (req, res) => {
 app.get("/recetaRandomComunidad", async (req, res) => {
   try {
 
-    const result = await pool.query(`
-      SELECT 
-        r.*,
-        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
-        COUNT(c.id) AS total_reseñas
-      FROM recetas r
-      LEFT JOIN comentarios c ON c.id_receta = r.id
-      WHERE r.elegida_comunidad = TRUE
-      GROUP BY r.id
-      ORDER BY RANDOM()
-      LIMIT 1
-    `);
+    const result = await pool.query(`SELECT r.*, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.elegida_comunidad = TRUE GROUP BY r.id ORDER BY RANDOM() LIMIT 1`);
 
     if (result.rows.length === 0) {
       return res.json(null);
@@ -351,12 +311,7 @@ app.get("/recetaRandomComunidad", async (req, res) => {
 
 app.get("/recetas-recientes", async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT id, nombre, imagen_url, fecha_creacion
-      FROM recetas
-      ORDER BY fecha_creacion DESC
-      LIMIT 5
-    `);
+    const result = await pool.query(`SELECT id, nombre, imagen_url, fecha_creacion FROM recetas ORDER BY fecha_creacion DESC LIMIT 5`);
 
     res.json(result.rows);
   } catch (error) {
@@ -374,22 +329,7 @@ app.get("/mis-recetas", async (req, res) => {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
-    const query = `
-      SELECT 
-        r.id,
-        r.nombre,
-        r.tiempo_preparacion,
-        r.comensales,
-        r.imagen_url,
-        r.elegida_comunidad,
-        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
-        COUNT(c.id) AS total_reseñas
-      FROM recetas r
-      LEFT JOIN comentarios c ON c.id_receta = r.id
-      WHERE r.id_usuario = $1
-      GROUP BY r.id
-      ORDER BY r.id DESC
-    `;
+    const query = `SELECT r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url, r.elegida_comunidad, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.id_usuario = $1 GROUP BY r.id ORDER BY r.id DESC`;
 
     const result = await pool.query(query, [id_usuario]);
 
@@ -533,107 +473,31 @@ app.delete("/comentarios/:id", async (req, res) => {
   }
 });
 
-// PUT /comentarios/:id/vote (likes o dislikes)
-app.put("/comentarios/:id/vote", async (req, res) => {
+// PUT /comentarios/votar/:id
+app.put("/comentarios/votar/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const tipo = req.body.tipo;
+    const { tipo } = req.body;
+
     if (!["like", "dislike"].includes(tipo)) {
       return res.status(400).json({ error: "Tipo inválido" });
     }
-    const field = tipo === "like" ? "likes" : "dislikes";
-    const result = await pool.query(`UPDATE comentarios SET ${field} = ${field} + 1 WHERE id = $1 RETURNING *`, [id]);
+
+    const campo = tipo === "like" ? "likes" : "dislikes";
+
+    const result = await pool.query(
+      `UPDATE comentarios
+       SET ${campo} = ${campo} + 1
+       WHERE id = $1
+       RETURNING likes, dislikes`,
+      [id]
+    );
 
     if (!result.rows.length) {
       return res.status(404).json({ error: "Comentario no encontrado" });
     }
 
     res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "DB error" });
-  }
-});
-
-// PUT /comentarios/votar/:id
-app.put("/comentarios/votar/:id", async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const { id_usuario, tipo } = req.body;
-
-    if (!id_usuario || !["like", "dislike"].includes(tipo)) {
-      return res.status(400).json({ error: "Datos inválidos" });
-    }
-
-    const votoExistenteRes = await pool.query(
-      "SELECT tipo FROM votos_comentarios WHERE id_comentario=$1 AND id_usuario=$2",
-      [id, id_usuario]
-    );
-
-    let usuarioVoto = tipo;
-
-    if (votoExistenteRes.rows.length > 0) {
-
-      const votoExistente = votoExistenteRes.rows[0].tipo;
-
-      if (votoExistente === tipo) {
-        // 🔥 QUITAR VOTO
-        await pool.query(
-          "DELETE FROM votos_comentarios WHERE id_comentario=$1 AND id_usuario=$2",
-          [id, id_usuario]
-        );
-
-        await pool.query(
-          `UPDATE comentarios 
-           SET likes = likes - ${tipo === "like" ? 1 : 0},
-               dislikes = dislikes - ${tipo === "dislike" ? 1 : 0}
-           WHERE id = $1`,
-          [id]
-        );
-
-        usuarioVoto = null;
-
-      } else {
-        // 🔥 CAMBIAR VOTO
-        await pool.query(
-          "UPDATE votos_comentarios SET tipo=$1 WHERE id_comentario=$2 AND id_usuario=$3",
-          [tipo, id, id_usuario]
-        );
-
-        await pool.query(
-          `UPDATE comentarios 
-           SET likes = likes ${tipo === "like" ? "+ 1" : "- 1"},
-               dislikes = dislikes ${tipo === "dislike" ? "+ 1" : "- 1"}
-           WHERE id = $1`,
-          [id]
-        );
-      }
-
-    } else {
-      // 🔥 NUEVO VOTO
-      await pool.query(
-        "INSERT INTO votos_comentarios (id_comentario, id_usuario, tipo) VALUES ($1,$2,$3)",
-        [id, id_usuario, tipo]
-      );
-
-      await pool.query(
-        `UPDATE comentarios 
-         SET ${tipo === "like" ? "likes" : "dislikes"} = ${tipo === "like" ? "likes" : "dislikes"} + 1
-         WHERE id = $1`,
-        [id]
-      );
-    }
-
-    const comentarioActualizado = await pool.query(
-      "SELECT likes, dislikes FROM comentarios WHERE id=$1",
-      [id]
-    );
-
-    res.json({
-      likes: comentarioActualizado.rows[0].likes,
-      dislikes: comentarioActualizado.rows[0].dislikes,
-      usuarioVoto
-    });
 
   } catch (err) {
     console.error(err);
@@ -641,17 +505,14 @@ app.put("/comentarios/votar/:id", async (req, res) => {
   }
 });
 
+
 //POST. /login (un usuario se logea)
 app.post("/login", async (req, res) => {
   try{
     const usuario = req.body.usuario;
     const contrasena = req.body.contrasena;
 
-    const query = `
-    SELECT id, usuario
-    FROM usuarios
-    WHERE usuario = $1 AND contrasena = $2
-    `;
+    const query = `SELECT id, usuario FROM usuarios WHERE usuario = $1 AND contrasena = $2`;
 
     const resultados = await pool.query(query, [usuario, contrasena]);
 
@@ -670,10 +531,7 @@ app.post("/login", async (req, res) => {
 app.get("/usuariosPosts/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await pool.query(`SELECT usuarios.id, COUNT(recetas.id) AS posts
-    FROM usuarios
-    INNER JOIN recetas ON recetas.id_usuario = usuarios.id
-    GROUP BY usuarios.id;`);
+    const result = await pool.query(`SELECT usuarios.id, COUNT(recetas.id) AS posts FROM usuarios INNER JOIN recetas ON recetas.id_usuario = usuarios.id GROUP BY usuarios.id;`);
     if (result.rows.length === 0 || result.rows[0].posts === 0) {
       return res.json({ usuario_id: id, posts: 0 });
     }
@@ -689,11 +547,7 @@ app.get("/usuariosElegidas/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const result = await pool.query(`
-      SELECT COUNT(*) AS elegidas
-      FROM recetas
-      WHERE id_usuario = $1 AND elegida_comunidad = TRUE
-    `, [id]);
+    const result = await pool.query(`SELECT COUNT(*) AS elegidas FROM recetas WHERE id_usuario = $1 AND elegida_comunidad = TRUE`, [id]);
 
     res.json({ elegidas: Number(result.rows[0].elegidas) });
 
