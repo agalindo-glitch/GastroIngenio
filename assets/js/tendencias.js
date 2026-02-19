@@ -1,6 +1,6 @@
 "use strict";
 
-const API_RECETAS = "http://localhost:3000/recetas";
+const API_TRENDS = "http://localhost:3000/trends";
 const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
 const contenedorTendencias = document.querySelector(".trends__list");
@@ -16,51 +16,23 @@ async function fetchJSON(url) {
   }
 }
 
-function calcularPromedio(comentarios = []) {
-  if (!comentarios.length) {
-    return { promedio: 0, total: 0 };
-  }
-
-  const suma = comentarios.reduce((acc, c) => acc + (c.puntaje || 0), 0);
-  return {
-    promedio: Math.round(suma / comentarios.length),
-    total: comentarios.length
-  };
-}
-
 async function cargarTendencias() {
   if (!contenedorTendencias) return;
 
-  const recetas = await fetchJSON(API_RECETAS);
+  const recetas = await fetchJSON(API_TRENDS);
   if (!recetas || !recetas.length) return;
 
-  const recetasConRating = [];
-
-  for (const r of recetas) {
-
-    const comentarios = await fetchJSON(`${API_RECETAS}/${r.id}/comentarios`);
-
-    const { promedio, total } = calcularPromedio(comentarios || []);
-
-    const completa = await fetchJSON(`${API_RECETAS}/${r.id}`);
-    if (!completa) continue;
-
-    recetasConRating.push({
-      id: r.id,
-      nombre: r.nombre,
-      imagen: r.imagen_url,
-      tiempo: r.tiempo_preparacion,
-      promedio,
-      total,
-      autor: completa.autor,
-      autorFoto: completa.autor_foto,
-      autorId: completa.id_usuario
-    });
-  }
-
-  recetasConRating.sort((a, b) => b.promedio - a.promedio);
-
-  const top4 = recetasConRating.slice(0, 4);
+  const top4 = recetas.map(r => ({
+    id:        r.id,
+    nombre:    r.nombre,
+    imagen:    r.imagen_url,
+    tiempo:    r.tiempo_preparacion,
+    promedio:  Number(r.promedio),
+    total:     Number(r.total_comentarios),
+    autor:     r.autor,
+    autorFoto: r.autor_foto,
+    autorId:   r.id_usuario
+  }));
 
   renderTendencias(top4);
 }

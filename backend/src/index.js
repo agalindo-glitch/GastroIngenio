@@ -303,15 +303,26 @@ app.delete("/recetas", async (req, res) => {
 // GET. /recetaRandomComunidad
 app.get("/recetaRandomComunidad", async (req, res) => {
   try {
+    const result = await pool.query(`
+      SELECT * FROM (
+        SELECT
+          r.*,
+          COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio,
+          COUNT(c.id)                          AS total_reseñas
+        FROM recetas r
+        LEFT JOIN comentarios c ON c.id_receta = r.id
+        GROUP BY r.id
+        HAVING COUNT(c.id) > 0
+        ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC
+        LIMIT 10
+      ) AS top10
+      ORDER BY RANDOM()
+      LIMIT 1
+    `);
 
-    const result = await pool.query(`SELECT r.*, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.elegida_comunidad = TRUE GROUP BY r.id ORDER BY RANDOM() LIMIT 1`);
-
-    if (result.rows.length === 0) {
-      return res.json(null);
-    }
+    if (result.rows.length === 0) return res.json(null);
 
     res.json(result.rows[0]);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "DB error" });
@@ -329,7 +340,36 @@ app.get("/recetas-recientes", async (req, res) => {
   }
 });
 
-// GET. /mis-recetas (muestra las recetas hechas por el usuario)
+// GET /trends 
+app.get("/trends", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        r.id,
+        r.nombre,
+        r.imagen_url,
+        r.tiempo_preparacion,
+        r.id_usuario,
+        u.usuario        AS autor,
+        u.foto_perfil    AS autor_foto,
+        COUNT(c.id)      AS total_comentarios,
+        COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio
+      FROM recetas r
+      LEFT JOIN comentarios c ON c.id_receta = r.id
+      LEFT JOIN usuarios u    ON u.id = r.id_usuario
+      GROUP BY r.id, u.usuario, u.foto_perfil
+      ORDER BY COUNT(c.id) DESC
+      LIMIT 4
+    `);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
+// GET. /mis-recetas 
 app.get("/mis-recetas", async (req, res) => {
   try {
     const id_usuario = req.query.id_usuario;
@@ -350,7 +390,7 @@ app.get("/mis-recetas", async (req, res) => {
   }
 });
 
-// POST /comentarios (crear comentario)
+// POST /comentarios 
 app.post("/comentarios", async (req, res) => {
   try {
     const id_usuario = req.body.id_usuario;
@@ -375,7 +415,7 @@ app.post("/comentarios", async (req, res) => {
   }
 });
 
-// GET /comentarios (todos)
+// GET /comentarios 
 app.get("/comentarios", async (req, res) => {
   try {
 
@@ -389,7 +429,7 @@ app.get("/comentarios", async (req, res) => {
   }
 });
 
-// GET /comentarios/:id (uno por id) + trae usuario y foto
+// GET /comentarios/:id 
 app.get("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -407,7 +447,7 @@ app.get("/comentarios/:id", async (req, res) => {
   }
 });
 
-// GET /recetas/:id/comentarios (todos los comentarios de una receta)
+// GET /recetas/:id/comentarios 
 app.get("/recetas/:id/comentarios", async (req, res) => {
   try {
     const id_receta = Number(req.params.id);
@@ -422,7 +462,7 @@ app.get("/recetas/:id/comentarios", async (req, res) => {
   }
 });
 
-// PUT /comentarios/:id (editar) solo dueño
+// PUT /comentarios/:id 
 app.put("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -458,7 +498,7 @@ app.put("/comentarios/:id", async (req, res) => {
   }
 });
 
-// DELETE /comentarios/:id (borrar) solo dueño
+// DELETE /comentarios/:id
 app.delete("/comentarios/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);

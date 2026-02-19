@@ -188,6 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
     botonLike.addEventListener("click", () => votarComentario(c.id, "like", articulo));
     botonDislike.addEventListener("click", () => votarComentario(c.id, "dislike", articulo));
 
+    const votoGuardado = localStorage.getItem(`voto_comentario_${c.id}`);
+    if (votoGuardado) {
+        botonLike.disabled = true;
+        botonDislike.disabled = true;
+        botonLike.style.opacity = "0.5";
+        botonDislike.style.opacity = "0.5";
+    }
 
     if (usuarioLogueado === Number(c.id_usuario)) {
       const botones = document.createElement("div");
@@ -207,29 +214,47 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function votarComentario(id, tipo, articulo) {
-    try {
-      const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tipo })
-      });
+      const storageKey = `voto_comentario_${id}`;
+      const votoExistente = localStorage.getItem(storageKey);
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Error al votar");
-        return;
+      // Si ya votó cualquier cosa en este comentario, bloqueamos
+      if (votoExistente) {
+          alert(`Ya votaste este comentario con ${votoExistente === "like" ? "👍" : "👎"}`);
+          return;
       }
 
-      articulo.querySelector(".like-count").textContent = data.likes;
-      articulo.querySelector(".dislike-count").textContent = data.dislikes;
+      try {
+          const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ tipo })
+          });
 
-    } catch (err) {
-      console.error(err);
-      alert("Error al votar");
-    }
+          const data = await res.json();
+
+          if (!res.ok) {
+              alert(data.error || "Error al votar");
+              return;
+          }
+
+          // Guardamos el voto en localStorage
+          localStorage.setItem(storageKey, tipo);
+
+          // Actualizamos los contadores en pantalla
+          articulo.querySelector(".like-count").textContent = data.likes;
+          articulo.querySelector(".dislike-count").textContent = data.dislikes;
+
+          // Deshabilitamos ambos botones visualmente
+          articulo.querySelector(".btn-like").disabled = true;
+          articulo.querySelector(".btn-dislike").disabled = true;
+          articulo.querySelector(".btn-like").style.opacity = "0.5";
+          articulo.querySelector(".btn-dislike").style.opacity = "0.5";
+
+      } catch (err) {
+          console.error(err);
+          alert("Error al votar");
+      }
   }
-
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";

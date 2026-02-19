@@ -103,31 +103,21 @@ function renderRecipe(htmlId, recipe, usuario) {
 
     // Badge comunidad
     if (badgeEl) {
-        if (recipe.elegida_comunidad === true) {
-            badgeEl.textContent = "⭐ Elegido por la comunidad";
-            badgeEl.style.display = "inline-block";
-        } else {
-            badgeEl.style.display = "none";
-        }
+        badgeEl.textContent = "⭐ Elegida por la comunidad";
+        badgeEl.style.display = "inline-block";
     }
 
 }
 
 async function chooseElegidosComunidad() {
     try {
-
-        const htmlId = "#community-card";
-
-        // Trae UNA receta random ya elegida por comunidad
         const recipe = await getFromBackend("http://localhost:3000/recetaRandomComunidad");
         if (!recipe) return;
 
-        // Trae su autor
         const user = await getFromBackend(`${API_USERS}/${recipe.id_usuario}`);
         if (!user) return;
 
-        renderRecipe(htmlId, recipe, user);
-
+        renderRecipe("#community-card", recipe, user);
     } catch (err) {
         console.error("❌ chooseElegidosComunidad:", err);
     }
