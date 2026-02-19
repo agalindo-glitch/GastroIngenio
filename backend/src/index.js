@@ -373,14 +373,12 @@ app.get("/trends", async (req, res) => {
 app.get("/mis-recetas", async (req, res) => {
   try {
     const id_usuario = req.query.id_usuario;
-
-    if (!id_usuario) {
-      return res.status(400).json({ error: "Falta id_usuario" });
-    }
+    if (!id_usuario) return res.status(400).json({ error: "Falta id_usuario" });
 
     const query = `
       SELECT 
         r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url,
+        r.elegida_comunidad,
         COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, 
         COUNT(c.id) AS total_reseñas 
       FROM recetas r 
@@ -391,9 +389,7 @@ app.get("/mis-recetas", async (req, res) => {
     `;
 
     const result = await pool.query(query, [id_usuario]);
-
     res.json(result.rows);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "DB error" });
