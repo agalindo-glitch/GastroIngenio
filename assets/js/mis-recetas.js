@@ -17,24 +17,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const porPagina = 6;
   let paginaActual = 1;
 
-  fetch(`http://localhost:3000/mis-recetas?id_usuario=${idUsuario}`)
-    .then(res => {
-      if (!res.ok) throw new Error("Error al cargar recetas");
-      return res.json();
-    })
-    .then(data => {
-      recetas = data;
+  fetch("http://localhost:3000/actualizarElegidasComunidad", { method: "PUT" })
+    .catch(err => console.error("Error actualizando elegidas:", err))
+    .finally(() => {
+      fetch(`http://localhost:3000/mis-recetas?id_usuario=${idUsuario}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Error al cargar recetas");
+          return res.json();
+        })
+        .then(data => {
+          recetas = data;
 
-      if (recetas.length === 0) {
-        contenedor.innerHTML = "<p>No tenés recetas cargadas.</p>";
-        return;
-      }
+          if (recetas.length === 0) {
+            contenedor.innerHTML = "<p>No tenés recetas cargadas.</p>";
+            return;
+          }
 
-      mostrarPagina();
-    })
-    .catch(err => {
-      console.error(err);
-      contenedor.innerHTML = "<p>Error al cargar las recetas.</p>";
+          mostrarPagina();
+        })
+        .catch(err => {
+          console.error(err);
+          contenedor.innerHTML = "<p>Error al cargar las recetas.</p>";
+        });
     });
 
   function mostrarPagina() {
@@ -72,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (badgeEl) {
-        if (receta.elegida_comunidad === true) {
+        if (receta.elegida_comunidad) {
           badgeEl.textContent = "⭐ Elegido por la comunidad";
           badgeEl.style.display = "inline-block";
         } else {

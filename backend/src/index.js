@@ -151,8 +151,6 @@ app.delete("/usuarios/:id", async (req, res) => {
 app.get("/recetas", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM recetas");
-    res.json(result.rows);
-
     res.status(200).json(result.rows);
 
   } catch (error) {
@@ -175,7 +173,10 @@ app.post("/recetas", async (req, res) => {
     const id_receta = recetaInsert.rows[0].id;
 
     for (let i = 0; i < pasos.length; i++) {
-      await client.query(`INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES ($1,$2,$3,$4)`, [id_receta, i + 1, pasos[i].descripcion, pasos[i].imagen_url || null]);
+      await pool.query(`
+        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
+        VALUES ($1,$2,$3,$4)
+      `, [id_receta, i + 1, pasos[i].descripcion, pasos[i].imagen_url || null]);
     }
 
     res.status(201).json({ message: "Receta creada correctamente", id: id_receta });
@@ -261,15 +262,14 @@ app.put("/recetas/:id", async (req, res) => {
     }
 
     await pool.query(`
-      UPDATE recetas
-      SET nombre = $1,
-          descripcion = $2,
-          tiempo_preparacion = $3,
-          comensales = $4,
-          imagen_url = $5,
-          ingredientes = $6,
-          pasos = $7
-      WHERE id = $8
+    UPDATE recetas
+    SET nombre = $1,
+        descripcion = $2,
+        tiempo_preparacion = $3,
+        comensales = $4,
+        imagen_url = $5,
+        ingredientes = $6
+    WHERE id = $7
     `, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
 
     res.json({ message: "Receta actualizada correctamente" });
@@ -378,7 +378,17 @@ app.get("/mis-recetas", async (req, res) => {
       return res.status(400).json({ error: "Falta id_usuario" });
     }
 
-    const query = `SELECT r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url, r.elegida_comunidad, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.id_usuario = $1 GROUP BY r.id ORDER BY r.id DESC`;
+    const query = `
+      SELECT 
+        r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url,
+        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, 
+        COUNT(c.id) AS total_reseñas 
+      FROM recetas r 
+      LEFT JOIN comentarios c ON c.id_receta = r.id 
+      WHERE r.id_usuario = $1 
+      GROUP BY r.id 
+      ORDER BY r.id DESC
+    `;
 
     const result = await pool.query(query, [id_usuario]);
 
@@ -412,6 +422,35 @@ app.post("/comentarios", async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+// PUT /actualizarElegidasComunidad
+app.put("/actualizarElegidasComunidad", async (req, res) => {
+  try {
+    // Primero resetea todas a false
+    await pool.query(`UPDATE recetas SET elegida_comunidad = FALSE`);
+
+    // Luego marca el top 10 como true
+    await pool.query(`
+      UPDATE recetas
+      SET elegida_comunidad = TRUE
+      WHERE id IN (
+        SELECT r.id
+        FROM recetas r
+        LEFT JOIN comentarios c ON c.id_receta = r.id
+        GROUP BY r.id
+        HAVING COUNT(c.id) > 0
+        ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC
+        LIMIT 10
+      )
+    `);
+
+    res.json({ message: "Recetas elegidas por la comunidad actualizadas" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
   }
 });
 
@@ -576,14 +615,23 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// GET. /usuariosPosts/<id> (busca el numero de posteos de un usuario)
+// GET. /usuariosPosts/<id>
 app.get("/usuariosPosts/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await pool.query(`SELECT usuarios.id, COUNT(recetas.id) AS posts FROM usuarios INNER JOIN recetas ON recetas.id_usuario = usuarios.id GROUP BY usuarios.id;`);
-    if (result.rows.length === 0 || result.rows[0].posts === 0) {
+
+    const result = await pool.query(`
+      SELECT u.id, COUNT(r.id) AS posts
+      FROM usuarios u
+      LEFT JOIN recetas r ON r.id_usuario = u.id
+      WHERE u.id = $1
+      GROUP BY u.id
+    `, [id]);
+
+    if (result.rows.length === 0) {
       return res.json({ usuario_id: id, posts: 0 });
     }
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);

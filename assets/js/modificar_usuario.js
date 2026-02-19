@@ -2,20 +2,13 @@
 
 async function cargarEstadisticas(id_usuario) {
     try {
-        const res = await fetch("http://localhost:3000/recetas");
-        const recetas = await res.json();
+        const resPosts = await fetch(`http://localhost:3000/usuariosPosts/${id_usuario}`);
+        const postsData = await resPosts.json();
+        document.getElementById("numPosts").textContent = postsData.posts || 0;
 
-        const recetasUsuario = recetas.filter(
-            receta => receta.id_usuario == id_usuario
-        );
-
-        document.getElementById("numPosts").textContent = recetasUsuario.length;
-
-        const elegidos = recetasUsuario.filter(
-            receta => receta.elegidos_comunidad === true
-        );
-
-        document.getElementById("numElegidos").textContent = elegidos.length;
+        const resElegidas = await fetch(`http://localhost:3000/usuariosElegidas/${id_usuario}`);
+        const elegidasData = await resElegidas.json();
+        document.getElementById("numElegidos").textContent = elegidasData.elegidas || 0;
 
     } catch (error) {
         console.error("Error al cargar estadísticas", error);

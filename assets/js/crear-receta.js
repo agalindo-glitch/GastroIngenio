@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
     
-    const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos};
+    const body = { id_usuario, nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos };
 
     try {
       const res = await fetch("http://localhost:3000/recetas", {
