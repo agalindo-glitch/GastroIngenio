@@ -3,13 +3,19 @@
 const params = new URLSearchParams(window.location.search);
 const idVisitado = params.get("userId");
 const idLogueado = localStorage.getItem("id_usuario");
+const idFinal = idVisitado || idLogueado;
+const esMiPerfil = !idVisitado || idVisitado === idLogueado;
 
 let userVisitado; 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    
+    if (!esMiPerfil){
+        document.getElementById("botones-propios").remove();
+    }
 
     try {
-        const res = await fetch(`http://localhost:3000/usuarios/${idLogueado}`);
+        const res = await fetch(`http://localhost:3000/usuarios/${idFinal}`);
         const text = await res.text();
         userVisitado = text ? JSON.parse(text) : null;
 
@@ -21,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             userVisitado.foto_perfil?.trim() || "https://st5.depositphotos.com/54392550/74655/v/450/depositphotos_746551184-stock-illustration-user-profile-icon-anonymous-person.jpg";
 
         cargarEstadisticas(Number(userVisitado.id));
-
 
     } catch (error) {
         console.error("Error cargando perfil:", error);

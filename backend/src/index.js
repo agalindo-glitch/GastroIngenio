@@ -202,7 +202,16 @@ app.get("/recetas/:id", async (req, res) => {
       LEFT JOIN usuarios u ON r.id_usuario = u.id
       LEFT JOIN comentarios c ON c.id_receta = r.id
       WHERE r.id = $1
-      GROUP BY r.id, u.usuario, u.foto_perfil
+      GROUP BY r.id,
+        r.id_usuario,
+        r.nombre,
+        r.descripcion,
+        r.tiempo_preparacion,
+        r.comensales,
+        r.imagen_url,
+        r.ingredientes,
+        u.usuario,
+        u.foto_perfil
     `, [id]);
 
     const pasos = await pool.query(`

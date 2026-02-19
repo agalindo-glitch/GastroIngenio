@@ -93,7 +93,7 @@ function renderTendencias(recetas) {
             <h2 class="trends-card__heading">${r.nombre}</h2>
 
             <div class="trends-card__meta">
-              <a class="trends-card__author" href="usuario.html?userId=${r.autorId}">
+              <a class="trends-card__author" href="./pages/usuario.html?userId=${r.autorId}">
                 <img class="trends-card__author-avatar"
                   src="${r.autorFoto || AVATAR_DEFAULT}"
                   alt="Autor" />
