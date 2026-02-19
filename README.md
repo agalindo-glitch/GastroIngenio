@@ -80,11 +80,25 @@ Luego accedemos a la base de datos con el siguiente comando
 
     CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL, foto_perfil TEXT);
 
-    CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER REFERENCES usuarios(id), nombre VARCHAR(50) NOT NULL, ingredientes TEXT[] NOT NULL, pasos TEXT[] NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, comensales INTEGER, review INTEGER DEFAULT 0, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, imagen_url TEXT);
+    CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, nombre VARCHAR(50) NOT NULL, ingredientes TEXT[] NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER CHECK (tiempo_preparacion >= 0), comensales INTEGER CHECK (comensales > 0), imagen_url TEXT, fecha_creacion TIMESTAMPTZ DEFAULT NOW(), elegida_comunidad BOOLEAN DEFAULT FALSE);
+
+    CREATE TABLE pasos (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id), numero_paso INTEGER NOT NULL, descripcion TEXT NOT NULL, imagen_url TEXT);
 
     CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, puntaje INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
 
-5- Una vez configurada la base de datos, abri otra terminal en el directorio del backend y ejecuta el siguiente comando para levantar el servidor del backend.
+5- (opcional) Si quiere agregar registros de prueba para la base de datos, ingrese lo siguiente a la misma:
+
+    INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ('Carlos','García',28,'carlosg','pass1234','https://randomuser.me/api/portraits/men/1.jpg'),('María','López',34,'marialopez','securePass!1','https://randomuser.me/api/portraits/women/2.jpg')
+
+    INSERT INTO recetas (id_usuario, nombre, ingredientes, descripcion, tiempo_preparacion, comensales, imagen_url) VALUES (1,'Tacos de Carnitas',ARRAY['cerdo','tortillas','cebolla','cilantro','limón'],'Deliciosos tacos de cerdo confitado al estilo mexicano.',60,4,'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85')
+
+    INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes, puntaje) VALUES (2,1,'Increíbles, la carne quedó súper jugosa. Los hago cada semana.',18,0,5),(3,1,'Le agregué chile de árbol y quedaron perfectos.',12,1,5);
+
+    INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES (1,1,'Cortar el cerdo en trozos y sazonar con sal, ajo y jugo de naranja.','https://images.unsplash.com/photo-1604908176997-125f25cc6f3d');
+
+Al finalizar con la base de datos ingrese "exit" dos veces para salir de la base de datos y de su contenedor de docker.
+
+6- Una vez configurada la base de datos, abri otra terminal en el directorio del backend y ejecuta el siguiente comando para levantar el servidor del backend.
 
 Directorio: GastroIngenio/backend
 

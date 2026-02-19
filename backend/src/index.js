@@ -173,10 +173,7 @@ app.post("/recetas", async (req, res) => {
     const id_receta = recetaInsert.rows[0].id;
 
     for (let i = 0; i < pasos.length; i++) {
-      await pool.query(`
-        INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url)
-        VALUES ($1,$2,$3,$4)
-      `, [id_receta, i + 1, pasos[i].descripcion, pasos[i].imagen_url || null]);
+      await pool.query(`INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES ($1,$2,$3,$4)`, [id_receta, i + 1, pasos[i].descripcion, pasos[i].imagen_url || null]);
     }
 
     res.status(201).json({ message: "Receta creada correctamente", id: id_receta });
@@ -192,35 +189,9 @@ app.get("/recetas/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const receta = await pool.query(`
-      SELECT 
-        r.*,
-        u.usuario AS autor,
-        u.foto_perfil AS autor_foto,
-        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio,
-        COUNT(c.id) AS total_reseñas
-      FROM recetas r
-      LEFT JOIN usuarios u ON r.id_usuario = u.id
-      LEFT JOIN comentarios c ON c.id_receta = r.id
-      WHERE r.id = $1
-      GROUP BY r.id,
-        r.id_usuario,
-        r.nombre,
-        r.descripcion,
-        r.tiempo_preparacion,
-        r.comensales,
-        r.imagen_url,
-        r.ingredientes,
-        u.usuario,
-        u.foto_perfil
-    `, [id]);
+    const receta = await pool.query(`SELECT r.*, u.usuario AS autor, u.foto_perfil AS autor_foto, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN usuarios u ON r.id_usuario = u.id LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.id = $1 GROUP BY r.id, r.id_usuario, r.nombre, r.descripcion, r.tiempo_preparacion, r.comensales, r.imagen_url, r.ingredientes, u.usuario, u.foto_perfil`, [id]);
 
-    const pasos = await pool.query(`
-      SELECT numero_paso, descripcion, imagen_url
-      FROM pasos
-      WHERE id_receta = $1
-      ORDER BY numero_paso ASC
-    `, [id]);
+    const pasos = await pool.query(`SELECT numero_paso, descripcion, imagen_url FROM pasos WHERE id_receta = $1 ORDER BY numero_paso ASC`, [id]);
 
     if (receta.rows.length === 0) {
       return res.status(404).json({ error: "Receta no encontrada" });
@@ -241,36 +212,13 @@ app.get("/recetas/:id", async (req, res) => {
 app.put("/recetas/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const {
-      nombre,
-      ingredientes,
-      pasos,
-      descripcion,
-      tiempo_preparacion,
-      comensales,
-      imagen_url
-    } = req.body;
+    const {nombre, ingredientes, pasos, descripcion, tiempo_preparacion, comensales, imagen_url} = req.body;
 
-    if (
-      !nombre?.trim() ||
-      !descripcion?.trim() ||
-      !comensales || comensales <= 0 ||
-      !Array.isArray(ingredientes) || ingredientes.length === 0 ||
-      !Array.isArray(pasos) || pasos.length === 0
-    ) {
+    if (!nombre?.trim() || !descripcion?.trim() || !comensales || comensales <= 0 || !Array.isArray(ingredientes) || ingredientes.length === 0 || !Array.isArray(pasos) || pasos.length === 0) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    await pool.query(`
-    UPDATE recetas
-    SET nombre = $1,
-        descripcion = $2,
-        tiempo_preparacion = $3,
-        comensales = $4,
-        imagen_url = $5,
-        ingredientes = $6
-    WHERE id = $7
-    `, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
+    await pool.query(`UPDATE recetas SET nombre = $1, descripcion = $2, tiempo_preparacion = $3, comensales = $4, imagen_url = $5, ingredientes = $6 WHERE id = $7`, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
 
     res.json({ message: "Receta actualizada correctamente" });
 
@@ -278,7 +226,6 @@ app.put("/recetas/:id", async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
-
 
 // DELETE. /recetas (elimino una receta por su id, pero no como parametro)
 app.delete("/recetas", async (req, res) => {
@@ -303,22 +250,7 @@ app.delete("/recetas", async (req, res) => {
 // GET. /recetaRandomComunidad
 app.get("/recetaRandomComunidad", async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT * FROM (
-        SELECT
-          r.*,
-          COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio,
-          COUNT(c.id)                          AS total_reseñas
-        FROM recetas r
-        LEFT JOIN comentarios c ON c.id_receta = r.id
-        GROUP BY r.id
-        HAVING COUNT(c.id) > 0
-        ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC
-        LIMIT 10
-      ) AS top10
-      ORDER BY RANDOM()
-      LIMIT 1
-    `);
+    const result = await pool.query(`SELECT * FROM (SELECT r.*, COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id GROUP BY r.id HAVING COUNT(c.id) > 0 ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC LIMIT 10) AS top10 ORDER BY RANDOM() LIMIT 1`);
 
     if (result.rows.length === 0) return res.json(null);
 
@@ -343,24 +275,7 @@ app.get("/recetas-recientes", async (req, res) => {
 // GET /trends 
 app.get("/trends", async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT
-        r.id,
-        r.nombre,
-        r.imagen_url,
-        r.tiempo_preparacion,
-        r.id_usuario,
-        u.usuario        AS autor,
-        u.foto_perfil    AS autor_foto,
-        COUNT(c.id)      AS total_comentarios,
-        COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio
-      FROM recetas r
-      LEFT JOIN comentarios c ON c.id_receta = r.id
-      LEFT JOIN usuarios u    ON u.id = r.id_usuario
-      GROUP BY r.id, u.usuario, u.foto_perfil
-      ORDER BY COUNT(c.id) DESC
-      LIMIT 4
-    `);
+    const result = await pool.query(`SELECT r.id, r.nombre, r.imagen_url, r.tiempo_preparacion, r.id_usuario, u.usuario AS autor, u.foto_perfil AS autor_foto, COUNT(c.id) AS total_comentarios, COALESCE(ROUND(AVG(c.puntaje)), 0) AS promedio FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id LEFT JOIN usuarios u ON u.id = r.id_usuario GROUP BY r.id, u.usuario, u.foto_perfil ORDER BY COUNT(c.id) DESC LIMIT 4`);
 
     res.json(result.rows);
   } catch (err) {
@@ -375,18 +290,7 @@ app.get("/mis-recetas", async (req, res) => {
     const id_usuario = req.query.id_usuario;
     if (!id_usuario) return res.status(400).json({ error: "Falta id_usuario" });
 
-    const query = `
-      SELECT 
-        r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url,
-        r.elegida_comunidad,
-        COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, 
-        COUNT(c.id) AS total_reseñas 
-      FROM recetas r 
-      LEFT JOIN comentarios c ON c.id_receta = r.id 
-      WHERE r.id_usuario = $1 
-      GROUP BY r.id 
-      ORDER BY r.id DESC
-    `;
+    const query = `SELECT r.id, r.nombre, r.tiempo_preparacion, r.comensales, r.imagen_url, r.elegida_comunidad, COALESCE(ROUND(AVG(c.puntaje)),0) AS promedio, COUNT(c.id) AS total_reseñas FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id WHERE r.id_usuario = $1 GROUP BY r.id ORDER BY r.id DESC`;
 
     const result = await pool.query(query, [id_usuario]);
     res.json(result.rows);
@@ -424,23 +328,9 @@ app.post("/comentarios", async (req, res) => {
 // PUT /actualizarElegidasComunidad
 app.put("/actualizarElegidasComunidad", async (req, res) => {
   try {
-    // Primero resetea todas a false
     await pool.query(`UPDATE recetas SET elegida_comunidad = FALSE`);
 
-    // Luego marca el top 10 como true
-    await pool.query(`
-      UPDATE recetas
-      SET elegida_comunidad = TRUE
-      WHERE id IN (
-        SELECT r.id
-        FROM recetas r
-        LEFT JOIN comentarios c ON c.id_receta = r.id
-        GROUP BY r.id
-        HAVING COUNT(c.id) > 0
-        ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC
-        LIMIT 10
-      )
-    `);
+    await pool.query(`UPDATE recetas SET elegida_comunidad = TRUE WHERE id IN (SELECT r.id FROM recetas r LEFT JOIN comentarios c ON c.id_receta = r.id GROUP BY r.id HAVING COUNT(c.id) > 0 ORDER BY ROUND(AVG(c.puntaje)) DESC, COUNT(c.id) DESC LIMIT 10)`);
 
     res.json({ message: "Recetas elegidas por la comunidad actualizadas" });
 
@@ -569,13 +459,7 @@ app.put("/comentarios/votar/:id", async (req, res) => {
 
     const campo = tipo === "like" ? "likes" : "dislikes";
 
-    const result = await pool.query(
-      `UPDATE comentarios
-       SET ${campo} = ${campo} + 1
-       WHERE id = $1
-       RETURNING likes, dislikes`,
-      [id]
-    );
+    const result = await pool.query(`UPDATE comentarios SET ${campo} = ${campo} + 1 WHERE id = $1 RETURNING likes, dislikes`, [id]);
 
     if (!result.rows.length) {
       return res.status(404).json({ error: "Comentario no encontrado" });
@@ -600,7 +484,6 @@ app.post("/login", async (req, res) => {
 
     const resultados = await pool.query(query, [usuario, contrasena]);
 
-
     if (resultados.rows.length === 0){
       return res.status(401).send("No existe el usuario");
     }
@@ -616,13 +499,7 @@ app.get("/usuariosPosts/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    const result = await pool.query(`
-      SELECT u.id, COUNT(r.id) AS posts
-      FROM usuarios u
-      LEFT JOIN recetas r ON r.id_usuario = u.id
-      WHERE u.id = $1
-      GROUP BY u.id
-    `, [id]);
+    const result = await pool.query(`SELECT u.id, COUNT(r.id) AS posts FROM usuarios u LEFT JOIN recetas r ON r.id_usuario = u.id WHERE u.id = $1 GROUP BY u.id`, [id]);
 
     if (result.rows.length === 0) {
       return res.json({ usuario_id: id, posts: 0 });
