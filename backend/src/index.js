@@ -214,15 +214,20 @@ app.put("/recetas/:id", async (req, res) => {
     const id = req.params.id;
     const {nombre, ingredientes, pasos, descripcion, tiempo_preparacion, comensales, imagen_url} = req.body;
 
-    if (!nombre?.trim() || !descripcion?.trim() || !comensales || comensales <= 0 || !Array.isArray(ingredientes) || ingredientes.length === 0 || !Array.isArray(pasos) || pasos.length === 0) {
+    if (!nombre?.trim() || !descripcion?.trim() || !comensales || !Array.isArray(ingredientes) || !ingredientes.length || !Array.isArray(pasos) || !pasos.length) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    await pool.query(`UPDATE recetas SET nombre = $1, descripcion = $2, tiempo_preparacion = $3, comensales = $4, imagen_url = $5, ingredientes = $6 WHERE id = $7`, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, pasos, id]);
+    await pool.query(`UPDATE recetas SET nombre=$1, descripcion=$2, tiempo_preparacion=$3, comensales=$4, imagen_url=$5, ingredientes=$6 WHERE id=$7`, [nombre, descripcion, tiempo_preparacion, comensales, imagen_url, ingredientes, id]);
+
+    await pool.query(`DELETE FROM pasos WHERE id_receta=$1`, [id]);
+
+    for (const paso of pasos) {await pool.query(`INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES ($1,$2,$3,$4)`, [id, paso.numero_paso, paso.descripcion, paso.imagen_url]);}
 
     res.json({ message: "Receta actualizada correctamente" });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 });
