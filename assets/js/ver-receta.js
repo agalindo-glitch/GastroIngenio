@@ -190,10 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const votoGuardado = localStorage.getItem(`voto_comentario_${c.id}`);
     if (votoGuardado) {
-        botonLike.disabled = true;
-        botonDislike.disabled = true;
-        botonLike.style.opacity = "0.5";
-        botonDislike.style.opacity = "0.5";
+      actualizarEstiloVoto(articulo, votoGuardado);
     }
 
     if (usuarioLogueado === Number(c.id_usuario)) {
@@ -214,47 +211,52 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function votarComentario(id, tipo, articulo) {
-      const storageKey = `voto_comentario_${id}`;
-      const votoExistente = localStorage.getItem(storageKey);
+    const storageKey = `voto_comentario_${id}`;
+    const votoExistente = localStorage.getItem(storageKey);
 
-      // Si ya votó cualquier cosa en este comentario, bloqueamos
-      if (votoExistente) {
-          alert(`Ya votaste este comentario con ${votoExistente === "like" ? "👍" : "👎"}`);
-          return;
+    // Si ya votaste lo mismo, no hace nada
+    if (votoExistente === tipo) {
+      alert(`Ya votaste este comentario con ${tipo === "like" ? "👍" : "👎"}`);
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tipo, votoAnterior: votoExistente || null })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Error al votar");
+        return;
       }
 
-      try {
-          const res = await fetch(`http://localhost:3000/comentarios/votar/${id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ tipo })
-          });
+      // Guarda el nuevo voto (sobreescribe el anterior si existía)
+      localStorage.setItem(storageKey, tipo);
 
-          const data = await res.json();
+      // Actualiza contadores
+      articulo.querySelector(".like-count").textContent = data.likes;
+      articulo.querySelector(".dislike-count").textContent = data.dislikes;
 
-          if (!res.ok) {
-              alert(data.error || "Error al votar");
-              return;
-          }
+      // Resalta el botón activo visualmente
+      actualizarEstiloVoto(articulo, tipo);
 
-          // Guardamos el voto en localStorage
-          localStorage.setItem(storageKey, tipo);
-
-          // Actualizamos los contadores en pantalla
-          articulo.querySelector(".like-count").textContent = data.likes;
-          articulo.querySelector(".dislike-count").textContent = data.dislikes;
-
-          // Deshabilitamos ambos botones visualmente
-          articulo.querySelector(".btn-like").disabled = true;
-          articulo.querySelector(".btn-dislike").disabled = true;
-          articulo.querySelector(".btn-like").style.opacity = "0.5";
-          articulo.querySelector(".btn-dislike").style.opacity = "0.5";
-
-      } catch (err) {
-          console.error(err);
-          alert("Error al votar");
-      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al votar");
+    }
   }
+
+function actualizarEstiloVoto(articulo, votoActivo) {
+  const btnLike = articulo.querySelector(".btn-like");
+  const btnDislike = articulo.querySelector(".btn-dislike");
+
+  btnLike.style.opacity = votoActivo === "like" ? "1" : "0.5";
+  btnDislike.style.opacity = votoActivo === "dislike" ? "1" : "0.5";
+}
 
   function renderizarEstrellas(puntaje) {
     let estrellasHTML = "";

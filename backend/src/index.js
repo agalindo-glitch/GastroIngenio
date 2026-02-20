@@ -456,15 +456,42 @@ app.delete("/comentarios/:id", async (req, res) => {
 app.put("/comentarios/votar/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { tipo } = req.body;
+    const { tipo, votoAnterior } = req.body;
 
     if (!["like", "dislike"].includes(tipo)) {
       return res.status(400).json({ error: "Tipo inválido" });
     }
 
-    const campo = tipo === "like" ? "likes" : "dislikes";
+    // Si el voto nuevo es igual al anterior, no hacemos nada
+    if (votoAnterior === tipo) {
+      const actual = await pool.query(
+        `SELECT likes, dislikes FROM comentarios WHERE id = $1`, [id]
+      );
+      return res.json(actual.rows[0]);
+    }
 
-    const result = await pool.query(`UPDATE comentarios SET ${campo} = ${campo} + 1 WHERE id = $1 RETURNING likes, dislikes`, [id]);
+    let result;
+
+    if (votoAnterior && votoAnterior !== tipo) {
+      // Cambio de voto: suma el nuevo y descuenta el anterior
+      const campoNuevo = tipo === "like" ? "likes" : "dislikes";
+      const campoViejo = votoAnterior === "like" ? "likes" : "dislikes";
+      result = await pool.query(
+        `UPDATE comentarios
+         SET ${campoNuevo} = ${campoNuevo} + 1,
+             ${campoViejo} = GREATEST(${campoViejo} - 1, 0)
+         WHERE id = $1
+         RETURNING likes, dislikes`,
+        [id]
+      );
+    } else {
+      // Primer voto
+      const campo = tipo === "like" ? "likes" : "dislikes";
+      result = await pool.query(
+        `UPDATE comentarios SET ${campo} = ${campo} + 1 WHERE id = $1 RETURNING likes, dislikes`,
+        [id]
+      );
+    }
 
     if (!result.rows.length) {
       return res.status(404).json({ error: "Comentario no encontrado" });
@@ -477,7 +504,6 @@ app.put("/comentarios/votar/:id", async (req, res) => {
     res.status(500).json({ error: "Error actualizando voto" });
   }
 });
-
 
 //POST. /login (un usuario se logea)
 app.post("/login", async (req, res) => {
