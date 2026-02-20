@@ -1,7 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const from = document.getElementById("crearForm");
+"use strict";
 
-    from.addEventListener("submit", e => {
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("crearForm");
+
+    form.addEventListener("submit", e => {
         e.preventDefault();
         crearUsuario();
     });

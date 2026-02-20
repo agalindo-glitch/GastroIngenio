@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>GastroIngenio - Crear Receta</title>
+  <title>GastroIngenio - Editar Receta</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
@@ -28,6 +28,8 @@
     <div class="container">
 
       <form id="recipe-form" class="recipe-wrapper box">
+
+        <h1 class="title is-3 has-text-centered mb-5">Editar receta</h1>
 
         <div class="field">
           <label class="label has-text-centered">Título de la receta</label>
@@ -74,7 +76,7 @@
 
         <div class="creator-info">
           <figure>
-            <img  class="avatar" src="https://via.placeholder.com/96" alt="Usuario">
+            <img class="avatar" src="https://via.placeholder.com/96" alt="Usuario">
           </figure>
           <span class="creator-name">usuario (creador)</span>
         </div>
@@ -107,6 +109,7 @@
         <section class="box recipe-steps">
           <h2 class="title is-5">Pasos 1 a 1 de cómo se hace</h2>
 
+
           <div id="steps-container">
             <div class="box step-item">
               <div class="field is-grouped is-align-items-center">
@@ -122,18 +125,9 @@
               <div class="field">
                 <label class="label is-small">Descripción del paso</label>
                 <div class="control">
-                  <textarea class="textarea step-text" rows="2"
+                  <textarea class="textarea" name="steps[][text]" rows="2"
                     placeholder="Explicá qué hay que hacer en este paso" required></textarea>
                 </div>
-              </div>
-
-              <!-- 🔥 NUEVO: Imagen del paso -->
-              <div class="field">
-                <label class="label is-small">Imagen del paso (URL)</label>
-                <div class="control">
-                  <input class="input step-image" type="url" name="steps[][image]" placeholder="https://...">
-                </div>
-                <img class="step-preview mt-2" style="max-width:200px; display:none;" />
               </div>
             </div>
           </div>
@@ -146,12 +140,14 @@
         <section class="box preview-section">
           <h2 class="title is-5">Resumen de la receta</h2>
           <p>Antes de guardar, revisá que todo esté correcto. Vas a poder ver el título, los ingredientes y los pasos
-            que agregaste.</p>
+            actualizados.</p>
         </section>
 
-        <div class="field has-text-right">
+        <div class="field is-flex is-justify-content-space-between mt-5">
+          <a href="mis-recetas.html" class="button is-light">Cancelar</a>
+
           <button id="btn-guardar-receta" type="submit" class="button is-primary">
-              Guardar receta
+            Guardar cambios
           </button>
         </div>
 
@@ -163,7 +159,7 @@
   <footer id="footer"></footer>
 
   <script src="../assets/js/components.js"></script>
-  <script src="../assets/js/crear-receta.js" defer></script>
+  <script src="../assets/js/editar-recetas.js" defer></script>
 </body>
 
 </html>

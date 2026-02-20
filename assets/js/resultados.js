@@ -1,11 +1,10 @@
+"use strict";
+
 const API_RECETAS = "http://localhost:3000/recetas";
 const API_USUARIOS = "http://localhost:3000/usuarios";
 const API_INGREDIENTES = "http://localhost:3000/receta_ingredientes";
 const AVATAR_DEFAULT = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
-/* =========================
-   NAVEGACIÓN
-========================= */
 document.addEventListener("click", e => {
   const card = e.target.closest(".recipe-card__main-link");
   if (!card) return;
@@ -13,9 +12,6 @@ document.addEventListener("click", e => {
   window.location.href = card.dataset.link;
 });
 
-/* =========================
-   QUERY URL
-========================= */
 const params = new URLSearchParams(window.location.search);
 const query = (params.get("query") || "").trim().toLowerCase();
 
@@ -24,9 +20,6 @@ titleResultados.textContent = query
   ? `Resultados para "${query}"`
   : "Resultados";
 
-/* =========================
-   FETCHERS
-========================= */
 async function fetchJSON(url) {
   try {
     const res = await fetch(url);
@@ -38,9 +31,6 @@ async function fetchJSON(url) {
   }
 }
 
-/* =========================
-   DATOS
-========================= */
 let resultados = [];
 const porPagina = 15;
 let paginaActual = 1;
@@ -48,9 +38,6 @@ let paginaActual = 1;
 const contenedorResultados = document.getElementById("resultados-recetas");
 const contenedorPaginas = document.getElementById("paginacion");
 
-/* =========================
-   CARGAR RESULTADOS
-========================= */
 async function cargarResultados() {
   const [recetas, usuarios, ingredientes] = await Promise.all([
     fetchJSON(API_RECETAS),
@@ -73,7 +60,7 @@ async function cargarResultados() {
     if (!query) return true;
 
     if (query === "elegidos_por-la_comunidad") {
-      return r.elegidos_comunidad === true;
+      return r.elegida_comunidad === true;
     }
 
     const usuario = usuariosPorId[r.id_usuario];
@@ -89,9 +76,6 @@ async function cargarResultados() {
   mostrarPagina();
 }
 
-/* =========================
-   PROMEDIO ESTRELLAS
-========================= */
 function calcularPromedio(comentarios = []) {
   if (!comentarios.length) return { promedio: 0, total: 0 };
 
@@ -102,9 +86,6 @@ function calcularPromedio(comentarios = []) {
   };
 }
 
-/* =========================
-   RENDER PÁGINA
-========================= */
 async function mostrarPagina() {
   const inicio = (paginaActual - 1) * porPagina;
   const fin = inicio + porPagina;
@@ -119,8 +100,9 @@ async function mostrarPagina() {
   contenedorResultados.innerHTML = "";
 
   for (const r of paginaItems) {
-    const recetaCompleta = await fetchJSON(`${API_RECETAS}/${r.id}/completo`);
-    const { promedio, total } = calcularPromedio(recetaCompleta.comentarios);
+    const recetaCompleta = await fetchJSON(`${API_RECETAS}/${r.id}`);
+    const promedio = Number(recetaCompleta.promedio) || 0;
+    const total = Number(recetaCompleta.total_reseñas) || 0;
 
     const usuario = recetaCompleta.autor
       ? {
@@ -136,7 +118,8 @@ async function mostrarPagina() {
           <figure class="recipe-card__media">
             <img class="recipe-card__image"
               src="${r.imagen_url || "https://wallpapers.com/images/hd/food-4k-1pf6px6ryqfjtnyr.jpg"}"
-              alt="imagen receta" />
+              alt="imagen receta"
+              onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Sin+Imagen';" />
           </figure>
 
           <div class="recipe-card__content">
@@ -145,7 +128,8 @@ async function mostrarPagina() {
             <div class="recipe-card__meta">
               <a class="recipe-card__author" href="usuario.html?userId=${usuario?.id}">
                 <img class="recipe-card__author-avatar"
-                  src="${usuario?.foto_perfil || AVATAR_DEFAULT}" />
+                  src="${usuario?.foto_perfil || AVATAR_DEFAULT}"
+                  onerror="this.onerror=null;this.src='/assets/img/default-user.png';" />
                 <span class="recipe-card__author-name">
                   ${usuario?.usuario || "Usuario desconocido"}
                 </span>
@@ -172,9 +156,6 @@ async function mostrarPagina() {
   generarPaginacion();
 }
 
-/* =========================
-   PAGINACIÓN
-========================= */
 function generarPaginacion() {
   const totalPaginas = Math.ceil(resultados.length / porPagina);
   contenedorPaginas.innerHTML = "";
@@ -193,7 +174,4 @@ function generarPaginacion() {
   }
 }
 
-/* =========================
-   INIT
-========================= */
 cargarResultados();

@@ -1,166 +1,162 @@
 CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(30) NOT NULL, apellido VARCHAR(30) NOT NULL, edad INTEGER NOT NULL, usuario VARCHAR(30) UNIQUE NOT NULL, contrasena VARCHAR(50) NOT NULL, foto_perfil TEXT);
 
-CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER REFERENCES usuarios(id), nombre VARCHAR(50) NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER NOT NULL, categoria VARCHAR(50) NOT NULL, comensales INTEGER, elegidos_comunidad BOOLEAN, review INTEGER DEFAULT 0, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP, imagen_url TEXT);
+CREATE TABLE recetas (id SERIAL PRIMARY KEY, id_usuario INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE, nombre VARCHAR(50) NOT NULL, ingredientes TEXT[] NOT NULL, descripcion TEXT NOT NULL, tiempo_preparacion INTEGER CHECK (tiempo_preparacion >= 0), comensales INTEGER CHECK (comensales > 0), imagen_url TEXT, fecha_creacion TIMESTAMPTZ DEFAULT NOW(), elegida_comunidad BOOLEAN DEFAULT FALSE);
+
+CREATE TABLE pasos (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id), numero_paso INTEGER NOT NULL, descripcion TEXT NOT NULL, imagen_url TEXT);
 
 CREATE TABLE comentarios (id SERIAL PRIMARY KEY, id_usuario INTEGER, id_receta INTEGER, descripcion TEXT NOT NULL, likes INTEGER DEFAULT 0, dislikes INTEGER DEFAULT 0, puntaje INTEGER DEFAULT 0, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), FOREIGN KEY (id_receta) REFERENCES recetas(id));
-
-CREATE TABLE respuestas (id SERIAL PRIMARY KEY, id_comentario INTEGER REFERENCES comentarios(id) ON DELETE CASCADE, id_usuario INTEGER REFERENCES usuarios(id) ON DELETE CASCADE, descripcion TEXT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
-
-CREATE TABLE seguidores (id SERIAL PRIMARY KEY, seguidor_id INT NOT NULL, seguido_id INT NOT NULL, fecha_seguimiento TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguidor FOREIGN KEY (seguidor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_seguido FOREIGN KEY (seguido_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_seguimiento UNIQUE (seguidor_id, seguido_id), CONSTRAINT no_auto_seguimiento CHECK (seguidor_id <> seguido_id));
-
-CREATE TABLE bloqueados (id SERIAL PRIMARY KEY, bloqueador_id INT NOT NULL, bloqueado_id INT NOT NULL, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_bloqueador FOREIGN KEY (bloqueador_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_bloqueado FOREIGN KEY (bloqueado_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT unique_bloqueo UNIQUE (bloqueador_id, bloqueado_id), CONSTRAINT no_auto_bloqueo CHECK (bloqueador_id <> bloqueado_id));
-
-CREATE TABLE mensajes (id SERIAL PRIMARY KEY, emisor_id INT NOT NULL, receptor_id INT NOT NULL, contenido TEXT NOT NULL, leido BOOLEAN DEFAULT FALSE, fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_emisor FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT fk_receptor FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE, CONSTRAINT no_auto_mensaje CHECK (emisor_id <> receptor_id));
-
-CREATE TABLE ingredientes (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE NOT NULL);
-
-CREATE TABLE receta_ingredientes (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, id_ingrediente INTEGER NOT NULL REFERENCES ingredientes(id), cantidad VARCHAR(50), unidad VARCHAR(50));
-
-CREATE TABLE pasos_receta (id SERIAL PRIMARY KEY, id_receta INTEGER NOT NULL REFERENCES recetas(id) ON DELETE CASCADE, numero SMALLINT NOT NULL CHECK (numero BETWEEN 1 AND 15), descripcion TEXT NOT NULL, foto_url TEXT, CONSTRAINT pasos_unicos UNIQUE (id_receta, numero));
 
 
 -insertar clientes de prueba-
 
-INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ('ricardo', 'rodrigues', 23, 'tini', 'nose');
-INSERT INTO recetas (id_usuario, nombre, descripcion, tiempo_preparacion, categoria, comensales, elegidos_comunidad, review) VALUES (1,'zapallo','zapallo del bueno', 35, 'comida', 22, 'true', 7);
-INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes) VALUES (1 , 1, 'muy buena la receta', 5, 8);
+INSERT INTO usuarios (nombre, apellido, edad, usuario, contrasena, foto_perfil) VALUES ('Carlos','García',28,'carlosg','pass1234','https://randomuser.me/api/portraits/men/1.jpg'),('María','López',34,'marialopez','securePass!1','https://randomuser.me/api/portraits/women/2.jpg'),('Juan','Martínez',22,'juanm22','juan2002*','https://randomuser.me/api/portraits/men/3.jpg'),('Ana','Rodríguez',45,'anarodri','anaR0dri!','https://randomuser.me/api/portraits/women/4.jpg'),('Pedro','Sánchez',31,'pedros','pedro#31','https://randomuser.me/api/portraits/men/5.jpg'),('Laura','Fernández',27,'laurafern','lauraF27!','https://randomuser.me/api/portraits/women/6.jpg'),('Miguel','González',38,'miguelg','miguelG!38','https://randomuser.me/api/portraits/men/7.jpg'),('Sofía','Pérez',25,'sofiaperez','sofia25#','https://randomuser.me/api/portraits/women/8.jpg'),('Diego','Torres',30,'diegot','diego30!','https://randomuser.me/api/portraits/men/9.jpg'),('Valeria','Ramírez',29,'valeria_r','vale29*','https://randomuser.me/api/portraits/women/10.jpg'),('Andrés','Flores',42,'andresf','andres42#','https://randomuser.me/api/portraits/men/11.jpg'),('Isabella','Morales',23,'isabellam','isa23!','https://randomuser.me/api/portraits/women/12.jpg'),('Roberto','Herrera',55,'robertoh','rober55*','https://randomuser.me/api/portraits/men/13.jpg'),('Camila','Díaz',26,'camiladiaz','camila26#','https://randomuser.me/api/portraits/women/14.jpg'),('Fernando','Vargas',33,'fernandov','ferv33!','https://randomuser.me/api/portraits/men/15.jpg'),('Valentina','Cruz',21,'valentinaC','val21#','https://randomuser.me/api/portraits/women/16.jpg'),('Javier','Reyes',47,'javierr','javier47*','https://randomuser.me/api/portraits/men/17.jpg'),('Lucía','Castillo',35,'luciacast','lucia35!','https://randomuser.me/api/portraits/women/18.jpg'),('Sebastián','Jiménez',24,'sebasj','sebas24#','https://randomuser.me/api/portraits/men/19.jpg'),('Gabriela','Romero',40,'gabiromel','gabi40*','https://randomuser.me/api/portraits/women/20.jpg'),('Daniel','Medina',36,'danimed','dani36!','https://randomuser.me/api/portraits/men/21.jpg'),('Natalia','Ortiz',28,'nataliao','nata28#','https://randomuser.me/api/portraits/women/22.jpg'),('Emilio','Ruiz',50,'emilior','emilio50*','https://randomuser.me/api/portraits/men/23.jpg'),('Patricia','Mendoza',32,'patriciamz','patri32!','https://randomuser.me/api/portraits/women/24.jpg'),('Tomás','Aguilar',27,'tomasag','tomas27#','https://randomuser.me/api/portraits/men/25.jpg'),('Elena','Vega',44,'elenavega','elena44*','https://randomuser.me/api/portraits/women/26.jpg'),('Rodrigo','Rojas',39,'rodrigor','rodri39!','https://randomuser.me/api/portraits/men/27.jpg'),('Mariana','Guerrero',22,'marianag','mari22#','https://randomuser.me/api/portraits/women/28.jpg'),('Alejandro','Núñez',31,'alejandrn','alej31*','https://randomuser.me/api/portraits/men/29.jpg'),('Daniela','Soto',26,'danielasoto','dani26!','https://randomuser.me/api/portraits/women/30.jpg'),('Héctor','Alvarado',48,'hectoral','hector48#','https://randomuser.me/api/portraits/men/31.jpg'),('Fernanda','Ramos',29,'fernandaramos','ferr29*','https://randomuser.me/api/portraits/women/32.jpg');
+INSERT INTO recetas (id_usuario, nombre, ingredientes, descripcion, tiempo_preparacion, comensales, imagen_url) VALUES (1,'Tacos de Carnitas',ARRAY['cerdo','tortillas','cebolla','cilantro','limón'],'Deliciosos tacos de cerdo confitado al estilo mexicano.',60,4,'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85'),(2,'Pasta Carbonara',ARRAY['espagueti','huevos','panceta','queso parmesano','pimienta negra'],'Clásica pasta italiana cremosa sin nata.',30,2,'https://images.unsplash.com/photo-1612874742237-6526221588e3'),(3,'Ceviche Peruano',ARRAY['corvina','limón','cebolla morada','ají amarillo','cilantro','choclo'],'Ceviche fresco y picante al estilo peruano.',20,4,'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3'),(4,'Paella Valenciana',ARRAY['arroz','pollo','conejo','judías verdes','tomate','azafrán'],'Auténtica paella valenciana cocinada a fuego lento.',90,6,'https://images.unsplash.com/photo-1534080564583-6be75777b70a'),(5,'Arepa Venezolana',ARRAY['harina de maíz','agua','sal','queso blanco','mantequilla'],'Arepas esponjosas rellenas de queso.',25,4,'https://images.unsplash.com/photo-1599974579688-8dbdd335c77f'),(6,'Sushi Rolls',ARRAY['arroz','nori','salmón','pepino','aguacate','vinagre de arroz'],'Rolls de sushi caseros frescos y deliciosos.',50,2,'https://images.unsplash.com/photo-1617196034183-421b4040ed20'),(7,'Guacamole Clásico',ARRAY['aguacate','tomate','cebolla','cilantro','jalapeño','limón'],'Guacamole fresco y cremoso listo en minutos.',10,4,'https://images.unsplash.com/photo-1600803907087-f56d462fd26b'),(8,'Pollo al Curry',ARRAY['pollo','curry','leche de coco','cebolla','ajo','jengibre'],'Pollo jugoso bañado en una salsa de curry aromática.',45,4,'https://images.unsplash.com/photo-1565557623262-b51c2513a641'),(9,'Tortilla Española',ARRAY['papas','huevos','cebolla','aceite de oliva','sal'],'Tortilla de papas esponjosa al estilo español.',35,4,'https://images.unsplash.com/photo-1594834749740-74b3f6764be4'),(10,'Hummus Casero',ARRAY['garbanzos','tahini','limón','ajo','aceite de oliva','pimentón'],'Hummus suave y cremoso para untar.',10,6,'https://images.unsplash.com/photo-1538681105587-85640961bf8b'),(11,'Falafel',ARRAY['garbanzos','perejil','ajo','comino','coriandro','harina'],'Falafel crujiente por fuera y suave por dentro.',40,4,'https://images.unsplash.com/photo-1593001874117-c99c800e3eb6'),(12,'Empanadas de Carne',ARRAY['carne molida','cebolla','huevo','aceitunas','masa para empanada'],'Empanadas jugosas horneadas al estilo argentino.',55,6,'https://images.unsplash.com/photo-1601050690597-df0568f70950'),(13,'Ramen Casero',ARRAY['fideos ramen','caldo de cerdo','huevo','cebolla de cambray','nori','cerdo'],'Ramen reconfortante con caldo profundo.',120,2,'https://images.unsplash.com/photo-1569718212165-3a8278d5f624'),(14,'Ensalada César',ARRAY['lechuga romana','crutones','parmesano','anchoas','aderezo césar'],'Ensalada fresca con el clásico aderezo César.',15,2,'https://images.unsplash.com/photo-1550304943-4f24f54ddde9'),(15,'Lasaña de Carne',ARRAY['láminas de lasaña','carne molida','salsa de tomate','bechamel','mozzarella'],'Lasaña capas por capas llena de sabor.',80,6,'https://images.unsplash.com/photo-1574894709920-11b28e7367e3'),(16,'Gazpacho Andaluz',ARRAY['tomate','pepino','pimiento','ajo','pan','vinagre','aceite de oliva'],'Sopa fría refrescante típica del sur de España.',20,4,'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b'),(17,'Pad Thai',ARRAY['fideos de arroz','camarón','tofu','cacahuetes','brotes de soja','tamarindo'],'Pad Thai auténtico con la mezcla perfecta de sabores.',35,2,'https://images.unsplash.com/photo-1559314809-0d155014e29e'),(18,'Cheesecake de Frutos Rojos',ARRAY['queso crema','galletas','mantequilla','azúcar','huevos','frutos rojos'],'Cheesecake cremoso con coulis de frutos rojos.',90,8,'https://images.unsplash.com/photo-1533134242443-d4fd215305ad'),(19,'Pizza Margarita',ARRAY['masa de pizza','salsa de tomate','mozzarella','albahaca','aceite de oliva'],'Pizza clásica italiana con ingredientes simples y frescos.',40,4,'https://images.unsplash.com/photo-1574071318508-1cdbab80d002'),(20,'Moussaka Griega',ARRAY['berenjena','carne molida','tomate','bechamel','canela','queso'],'Moussaka al horno con capas de berenjena y carne.',75,6,'https://images.unsplash.com/photo-1603903631918-a3f0c55ef1e2'),(21,'Burrito de Pollo',ARRAY['tortilla de trigo','pollo','arroz','frijoles','queso','crema agria'],'Burrito gigante relleno de pollo y arroz.',30,2,'https://images.unsplash.com/photo-1626700051175-6818013e1d4f'),(22,'Crema de Champiñones',ARRAY['champiñones','cebolla','ajo','crema','caldo de pollo','mantequilla'],'Sopa cremosa de champiñones suave y aromática.',30,4,'https://images.unsplash.com/photo-1547592166-23ac45744acd'),(23,'Bibimbap Coreano',ARRAY['arroz','carne','zanahoria','espinaca','huevo','gochujang','aceite de sésamo'],'Bibimbap colorido y nutritivo al estilo coreano.',40,2,'https://images.unsplash.com/photo-1590301157890-4810ed352733'),(24,'Tarta de Manzana',ARRAY['manzana','masa quebrada','azúcar','canela','mantequilla','limón'],'Tarta de manzana dorada con aroma a canela.',70,8,'https://images.unsplash.com/photo-1568571780765-9276de68fc8e'),(25,'Shakshuka',ARRAY['huevos','tomate','pimiento','cebolla','ajo','comino','pimentón'],'Huevos pochados en salsa de tomate especiada.',25,2,'https://images.unsplash.com/photo-1590412200988-a436970781fa'),(26,'Borsch Ucraniano',ARRAY['remolacha','repollo','zanahoria','papa','carne','crema agria'],'Sopa de remolacha intensa servida con crema agria.',70,6,'https://images.unsplash.com/photo-1527976746453-f363eac4d889'),(27,'Croquetas de Jamón',ARRAY['jamón ibérico','leche','harina','mantequilla','pan rallado','huevo'],'Croquetas cremosas rebozadas y fritas.',60,6,'https://images.unsplash.com/photo-1541014741259-de529411b96a'),(28,'Brigadeiro Brasileño',ARRAY['leche condensada','cacao','mantequilla','chocolate granulado'],'Dulce brasileño irresistible de chocolate.',20,20,'https://images.unsplash.com/photo-1606313564200-e75d5e30476c'),(29,'Cocido Madrileño',ARRAY['garbanzos','cerdo','chorizo','morcilla','repollo','zanahoria','papa'],'Guiso tradicional madrileño de cocción lenta.',180,6,'https://images.unsplash.com/photo-1547592180-85f173990554'),(30,'Tiramisú',ARRAY['mascarpone','huevos','azúcar','café','savoiardi','cacao en polvo'],'Postre italiano cremoso con sabor a café.',30,8,'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9'),(31,'Mole Negro',ARRAY['chile mulato','chile pasilla','chocolate','ajonjolí','pollo','plátano'],'Mole negro oaxaqueño con más de 30 ingredientes.',180,8,'https://images.unsplash.com/photo-1613514785940-daed07799d9b'),(32,'Paneer Tikka Masala',ARRAY['paneer','yogur','tomate','crema','garam masala','ajo','jengibre'],'Queso indio en salsa de tomate especiada y cremosa.',45,4,'https://images.unsplash.com/photo-1565557623262-b51c2513a641');
+INSERT INTO comentarios (id_usuario, id_receta, descripcion, likes, dislikes, puntaje) VALUES (2,1,'Increíbles, la carne quedó súper jugosa. Los hago cada semana.',18,0,5),(3,1,'Le agregué chile de árbol y quedaron perfectos.',12,1,5),(4,1,'Muy buenos pero tardé más de lo indicado.',5,2,3),(5,1,'La mejor receta de tacos que encontré en internet.',22,0,5),(6,1,'Ricos pero me faltó sazón, le agregué comino.',3,1,4),(7,2,'Por fin una carbonara sin nata. Quedó perfecta.',30,0,5),(8,2,'Se me cuajó el huevo a la primera pero al segundo intento salió bien.',8,3,3),(9,2,'Sabor auténtico italiano. Mi familia la amó.',14,0,5),(10,2,'Le faltaba un poco más de pimienta pero muy rica.',6,1,4),(11,2,'No me gustó mucho, prefiero la versión con nata.',2,9,2),(12,3,'Fresquísimo y auténtico. El ají amarillo es clave.',25,0,5),(13,3,'Perfecto para el verano. Lo repito seguido.',11,0,5),(14,4,'El socarrat quedó perfecto, una maravilla.',33,1,5),(15,4,'Costó conseguir el azafrán pero valió la pena.',17,0,5),(16,4,'Muy buena receta, aunque tardé más de 90 minutos.',9,2,4),(17,4,'La hice para 10 personas y todos pidieron repetir.',28,0,5),(18,5,'Igualitas a las de mi abuela venezolana. Gracias.',40,0,5),(19,5,'Fáciles y riquísimas. Las hago para el desayuno.',19,0,5),(20,6,'Primera vez haciendo sushi y salió bastante decente.',15,2,4),(21,6,'Se me desarmaron un poco al cortar, pero rico.',4,3,3),(22,6,'Necesité dos intentos pero al final quedó genial.',8,1,4),(23,6,'No es tan fácil como parece, pero la receta está bien explicada.',6,2,3),(24,6,'Excelente guía paso a paso.',12,0,5),(25,7,'Desapareció en 5 minutos en la reunión.',35,0,5),(26,7,'El jalapeño le da el toque exacto.',20,0,5),(27,7,'Simple y delicioso, lo hago siempre.',18,0,5),(28,7,'Le puse un poco de ajo y quedó brutal.',9,0,5),(29,8,'La leche de coco hace magia en esta receta.',22,0,5),(30,8,'Un poco picante para mi gusto pero muy sabroso.',7,1,4),(31,8,'Lo serví con arroz basmati, combinación perfecta.',16,0,5),(32,9,'Muy buena receta, al segundo intento me quedó perfecta.',11,0,4),(1,9,'La tortilla me quedó un poco seca, creo que me pasé de cocción.',3,4,2),(2,10,'Infinitamente mejor que el del supermercado.',38,0,5),(3,10,'Le agregué pimentón ahumado y quedó espectacular.',21,0,5),(4,10,'Muy cremoso y fácil. Lo hago cada semana.',15,0,5),(5,11,'Crujientes por fuera, suaves por dentro. Exacto.',27,0,5),(6,11,'Los frí en airfryer y quedaron igualmente buenos.',13,1,4),(7,12,'Las empanadas volaron de la mesa.',42,0,5),(8,12,'Le agregué huevo duro al relleno y quedaron mejores.',19,0,5),(9,12,'Perfectas para congelar y comer durante la semana.',24,0,5),(10,12,'Las hice horneadas y fritas, las dos versiones son buenas.',16,1,4),(11,12,'Un poco secas para mi gusto, le faltó jugo al relleno.',4,7,2),(12,13,'El caldo tardó pero valió absolutamente cada minuto.',36,1,5),(13,13,'Increíble para un día frío. La receta está muy bien.',20,0,5),(14,13,'Tardé más de lo indicado pero el resultado fue top.',14,0,4),(15,14,'Muy básica, no aporta nada nuevo a la receta clásica.',2,8,2),(16,14,'Correcta pero esperaba algo más elaborado.',3,5,3),(17,15,'La lasaña del domingo quedó perfecta para toda la familia.',29,0,5),(18,15,'Hice el doble de cantidad y congelé la mitad. Perfecta.',23,0,5),(19,15,'Muy buena aunque la bechamel me costó un poco.',11,1,4),(20,15,'Tardé más de lo esperado pero mereció la pena.',8,1,4),(21,16,'El gazpacho perfecto para el verano. Refrescante total.',24,0,5),(22,16,'Lo preparo cada semana en verano. Imprescindible.',17,0,5),(23,17,'Me transporté directo a Bangkok. Auténtico.',31,0,5),(24,17,'La salsa de tamarindo es difícil de conseguir acá.',6,3,3),(25,17,'Le faltó un poco de sabor, le agregué más salsa de soja.',5,2,3),(26,17,'Con los ingredientes correctos queda espectacular.',14,0,5),(27,18,'El mejor cheesecake que hice en casa. Sin dudas.',45,0,5),(28,18,'El coulis de frutos rojos lo elevó muchísimo.',32,0,5),(29,18,'Quedó cremoso y perfecto. Lo llevé a una reunión y todos pidieron la receta.',28,0,5),(30,18,'Me quedó un poco líquido en el centro, faltó horneado.',5,4,3),(31,19,'Superó a cualquier pizzería del barrio.',39,1,5),(32,19,'La masa casera es un nivel diferente.',26,0,5),(1,19,'La hice en piedra para pizza y quedó perfecta.',20,0,5),(2,19,'Le agregué rúcula al final y quedó gourmet.',15,0,5),(3,19,'Un poco quemada por los bordes pero muy rica igual.',6,2,4),(4,20,'Tomó tiempo pero el resultado fue increíble.',27,1,4),(5,20,'Nunca había hecho moussaka y salió bien a la primera.',18,0,5),(6,21,'Demasiado seco, le faltó salsa.',3,10,1),(7,21,'Correcto pero nada especial. Esperaba más.',4,6,2),(8,22,'Mi nueva sopa favorita para los días fríos.',33,0,5),(9,22,'Cremosa y aromática. Le puse trufa y fue otro nivel.',22,0,5),(10,22,'Muy rica, aunque la hice con caldo de verdura en lugar de pollo.',12,0,4),(11,23,'Muy colorido y nutritivo, perfecto para comer sano.',25,1,4),(12,23,'El gochujang es difícil de conseguir pero necesario.',7,3,3),(13,24,'Olía increíble mientras se horneaba. Sabor nostálgico.',30,0,5),(14,24,'La hice con manzanas verdes y quedó con el equilibrio ácido perfecto.',19,0,5),(15,24,'La masa me costó un poco pero el resultado fue excelente.',11,1,4),(16,24,'Demasiado dulce para mi gusto, reduciría el azúcar.',4,5,3),(17,25,'Mi desayuno favorito del fin de semana desde que encontré esta receta.',37,0,5),(18,25,'Fácil, rápida y llena de sabor. 10 puntos.',28,0,5),(19,25,'Le agregué queso feta encima y quedó espectacular.',21,0,5),(20,26,'Me recordó a los inviernos de infancia. Muy auténtico.',20,0,5),(21,26,'La remolacha le da un color y sabor únicos.',13,0,4),(22,27,'Adictivas. No paré hasta comerlas todas.',44,0,5),(23,27,'El jamón ibérico marca la diferencia total.',32,0,5),(24,27,'Las hice para Navidad y fueron el hit de la noche.',28,0,5),(25,27,'Me costó que no se abrieran al freír, necesité más reposo.',7,3,3),(26,28,'El dulce más fácil y delicioso que hice en mi vida.',50,0,5),(27,28,'Los hice para el cumple de mi hijo y volaron en segundos.',38,0,5),(28,28,'Le agregué coco rallado a algunos y quedaron increíbles.',25,0,5),(29,28,'Perfectos. La consistencia es clave, hay que tener paciencia.',19,0,5),(30,29,'Tres horas de cocción que valieron cada minuto.',35,1,5),(31,29,'Lo más reconfortante del invierno. Auténtico sabor madrileño.',22,0,5),(32,30,'Equilibrio perfecto entre el café y el mascarpone.',48,0,5),(1,30,'Lo hice para una cena y todos quedaron impresionados.',31,0,5),(2,30,'El mejor postre que hice en casa hasta ahora.',27,0,5),(3,31,'Complejo y elaborado, pero el resultado es una obra de arte.',29,0,5),(4,31,'Demasiado trabajo para el resultado. No lo repetiría.',2,11,2),(5,32,'La salsa especiada con el paneer es una combinación increíble.',26,0,5),(6,32,'Lo serví con naan casero y fue una cena perfecta.',20,0,5),(7,32,'Un poco picante para mi gusto pero muy sabroso igual.',8,2,4);
+INSERT INTO pasos (id_receta, numero_paso, descripcion, imagen_url) VALUES (1,1,'Cortar el cerdo en trozos y sazonar con sal, ajo y jugo de naranja.','https://images.unsplash.com/photo-1604908176997-125f25cc6f3d'),(1,2,'Cocinar a fuego lento durante 45 minutos hasta que la carne esté tierna y jugosa.','https://images.unsplash.com/photo-1547592180-85f173990554'),(1,3,'Calentar las tortillas y armar los tacos con cilantro, cebolla y limón.','https://images.unsplash.com/photo-1552332386-f8dd00dc2f85'),(2,1,'Cocer el espagueti en agua con sal hasta que esté al dente.','https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9'),(2,2,'Mezclar huevos con queso parmesano rallado y pimienta negra en un bol.','https://images.unsplash.com/photo-1506784365847-bbad939e9335'),(2,3,'Saltear la panceta, añadir la pasta y fuera del fuego incorporar la mezcla de huevo.','https://images.unsplash.com/photo-1612874742237-6526221588e3'),(3,1,'Cortar el pescado en cubos y marinar en jugo de limón durante 15 minutos.','https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2'),(3,2,'Añadir cebolla morada en juliana, ají amarillo y cilantro. Mezclar y sazonar.','https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3'),(4,1,'Sofreír el pollo y el conejo en la paellera con aceite y ajo.','https://images.unsplash.com/photo-1604908177453-7462950a8a3b'),(4,2,'Añadir el tomate, el azafrán y el arroz. Incorporar caldo caliente.','https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d'),(4,3,'Cocinar sin remover a fuego medio-alto hasta que el arroz absorba todo el caldo.','https://images.unsplash.com/photo-1534080564583-6be75777b70a'),(5,1,'Mezclar harina de maíz con agua tibia y sal hasta obtener una masa suave.','https://images.unsplash.com/photo-1574484284002-952d92a03a05'),(5,2,'Formar las arepas y cocinar en sartén caliente hasta dorar por ambos lados.','https://images.unsplash.com/photo-1599974579688-8dbdd335c77f'),(5,3,'Abrir las arepas por la mitad y rellenar con queso blanco y mantequilla.','https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58'),(6,1,'Cocinar el arroz y condimentar con vinagre de arroz, azúcar y sal.','https://images.unsplash.com/photo-1516684732162-798a0062be99'),(6,2,'Extender el arroz sobre la lámina de nori, colocar el salmón y el pepino.','https://images.unsplash.com/photo-1562802378-063ec186a863'),(6,3,'Enrollar firmemente con la ayuda de una esterilla de bambú y cortar en rodajas.','https://images.unsplash.com/photo-1617196034183-421b4040ed20'),(7,1,'Aplastar los aguacates maduros con un tenedor hasta obtener una textura gruesa.','https://images.unsplash.com/photo-1523049673857-eb18f1d7b578'),(7,2,'Agregar tomate, cebolla, cilantro, jalapeño y jugo de limón. Sazonar al gusto.','https://images.unsplash.com/photo-1600803907087-f56d462fd26b'),(8,1,'Saltear cebolla, ajo y jengibre en sartén caliente con aceite.','https://images.unsplash.com/photo-1596797038530-2c107229654b'),(8,2,'Añadir el pollo, el curry en polvo y la leche de coco. Cocinar 30 minutos a fuego medio.','https://images.unsplash.com/photo-1565557623262-b51c2513a641'),(9,1,'Pelar y cortar las papas en rodajas finas. Freír en abundante aceite hasta dorar.','https://images.unsplash.com/photo-1518977676601-b53f82aba655'),(9,2,'Batir los huevos con sal y mezclar con las papas. Cuajar en sartén a fuego bajo.','https://images.unsplash.com/photo-1594834749740-74b3f6764be4'),(10,1,'Licuar los garbanzos cocidos con tahini, ajo, limón y aceite hasta obtener una crema.','https://images.unsplash.com/photo-1585325701956-60dd9c8553bc'),(10,2,'Servir en plato hondo con pimentón, aceite de oliva y perejil picado.','https://images.unsplash.com/photo-1538681105587-85640961bf8b'),(11,1,'Procesar garbanzos, perejil, ajo y especias. Añadir harina hasta ligar la mezcla.','https://images.unsplash.com/photo-1609501676374-37792b5e4b0e'),(11,2,'Formar bolitas y freír en aceite caliente hasta que estén doradas y crujientes.','https://images.unsplash.com/photo-1593001874117-c99c800e3eb6'),(12,1,'Preparar el relleno sofriendo carne molida con cebolla, aceitunas y especias.','https://images.unsplash.com/photo-1574484284002-952d92a03a05'),(12,2,'Rellenar los discos de masa, sellar los bordes y hornear a 200°C por 20 minutos.','https://images.unsplash.com/photo-1601050690597-df0568f70950'),(13,1,'Preparar el caldo de cerdo cocinando huesos durante al menos 6 horas.','https://images.unsplash.com/photo-1547592180-85f173990554'),(13,2,'Cocer los fideos, disponer en el bol con caldo y decorar con huevo, nori y cerdo.','https://images.unsplash.com/photo-1569718212165-3a8278d5f624'),(14,1,'Mezclar todos los ingredientes del aderezo César: anchoas, ajo, limón y aceite.','https://images.unsplash.com/photo-1551248429-40975aa4de74'),(14,2,'Trozar la lechuga romana y mezclar con el aderezo, crutones y parmesano.','https://images.unsplash.com/photo-1550304943-4f24f54ddde9'),(15,1,'Preparar la salsa boloñesa y la bechamel por separado.','https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb'),(15,2,'Intercalar capas de láminas de pasta, boloñesa y bechamel. Terminar con mozzarella.','https://images.unsplash.com/photo-1574894709920-11b28e7367e3'),(15,3,'Hornear a 180°C durante 40 minutos hasta gratinar la superficie.','https://images.unsplash.com/photo-1621510456681-2330135e5871'),(16,1,'Triturar todos los vegetales en crudo con aceite, vinagre y un trozo de pan mojado.','https://images.unsplash.com/photo-1506084868230-bb9d95c24759'),(16,2,'Colar, sazonar y refrigerar mínimo 2 horas antes de servir.','https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b'),(17,1,'Remojar los fideos de arroz en agua caliente por 10 minutos.','https://images.unsplash.com/photo-1585325701165-c8e4e27b8f82'),(17,2,'Saltear el camarón y el tofu, añadir los fideos y la salsa de tamarindo.','https://images.unsplash.com/photo-1559314809-0d155014e29e'),(17,3,'Servir con brotes de soja, cacahuetes molidos y rodajas de limón.','https://images.unsplash.com/photo-1637806930600-37fa8892059e'),(18,1,'Triturar las galletas con mantequilla derretida y presionar en el molde.','https://images.unsplash.com/photo-1558961363-fa8fdf82db35'),(18,2,'Mezclar el queso crema con azúcar y huevos. Verter sobre la base y hornear a 160°C.','https://images.unsplash.com/photo-1576618148400-f54bed99fcfd'),(18,3,'Enfriar en nevera mínimo 4 horas y decorar con coulis de frutos rojos.','https://images.unsplash.com/photo-1533134242443-d4fd215305ad'),(19,1,'Extender la masa sobre una superficie enharinada y darle forma circular.','https://images.unsplash.com/photo-1604382354936-07c5d9983bd3'),(19,2,'Cubrir con salsa de tomate, mozzarella y albahaca fresca.','https://images.unsplash.com/photo-1565299624946-b28f40a0ae38'),(19,3,'Hornear a 250°C durante 10-12 minutos hasta dorar los bordes.','https://images.unsplash.com/photo-1574071318508-1cdbab80d002'),(20,1,'Cortar las berenjenas, salar y dejar reposar 30 minutos. Enjuagar y freír.','https://images.unsplash.com/photo-1617878227961-a9e3abe1e32f'),(20,2,'Preparar el relleno de carne especiada y la bechamel. Montar capas y hornear.','https://images.unsplash.com/photo-1603903631918-a3f0c55ef1e2'),(21,1,'Cocinar el pollo con especias mexicanas y deshebrar.','https://images.unsplash.com/photo-1598515214211-89d3c73ae83b'),(21,2,'Calentar la tortilla, añadir arroz, frijoles, pollo y enrollar firmemente.','https://images.unsplash.com/photo-1626700051175-6818013e1d4f'),(22,1,'Saltear champiñones con ajo y cebolla en mantequilla hasta dorar.','https://images.unsplash.com/photo-1504674900247-0877df9cc836'),(22,2,'Añadir caldo de pollo, cocinar 10 minutos y licuar. Incorporar crema y sazonar.','https://images.unsplash.com/photo-1547592166-23ac45744acd'),(23,1,'Saltear cada vegetal y la carne por separado con aceite de sésamo y gochujang.','https://images.unsplash.com/photo-1565299507177-b0ac66763828'),(23,2,'Servir el arroz en un bol con todos los ingredientes alrededor y un huevo frito al centro.','https://images.unsplash.com/photo-1590301157890-4810ed352733'),(24,1,'Pelar y cortar las manzanas en láminas finas. Mezclar con azúcar, canela y limón.','https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a'),(24,2,'Forrar el molde con masa quebrada, rellenar con manzana y cubrir con tiras de masa.','https://images.unsplash.com/photo-1621303837174-89787a7d4729'),(24,3,'Hornear a 180°C durante 40 minutos hasta dorar la superficie.','https://images.unsplash.com/photo-1568571780765-9276de68fc8e'),(25,1,'Sofreír cebolla, pimiento y ajo. Añadir tomates y especias. Cocinar 10 minutos.','https://images.unsplash.com/photo-1534939561126-855b8675edd7'),(25,2,'Hacer huecos en la salsa y cascar los huevos dentro. Tapar y cocinar hasta cuajar.','https://images.unsplash.com/photo-1590412200988-a436970781fa'),(26,1,'Cocer la carne en agua hasta que esté tierna. Reservar el caldo.','https://images.unsplash.com/photo-1547592180-85f173990554'),(26,2,'Añadir remolacha, zanahoria, papa y repollo al caldo. Cocinar 30 minutos. Servir con crema.','https://images.unsplash.com/photo-1527976746453-f363eac4d889'),(27,1,'Preparar la bechamel con jamón picado finamente. Enfriar en nevera varias horas.','https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb'),(27,2,'Formar las croquetas, pasar por huevo y pan rallado y freír en aceite caliente.','https://images.unsplash.com/photo-1541014741259-de529411b96a'),(28,1,'Cocinar la leche condensada con cacao y mantequilla a fuego medio removiendo constantemente.','https://images.unsplash.com/photo-1481391319762-47dff72954d9'),(28,2,'Cuando se despegue del fondo, retirar, enfriar y formar bolitas. Rebozar en chocolate.','https://images.unsplash.com/photo-1606313564200-e75d5e30476c'),(29,1,'Dejar los garbanzos en remojo toda la noche. Cocinar con la carne 2 horas.','https://images.unsplash.com/photo-1512058564366-18510be2db19'),(29,2,'Añadir las verduras y el chorizo. Cocinar 1 hora más. Servir en tres vuelcos.','https://images.unsplash.com/photo-1547592180-85f173990554'),(30,1,'Mezclar mascarpone con yemas y azúcar. Aparte, montar las claras e incorporar.','https://images.unsplash.com/photo-1542124948-dc391252a940'),(30,2,'Mojar los savoiardi en café y disponer en capas con la crema. Refrigerar 4 horas.','https://images.unsplash.com/photo-1551529834-525807d6b4f3'),(30,3,'Espolvorear cacao en polvo justo antes de servir.','https://images.unsplash.com/photo-1571877227200-a0d98ea607e9'),(31,1,'Tostar y desvenar los chiles. Remojar en agua caliente 30 minutos.','https://images.unsplash.com/photo-1583119022894-919a68a3d0e3'),(31,2,'Licuar los chiles con chocolate, ajonjolí y especias. Freír en aceite.','https://images.unsplash.com/photo-1606923829579-0cb981a83e2e'),(31,3,'Añadir el pollo y cocinar en el mole durante 40 minutos a fuego lento.','https://images.unsplash.com/photo-1613514785940-daed07799d9b'),(32,1,'Marinar el paneer en yogur con especias durante al menos 2 horas.','https://images.unsplash.com/photo-1601050690597-df0568f70950'),(32,2,'Grillar o freír el paneer hasta dorar. Preparar la salsa de tomate especiada.','https://images.unsplash.com/photo-1585937421612-70a008356fbe'),(32,3,'Incorporar el paneer a la salsa y cocinar 10 minutos. Servir con naan.','https://images.unsplash.com/photo-1565557623262-b51c2513a641');
 
 -comando para enviar una peticion HTTP POST desde la terminal-
 (se envia un JSON como un body para poder probar el post)
 
-//1- pruebo de forma ideal (pasa)
-curl -X POST \
--d '{"nombre":"matias", "apellido":"zapata", "edad":23, "usuario":"sergio44", "contrasena":"todomas"}'\
--H "Content-Type: application/json" \
-http://localhost:3000/usuarios
-
-curl -X POST \
--d '{"id_usuario":1,"nombre":"Tarta de verdu","descripcion":"tarta echa con verdura","tiempo_preparacion":30,"categoria":"comida","elegidos_comunidad":"false","review":0}' \
--H "Content-Type: application/json" \
-http://localhost:3000/recetas
-
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_receta":1,"descripcion":"Muy buena la receta","likes":0,"dislikes":0}' \
-http://localhost:3000/comentarios
-
-curl -X POST -H \
-"Content-Type: application/json" \
--d '{"usuario":"sergio44","contrasena":"todomas"}' \
-http://localhost:3000/login
 
 
 
 
 
-//2- pruebo errores del post en usuarios, dejo un espacio en blanco en apellido (marca error)
-curl -X POST \
--d '{"nombre":"aaaaa", "apellido":"", "edad":20, "usuario":"gsgwg", "contrasena":"elmascapo"}' \
--H "Content-Type: application/json" \
-http://localhost:3000/usuarios
 
-//2- pruebo errores de recetas, descripcion vacia (se espera error 400)
+-- PRUEBAS DEV
+-- //1- pruebo de forma ideal (pasa)
+-- curl -X POST \
+-- -d '{"nombre":"matias", "apellido":"zapata", "edad":23, "usuario":"sergio44", "contrasena":"todomas"}'\
+-- -H "Content-Type: application/json" \
+-- http://localhost:3000/usuarios
 
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"descripcion":"","tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
-http://localhost:3000/recetas
+-- curl -X POST \
+-- -d '{"id_usuario":1,"nombre":"Tarta de verdu","descripcion":"tarta echa con verdura","tiempo_preparacion":30,"categoria":"comida","elegidos_comunidad":"false","review":0}' \
+-- -H "Content-Type: application/json" \
+-- http://localhost:3000/recetas
 
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"id_receta":1,"descripcion":"Muy buena la receta","likes":0,"dislikes":0}' \
+-- http://localhost:3000/comentarios
 
-//2- pruebo erores de los comentarios, descripcion vacia (marca error 400)
-
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_receta":1,"descripcion":"","likes":0,"dislikes":0}' \
-http://localhost:3000/comentarios
-
-
-
-
-//3- pruebo errores del post en usuarios, no pongo el apellido (marca error)
-curl -X POST \
--d '{"nombre":"aaaaa", "edad":20, "usuario":"gsgwg", "contrasena":"elmascapo"}' \
--H "Content-Type: application/json" \
-http://localhost:3000/usuarios
-
-//3- pruebo errores de la receta, falta un campo obligatorio, no pongo la descripcion ( se espera error 400 )
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
-http://localhost:3000/recetas
-
-//3- receta con usuario indexistente (se espera error 400 o 404)
-
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":999,"nombre":"Error","descripcion":"No existe el usuario","tiempo_preparacion":10,"categoria":"comida"}' \
-http://localhost:3000/recetas
-
-
-//3- pruebo errores de los comentarios, falta la descripcion (se espera error 400 )
-curl -X POST \
-
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_receta":1, "likes":0,"dislikes":0}' \
-http://localhost:3000/comentarios
-
-//3- POST comentario con receta inexistente (se espera error 400 o 404)
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_receta":999,"descripcion":"Prueba"}' \
-http://localhost:3000/comentarios
-
-//3 -usuario indexistente (se espera error 400 o 404)
-
-curl -X POST \
--H "Content-Type: application/json" \
--d '{"id_usuario":999,"id_receta":1,"descripcion":"Prueba"}' \
-http://localhost:3000/comentarios
+-- curl -X POST -H \
+-- "Content-Type: application/json" \
+-- -d '{"usuario":"sergio44","contrasena":"todomas"}' \
+-- http://localhost:3000/login
 
 
 
 
--comando para enviar una peticion HTTP DELETE desde la terminal-
 
-//1- elimino un usuario de la base de datos
+-- //2- pruebo errores del post en usuarios, dejo un espacio en blanco en apellido (marca error)
+-- curl -X POST \
+-- -d '{"nombre":"aaaaa", "apellido":"", "edad":20, "usuario":"gsgwg", "contrasena":"elmascapo"}' \
+-- -H "Content-Type: application/json" \
+-- http://localhost:3000/usuarios
 
-curl -X DELETE \
-http://localhost:3000/usuarios/2
+-- //2- pruebo errores de recetas, descripcion vacia (se espera error 400)
 
-//-1 elimino una receta de la base de datos dado su id
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"descripcion":"","tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
+-- http://localhost:3000/recetas
 
-curl -X DELETE \
--H "Content-Type: application/json" \
--d '{"id": 1}' \
-http://localhost:3000/recetas
 
-//-1 elimino un comentario de la base de datos dado su id
+-- //2- pruebo erores de los comentarios, descripcion vacia (marca error 400)
 
-curl -X DELETE \
--H "Content-Type: application/json" \
--d '{"id": 2}' \
-http://localhost:3000/comentarios
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"id_receta":1,"descripcion":"","likes":0,"dislikes":0}' \
+-- http://localhost:3000/comentarios
 
--comando para enviar una peticion HTTP PUT desde la terminal-
 
-//1- modifico un usuario de la base de datos
 
-curl -X PUT \
--H "Content-Type: application/json" \
--d '{"nombre": "Juan", "apellido": "Pérez", "edad": 25, "usuario": "juanperez", "contrasena": "nuevacontra"}' \
-http://localhost:3000/usuarios/1
 
-//-1 modifico una receta de la base de datos
+-- //3- pruebo errores del post en usuarios, no pongo el apellido (marca error)
+-- curl -X POST \
+-- -d '{"nombre":"aaaaa", "edad":20, "usuario":"gsgwg", "contrasena":"elmascapo"}' \
+-- -H "Content-Type: application/json" \
+-- http://localhost:3000/usuarios
 
-curl -X PUT \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"nombre":"Pizza casera","descripcion": "Pizza casera mejorada","tiempo_preparacion": 40,"categoria": "comida","elegidos_comunidad":"false","review":0}' \
-http://localhost:3000/recetas/1
+-- //3- pruebo errores de la receta, falta un campo obligatorio, no pongo la descripcion ( se espera error 400 )
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"tiempo_preparacion":30,"categoria":"comida", "elegidos_comunidad":"false","review":0}' \
+-- http://localhost:3000/recetas
 
-//-1 modifico un comentario especifico de la base de datos 
-curl -X PUT \
--H "Content-Type: application/json" \
--d '{"id_usuario":1,"id_receta":1,"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
-http://localhost:3000/comentarios/1
+-- //3- receta con usuario indexistente (se espera error 400 o 404)
+
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":999,"nombre":"Error","descripcion":"No existe el usuario","tiempo_preparacion":10,"categoria":"comida"}' \
+-- http://localhost:3000/recetas
+
+
+-- //3- pruebo errores de los comentarios, falta la descripcion (se espera error 400 )
+-- curl -X POST \
+
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"id_receta":1, "likes":0,"dislikes":0}' \
+-- http://localhost:3000/comentarios
+
+-- //3- POST comentario con receta inexistente (se espera error 400 o 404)
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"id_receta":999,"descripcion":"Prueba"}' \
+-- http://localhost:3000/comentarios
+
+-- //3 -usuario indexistente (se espera error 400 o 404)
+
+-- curl -X POST \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":999,"id_receta":1,"descripcion":"Prueba"}' \
+-- http://localhost:3000/comentarios
+
+
+
+
+-- -comando para enviar una peticion HTTP DELETE desde la terminal-
+
+-- //1- elimino un usuario de la base de datos
+
+-- curl -X DELETE \
+-- http://localhost:3000/usuarios/2
+
+-- //-1 elimino una receta de la base de datos dado su id
+
+-- curl -X DELETE \
+-- -H "Content-Type: application/json" \
+-- -d '{"id": 1}' \
+-- http://localhost:3000/recetas
+
+-- //-1 elimino un comentario de la base de datos dado su id
+
+-- curl -X DELETE \
+-- -H "Content-Type: application/json" \
+-- -d '{"id": 2}' \
+-- http://localhost:3000/comentarios
+
+-- -comando para enviar una peticion HTTP PUT desde la terminal-
+
+-- //1- modifico un usuario de la base de datos
+
+-- curl -X PUT \
+-- -H "Content-Type: application/json" \
+-- -d '{"nombre": "Juan", "apellido": "Pérez", "edad": 25, "usuario": "juanperez", "contrasena": "nuevacontra"}' \
+-- http://localhost:3000/usuarios/1
+
+-- //-1 modifico una receta de la base de datos
+
+-- curl -X PUT \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"nombre":"Pizza casera","descripcion": "Pizza casera mejorada","tiempo_preparacion": 40,"categoria": "comida","elegidos_comunidad":"false","review":0}' \
+-- http://localhost:3000/recetas/1
+
+-- //-1 modifico un comentario especifico de la base de datos 
+-- curl -X PUT \
+-- -H "Content-Type: application/json" \
+-- -d '{"id_usuario":1,"id_receta":1,"descripcion": "Excelente receta, muy clara", "likes": 3, "dislikes": 0}' \
+-- http://localhost:3000/comentarios/1
 
 
