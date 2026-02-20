@@ -1,5 +1,29 @@
-/db_data/
-/mysql_data/
-/postgres_data/
-/sqlite/
-backend/.volumes/postgres/data/
+# =========================
+# Node
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Env
+# =========================
+.env
+.env.*
+
+# =========================
+# Docker / Postgres
+# =========================
+.volumes/*
+
+# =========================
+# OS
+# =========================
+.DS_Store
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log

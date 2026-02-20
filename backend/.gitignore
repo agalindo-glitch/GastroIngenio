@@ -1,7 +1,0 @@
-# Docker / Postgres
-.volumes/
-backend/.volumes/
-
-# Node
-node_modules/
-.env
