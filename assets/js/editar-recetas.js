@@ -204,25 +204,30 @@ function agregarIngrediente() {
 
 function agregarPaso() {
   const pasosContainer = document.getElementById("steps-container");
-
   const pasosNumero = pasosContainer.children.length + 1;
-  
+
   pasosContainer.insertAdjacentHTML("beforeend", `
     <div class="box step-item">
       <div class="field is-grouped is-align-items-center">
         <label class="label mr-2">Paso</label>
         <div class="control">
-          <input class="input step-number-input" type="number" min="1" value="${pasosNumero}" readonly>
+          <input class="input step-number-input" type="number" value="${pasosNumero}" readonly>
         </div>
         <div class="control ml-auto">
           <button type="button" class="button is-danger is-light remove-step">Eliminar paso</button>
         </div>
       </div>
+
       <div class="field">
-        <label class="label is-small">Descripción del paso</label>
-        <div class="control">
-          <textarea class="textarea" name="steps[][text]" rows="2" placeholder="Explicá qué hay que hacer en este paso" required></textarea>
-        </div>
+        <textarea class="textarea" name="steps[][text]" rows="2" required></textarea>
+      </div>
+
+      <div class="field">
+        <input class="input step-image-input"
+               type="url"
+               name="steps[][image]"
+               placeholder="https://...">
+        <img class="step-preview" style="display:none; max-width:200px;">
       </div>
     </div>
   `);
@@ -279,13 +284,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const items = document.querySelectorAll("#steps-container .step-item");
 
     items.forEach((item, i) => {
-      const descripcionPaso = item.querySelector('textarea[name="steps[][text]"]').value.trim();
-      const imagenPaso = item.querySelector('input[name="steps[][image]"]').value.trim() || null;
+      const textarea = item.querySelector('textarea[name="steps[][text]"]');
+      const inputImagen = item.querySelector('input[name="steps[][image]"]');
+
+      if (!textarea) return;
+
+      const descripcionPaso = textarea.value.trim();
 
       if (!descripcionPaso) {
         alert(`El paso ${i + 1} debe tener descripción.`);
+        error = true;
         return;
       }
+
+      const imagenPaso = inputImagen ? inputImagen.value.trim() || null : null;
 
       pasos.push({
         numero_paso: i + 1,

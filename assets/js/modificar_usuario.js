@@ -23,7 +23,7 @@ async function editarUsuario(id_usuario) {
         const apellido = document.getElementById("apellidoPerfilMod").value;
         const edad = document.getElementById("edadPerfilMod").value;
         const usuario = document.getElementById("usuarioPerfilMod").value;
-        const contrasena = document.getElementById("contrasenaPerfilMod").value;
+        const contrasena = document.getElementById("contrasenaInput").value;
 
         const fotoInput = document.getElementById("fotoPerfilInput");
         const foto_perfil = fotoInput.value.trim() || null;
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("apellidoPerfilMod").value = user.apellido;
         document.getElementById("edadPerfilMod").value = user.edad;
         document.getElementById("usuarioPerfilMod").value = user.usuario;
-        document.getElementById("contrasenaPerfilMod").value = user.contrasena;
+        document.getElementById("contrasenaInput").value = user.contrasena;
 
         document.getElementById("nombrePerfil").textContent = `@${user.usuario}`;
 
